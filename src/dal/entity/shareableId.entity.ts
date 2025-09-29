@@ -3,12 +3,11 @@ import { v4 as uuid } from 'uuid';
 
 export abstract class ShareableId {
   @Property({ fieldName: 'shareableId' })
-  shareableId!: string;
+  shareableId?: string;
 
   // Only fires is repostiory.create is used for before save
   @BeforeCreate()
   private addId() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     this.shareableId = uuid();
   }
 
