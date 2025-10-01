@@ -1,10 +1,21 @@
-import { Body, Controller, Get, Post, Render } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Render,
+  Sse,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Subject } from 'rxjs';
 import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  private messages: { user: string; message: string }[] = [];
+  private logger = new Logger(AppController.name);
+
+  private message$ = new Subject<string>();
 
   constructor(
     private readonly appService: AppService,
@@ -17,29 +28,35 @@ export class AppController {
     return {
       isProd: this.configService.get('NODE_ENV') == 'prod',
       appName: this.configService.get('APP_NAME') as string,
+      message: this.appService.getHello(),
     };
   }
 
-  @Get('messages')
-  getMessages(): any {
-    return this.messages
-      .map((msg) => `<p><strong>${msg.user}:</strong> ${msg.message}</p>`)
-      .join('');
+  @Sse('sse')
+  getChatStream() {
+    return this.message$;
   }
 
   @Post('message')
   async postMessages(@Body() body: any) {
     const message = body.message as string;
-    this.messages.push({ user: 'user', message });
-
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Simple response logic
-    const responseMessage = `Received your message: ${message}`;
-    this.messages.push({ user: 'Assistant', message: responseMessage });
-
-    return `
-      <p><strong>Assistant:</strong> ${responseMessage}</p>
-    `;
+    this.message$.next(`<strong>User:</strong> ${message}`);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.message$.next(`
+      <p><strong>Assistant:</strong> 1</p>
+    `);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.message$.next(`
+      <p><strong>Assistant:</strong> 2</p>
+    `);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.message$.next(`
+      <p><strong>Assistant:</strong> 3</p>
+    `);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    this.message$.next(`
+      <p><strong>Assistant:</strong> Hello World</p>
+    `);
+    this.logger.debug(`done with ${this.postMessages.name}`);
   }
 }

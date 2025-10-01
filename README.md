@@ -5,12 +5,13 @@ This repository serves as a jumping off point for rapid 3 tier web application d
 **It starts off from a freshly generated NestJS project which provides the following:**
 - Boiler plate application inspired by Spring and Angular 
   - Module based dependency injection
-  - example controller
-  - example service
-  - example jest unit test suite 
-  - example e2e integration testing
-  - linting
-  - formatting
+  - Example controller
+  - Example service
+  - Example jest unit test suite 
+  - Example e2e integration testing
+  - Linting
+  - Code Formatting
+  - Logging
 - CLI for generating controllers, services, tests, etc: https://docs.nestjs.com/cli/overview
 - Preconfigured npm scripts
 
