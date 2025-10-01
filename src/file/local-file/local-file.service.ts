@@ -12,9 +12,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { FileUpload } from '../interfaces/file-upload.interface';
 import sharp from 'sharp';
-import { Stream } from 'stream';
+import { Readable, Stream } from 'stream';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { File } from '../../dal/entity/file.entity';
 
 @Injectable()
@@ -26,6 +26,7 @@ export class LocalFileService implements FileServiceInterface {
     private readonly configService: ConfigService,
     @InjectRepository(File)
     private readonly fileRepository: EntityRepository<File>,
+    private readonly em: EntityManager,
   ) {
     this.logger.debug('constructor');
     this.directory = configService.get(
@@ -57,19 +58,21 @@ export class LocalFileService implements FileServiceInterface {
       createdOn: new Date().toISOString(),
       createdBy: userId,
     });
-    await this.fileRepository.getEntityManager().persistAndFlush(file);
+    await this.em.persistAndFlush(file);
     return file;
   }
 
-  get(fileName: string): fs.ReadStream {
+  async get(fileName: string): Promise<Readable | undefined> {
     if (fs.existsSync(path.join(this.directory, fileName))) {
-      return fs.createReadStream(path.join(this.directory, fileName));
+      return new Promise((resolve) =>
+        resolve(fs.createReadStream(path.join(this.directory, fileName))),
+      );
     } else {
       throw new NotFoundException(fileName);
     }
   }
 
-  async getByShareableId(shareableId: string): Promise<fs.ReadStream> {
+  async getByShareableId(shareableId: string): Promise<Readable> {
     const file = await this.fileRepository.findOneOrFail({ shareableId });
     if (fs.existsSync(path.join(this.directory, file.fileName))) {
       return fs.createReadStream(path.join(this.directory, file.fileName));

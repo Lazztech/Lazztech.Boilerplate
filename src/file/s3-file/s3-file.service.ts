@@ -3,13 +3,13 @@ import { InjectS3, type S3 } from 'nestjs-s3';
 import { FileServiceInterface } from '../interfaces/file-service.interface';
 import { v1 as uuidv1 } from 'uuid';
 import { ConfigService } from '@nestjs/config';
-import { ReadStream } from 'fs';
 import { FileUpload } from '../interfaces/file-upload.interface';
 import sharp from 'sharp';
-import { Stream } from 'stream';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { File } from '../../dal/entity/file.entity';
 import { EntityRepository } from '@mikro-orm/core';
+import { EntityManager } from '@mikro-orm/sqlite';
+import Stream, { Readable } from 'stream';
 
 @Injectable()
 export class S3FileService implements FileServiceInterface {
@@ -21,6 +21,7 @@ export class S3FileService implements FileServiceInterface {
     readonly configService: ConfigService,
     @InjectRepository(File)
     private readonly fileRepository: EntityRepository<File>,
+    private readonly em: EntityManager,
   ) {
     this.bucketName = configService.get('OBJECT_STORAGE_BUCKET_NAME') as string;
   }
@@ -51,7 +52,7 @@ export class S3FileService implements FileServiceInterface {
         });
 
       // await completion of upload
-      await uploadStream.promise.then(async () => {
+      uploadStream.promise.then(async () => {
         // repository.create => save pattern used to so that the @BeforeInsert decorated method
         // will fire generating a uuid for the shareableId
         const file = this.fileRepository.create({
@@ -59,7 +60,7 @@ export class S3FileService implements FileServiceInterface {
           createdOn: new Date().toISOString(),
           createdBy: userId,
         });
-        await this.fileRepository.getEntityManager().persistAndFlush(file);
+        await this.em.persistAndFlush(file);
         resolve(file);
       });
     });
@@ -100,20 +101,20 @@ export class S3FileService implements FileServiceInterface {
     return this.fileRepository.getEntityManager().removeAndFlush(file);
   }
 
-  async get(fileName: string): Promise<ReadStream> {
+  async get(fileName: string): Promise<Readable | undefined> {
     const result = await this.s3.getObject({
       Bucket: this.bucketName,
       Key: fileName,
     });
-    return result.Body?.transformToWebStream();
+    return result.Body as Readable;
   }
 
-  async getByShareableId(shareableId: string): Promise<ReadStream> {
+  async getByShareableId(shareableId: string): Promise<Readable | undefined> {
     const file = await this.fileRepository.findOneOrFail({ shareableId });
     const result = await this.s3.getObject({
       Bucket: this.bucketName,
       Key: file.fileName,
     });
-    return result.Body?.transformToWebStream() as ReadStream;
+    return result.Body as Readable;
   }
 }

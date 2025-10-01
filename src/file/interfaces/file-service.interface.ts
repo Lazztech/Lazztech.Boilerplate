@@ -1,6 +1,6 @@
-import { ReadStream } from 'fs';
 import { File } from 'src/dal/entity/file.entity';
 import { FileUpload } from './file-upload.interface';
+import { Readable } from 'stream';
 
 export interface FileServiceInterface {
   /**
@@ -14,6 +14,6 @@ export interface FileServiceInterface {
   ): Promise<File>;
   delete(fileName: string): Promise<void>;
   deleteById(fileId: any, userId: any): Promise<any>;
-  get(fileName: string): ReadStream;
-  getByShareableId(shareableId: string): Promise<ReadStream>;
+  get(fileName: string): Promise<Readable | undefined>;
+  getByShareableId(shareableId: string): Promise<Readable | undefined>;
 }

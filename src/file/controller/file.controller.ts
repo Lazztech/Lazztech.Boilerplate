@@ -7,11 +7,11 @@ import {
   Param,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { type Response } from 'express';
 import { join } from 'path';
 import sharp from 'sharp';
 import { FILE_SERVICE } from '../file-service.token';
-import { FileServiceInterface } from '../interfaces/file-service.interface';
+import { type FileServiceInterface } from '../interfaces/file-service.interface';
 
 @Controller('file')
 export class FileController {
@@ -24,10 +24,10 @@ export class FileController {
 
   @Get(':fileName')
   @Header('Cache-Control', 'public, max-age=86400') // public for CDN, max-age= 24hrs in seconds
-  get(@Param('fileName') fileName: string, @Res() response: Response) {
-    this.fileService
-      .get(fileName)
-      .on('error', (err) => {
+  async get(@Param('fileName') fileName: string, @Res() response: Response) {
+    const readable = await this.fileService.get(fileName);
+    readable
+      ?.on('error', (err) => {
         this.logger.error(err);
         response.status(500).send(err);
       })
@@ -67,7 +67,7 @@ export class FileController {
       .toBuffer();
     const fileStream = await this.fileService.getByShareableId(shareableId);
     fileStream
-      .pipe(
+      ?.pipe(
         sharp()
           .jpeg()
           .resize(1080, 1080, { fit: sharp.fit.inside })
