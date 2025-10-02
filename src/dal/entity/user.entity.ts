@@ -14,7 +14,6 @@ import { File } from './file.entity';
 import { ShareableId } from './shareableId.entity';
 import { PasswordReset } from './passwordReset.entity';
 
-/* eslint-disable */ // needed for mikroorm default value & type which conflicts with typescript-eslint/no-unused-vars
 @Entity()
 export class User extends ShareableId {
   @PrimaryKey()
