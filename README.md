@@ -7,7 +7,7 @@ This repository serves as a jumping off point for rapid 3 tier web application d
   - Module based dependency injection
   - Example controller
   - Example service
-  - Example jest unit test suite 
+  - Example jest unit test suite
   - Example e2e integration testing
   - Linting
   - Code Formatting
@@ -30,7 +30,7 @@ This repository serves as a jumping off point for rapid 3 tier web application d
   - Configuration based us of either local disk or s3 based file storage
 - Multi user support
   - User ORM entity
-  - JWT Based Authentication
+  - JWT Based Authentication: https://docs.nestjs.com/security/authentication
   - User password management and reset
 - Dockerfile and Docker Compose script
 - Github Actions Continous Integration Pipeline
@@ -226,15 +226,13 @@ $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/depl
 | Parameter | Function | Optional | Example |
 | ----------- | ----------- | ----------- | ----------- |
 | APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Template |
-| ACCESS_TOKEN_SECRET | Used for jwt tokens | ❌ |
+| ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ | ChangeMe! |
 | PUBLIC_VAPID_KEY | Used for web push notifications | ✅ |
 | PRIVATE_VAPID_KEY | Used for web push notifications | ✅ |
-| FIREBASE_SERVER_KEY | Used for push notifications | ❌ |
-| PUSH_NOTIFICATION_ENDPOINT | Used for triggering push notifications via http | ❌ |
 | EMAIL_TRANSPORT | Used for emailing users | ✅ | 'gmail' or 'mailgun' defaults to gmail |
 | EMAIL_API_KEY | Used for emailing users | required for mailgun |
 | EMAIL_DOMAIN | Used for emailing users | required for mailgun |
-| EMAIL_FROM_ADDRESS | Used for emailing users | ❌ |
+| EMAIL_FROM_ADDRESS | Used for emailing users | ⚠️ | admin@example.com |
 | EMAIL_PASSWORD | Used for emailing users | ✅ when transport is mailgun |
 | DATABASE_TYPE | Used for selecting sqlite or postgres | Defaults to sqlite ✅ | 'sqlite' or 'postgres' |
 | DATABASE_HOST | Used for connecting to database | Optional depending on database type ✅ |

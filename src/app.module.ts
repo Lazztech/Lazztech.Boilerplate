@@ -15,7 +15,74 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
       envFilePath: ['.env.local', '.env'],
       validationSchema: Joi.object({
         APP_NAME: Joi.string().required(),
+        ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
+        DATABASE_TYPE: Joi.string()
+          .valid('sqlite', 'postgres')
+          .default('sqlite'),
+        DATABASE_SCHEMA: Joi.string()
+          .when('DATABASE_TYPE', {
+            is: 'sqlite',
+            then: Joi.string().default(path.join('data', 'sqlite3.db')),
+          })
+          .when('DATABASE_TYPE', {
+            is: 'postgres',
+            then: Joi.string().required(),
+          }),
+        DATABASE_HOST: Joi.string().when('DATABASE_TYPE', {
+          is: 'postgres',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
+        DATABASE_PORT: Joi.number().when('DATABASE_TYPE', {
+          is: 'postgres',
+          then: Joi.number().required(),
+          otherwise: Joi.optional(),
+        }),
+        DATABASE_USER: Joi.string().when('DATABASE_TYPE', {
+          is: 'postgres',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
+        DATABASE_PASS: Joi.string().when('DATABASE_TYPE', {
+          is: 'postgres',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
+        DATABASE_SSL: Joi.boolean().when('DATABASE_TYPE', {
+          is: 'postgres',
+          then: Joi.boolean().default(false),
+          otherwise: Joi.optional(),
+        }),
+        FILE_STORAGE_TYPE: Joi.string()
+          .valid('local', 'object')
+          .default('local'),
+        OBJECT_STORAGE_BUCKET_NAME: Joi.string().when('FILE_STORAGE_TYPE', {
+          is: 'object',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
+        OBJECT_STORAGE_ACCESS_KEY_ID: Joi.string().when('FILE_STORAGE_TYPE', {
+          is: 'object',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
+        OBJECT_STORAGE_SECRET_ACCESS_KEY: Joi.string().when(
+          'FILE_STORAGE_TYPE',
+          {
+            is: 'object',
+            then: Joi.string().required(),
+            otherwise: Joi.optional(),
+          },
+        ),
+        OBJECT_STORAGE_ENDPOINT: Joi.string().when('FILE_STORAGE_TYPE', {
+          is: 'object',
+          then: Joi.string().required(),
+          otherwise: Joi.optional(),
+        }),
       }),
+      validationOptions: {
+        abortEarly: true,
+      },
       isGlobal: true,
     }),
     MikroOrmModule.forRootAsync({
