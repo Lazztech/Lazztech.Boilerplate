@@ -8,6 +8,7 @@ import { Connection, IDatabaseDriver } from '@mikro-orm/core';
 import * as path from 'path';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -160,6 +161,7 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
         }
       },
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

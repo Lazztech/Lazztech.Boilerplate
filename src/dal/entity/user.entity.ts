@@ -39,7 +39,7 @@ export class User extends ShareableId {
   /**
    * Exposed as a field resolver
    */
-   @ManyToOne({
+  @ManyToOne({
     entity: () => File,
     ref: true,
     nullable: true,
