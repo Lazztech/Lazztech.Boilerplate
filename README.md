@@ -49,6 +49,7 @@ To see view a diff between what this project adds to the default NestJS project 
   - User password management and reset
 - Dockerfile and Docker Compose script
 - Github Actions Continous Integration Pipeline
+- Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
 - VSCode Recommended Extensions
 
 ## Development Dependencies
