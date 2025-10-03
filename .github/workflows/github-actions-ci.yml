@@ -34,6 +34,9 @@ jobs:
       run: |
         npm run test:cov
 
+    - name: run lighthouse CI
+      run: npm run lighthouse
+
     - name: npm test:e2e local
       run: |
         npm run test:e2e

@@ -13,6 +13,7 @@
     "start:dev": "npm run build:tailwind && nest start --watch",
     "start:debug": "npm run build:tailwind && nest start --debug --watch",
     "start:prod": "node dist/main",
+    "lighthouse": "npm run build && lhci autorun",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -66,6 +67,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
+    "@lhci/cli": "^0.15.1",
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
