@@ -9,6 +9,7 @@
     "build": "nest build && npm run build:tailwind",
     "build:tailwind": "tailwindcss -i ./views/assets/tailwind.css -o ./public/main.css",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npm run build:tailwind && nest start",
     "start:dev": "npm run build:tailwind && nest start --watch",
     "start:debug": "npm run build:tailwind && nest start --debug --watch",
@@ -107,6 +108,9 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "transformIgnorePatterns": [
+        "node_modules/(?!(uuid)/)"
+    ]
   }
 }

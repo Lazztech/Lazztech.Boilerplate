@@ -2,11 +2,10 @@ import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FILE_SERVICE } from '../file-service.token';
 import { FileController } from './file.controller';
-import { ImageFileService } from '../image-file/image-file.service';
 import { LocalFileService } from '../local-file/local-file.service';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { File } from '../../dal/entity/file.entity';
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 
 describe('FileController', () => {
   let controller: FileController;
@@ -20,10 +19,17 @@ describe('FileController', () => {
           useClass: LocalFileService,
         },
         ConfigService,
-        ImageFileService,
         {
           provide: getRepositoryToken(File),
           useClass: EntityRepository,
+        },
+        {
+          provide: EntityManager,
+          useValue: {
+            query: jest.fn(),
+            // you can mock other functions inside
+            // the entity manager object, my case only needed query method
+          },
         },
       ],
     }).compile();

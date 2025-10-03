@@ -5,13 +5,6 @@ import { AppModule } from './../src/app.module';
 import { join } from 'path';
 import hbs from 'hbs';
 
-// https://stackoverflow.com/questions/75817287/jest-encountered-an-unexpected-token-export-default-as-v1-with-uuid
-jest.mock('uuid', () => {
-  return {
-    v4: jest.fn(() => 1),
-  };
-});
-
 describe('AppController (e2e)', () => {
   let app: NestExpressApplication;
 

@@ -8,7 +8,7 @@ import sharp from 'sharp';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { File } from '../../dal/entity/file.entity';
 import { EntityRepository } from '@mikro-orm/core';
-import { EntityManager } from '@mikro-orm/sqlite';
+import { EntityManager } from '@mikro-orm/core';
 import Stream, { Readable } from 'stream';
 
 @Injectable()
