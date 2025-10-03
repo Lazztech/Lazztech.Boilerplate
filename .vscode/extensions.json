@@ -9,6 +9,7 @@
         "hediet.vscode-drawio",
         "ms-azuretools.vscode-docker",
         "cweijan.vscode-database-client2",
-        "ms-azuretools.vscode-containers"
+        "ms-azuretools.vscode-containers",
+        "bierner.markdown-mermaid"
     ]
 }

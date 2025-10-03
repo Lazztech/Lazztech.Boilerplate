@@ -2,6 +2,66 @@
 
 This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, accross various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
 
+```mermaid
+graph TB
+    subgraph "Presentation Layer"
+        A[HTMX Dynamic UI]
+        B[Tailwind + DaisyUI Styling]
+        C[SSR Templates MVC]
+        D[PWA Service Worker]
+        E[Web Push Notifications]
+        F[Controllers]
+        
+        A --> C
+        B --> C
+        D --> E
+        C --> F
+    end
+    
+    subgraph "Business Logic Layer"
+        G[NestJS Core]
+        H[Dependency Injection Modules]
+        I[Services]
+        J[JWT Authentication]
+        K[User Management]
+        L[Password Management]
+        M[File Service Module]
+        N[Configuration Service]
+        O[Dotenv Config]
+        P[Schema Validation]
+        
+        F --> G
+        G --> H
+        H --> I
+        H --> J
+        J --> K
+        K --> L
+        H --> M
+        H --> N
+        N --> O
+        N --> P
+    end
+    
+    subgraph "Data Layer"
+        Q[MikroORM]
+        R[User Entity]
+        S[(PostgreSQL)]
+        T[(SQLite)]
+        U[Migration System]
+        V[Local Disk Storage]
+        W[S3 Storage]
+        
+        I --> Q
+        K --> Q
+        Q --> R
+        Q --> U
+        Q --> S
+        Q --> T
+        M --> V
+        M --> W
+    end
+```
+
 **Google Lighthouse**
 
 This all also results in a starting point for developing a web app with a perfect google lighthouse score.
