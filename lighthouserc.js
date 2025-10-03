@@ -12,7 +12,6 @@ module.exports = {
       assertions: {
         // Relax or disable frontend-specific checks for backend APIs
         'network-dependency-tree-insight': 'off',
-        'unminified-css': 'off',
         'unminified-javascript': 'off',
         'unused-css-rules': 'off',
         'unused-javascript': 'off',
