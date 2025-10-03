@@ -1,4 +1,4 @@
-# Lazztech.Template
+# Lazztech.Boilerplate
 
 This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, accross various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
 
@@ -273,7 +273,7 @@ $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/depl
 
 | Parameter | Function | Optional | Example |
 | ----------- | ----------- | ----------- | ----------- |
-| APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Template |
+| APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Boilerplate |
 | ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ | ChangeMe! |
 | PUBLIC_VAPID_KEY | Used for web push notifications | ✅ |
 | PRIVATE_VAPID_KEY | Used for web push notifications | ✅ |

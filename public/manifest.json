@@ -1,6 +1,6 @@
 {
-  "short_name": "Lazztech Template",
-  "name": "Lazztech Template",
+  "short_name": "Lazztech Boilerplate",
+  "name": "Lazztech Boilerplate",
   "icons": [
     {
         "src": "/icons/lazztech_icon.webp",
@@ -14,6 +14,6 @@
   "scope": "/",
   "theme_color": "#3367D6",
   "shortcuts": [],
-  "description": "Lazztech Template",
+  "description": "Lazztech Boilerplate",
   "screenshots": []
 }

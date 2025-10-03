@@ -26,6 +26,6 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect((res) => expect(res.text).toContain('Template'));
+      .expect((res) => expect(res.text).toContain('Boilerplate'));
   });
 });
