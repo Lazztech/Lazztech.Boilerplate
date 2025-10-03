@@ -59,4 +59,12 @@ export class AppController {
     `);
     this.logger.debug(`done with ${this.postMessages.name}`);
   }
+
+  @Get('/about')
+  @Render('about')
+  about() {
+    return {
+      appName: this.configService.get('APP_NAME'),
+    };
+  }
 }

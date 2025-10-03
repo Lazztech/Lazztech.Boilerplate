@@ -1,42 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lazztech IRA</title>
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.7/dist/htmx.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/htmx-ext-sse@2.2.2"></script>
-    <link rel="manifest" href="manifest.json" />
-    <!-- Include the TailwindCSS library on your page -->
-    {{#if isProd}}
-    <link href="/main.css" rel="stylesheet">
-    {{else}}
-    <script src="/tailwind3.4.3.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-    {{/if}}
-</head>
-
-<body hx-ext="sse" class="h-screen">
-    <div class="navbar bg-base-100 shadow-sm">
-        <a class="btn btn-ghost text-xl">{{appName}}</a>
+<div class="flex flex-col justify-center items-center p-10 h-screen">
+    <div id="chat">
+        <!-- Chat messages will be displayed here -->
     </div>
-    <div class="flex flex-col justify-center items-center p-10 h-screen">
-        <div id="chat">
-            <!-- Chat messages will be displayed here -->
-        </div>
-        <form id="messageForm" hx-post="/message" hx-trigger="submit" hx-swap="beforeend" hx-target="#chat"
-            onsubmit="handleSubmit(event)">
-            <input type="text" id="message" name="message" class="input" placeholder="Your message" required>
-            <button type="submit" class="btn btn-neutral">Send</button>
-        </form>
-        <div id="sse-listener" hx-ext="sse" sse-connect="/sse" sse-swap="message" hx-swap="beforeend" hx-target="#chat"></div>
+    <form id="messageForm" hx-post="/message" hx-trigger="submit" hx-swap="beforeend" hx-target="#chat">
+        <input type="text" id="message" name="message" class="input" placeholder="Your message" required>
+        <button type="submit" class="btn btn-neutral">Send</button>
+    </form>
+    <div id="sse-listener" hx-ext="sse" sse-connect="/sse" sse-swap="message" hx-swap="beforeend" hx-target="#chat">
     </div>
-</body>
-<script>
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/sw.js");
-    }
-</script>
-
-</html>
+</div>

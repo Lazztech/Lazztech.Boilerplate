@@ -1,8 +1,20 @@
 # Lazztech.Template
 
-This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering and consulting experience to propel project success by providing an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
+This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, accross various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
+
+**Google Lighthouse**
+
+This all also results in a starting point for developing a web app with a perfect google lighthouse score.
+
+https://developer.chrome.com/docs/lighthouse/overview
+
+- Performance: 100%
+- Accessibility: 100%
+- Best Practices: 100%
+- SEO: 100%
 
 **It starts off from a freshly generated NestJS project which provides the following:**
+
 - Boiler plate application inspired by Spring and Angular 
   - Module based dependency injection
   - Example controller
@@ -16,6 +28,9 @@ This repository serves as a jumping off point for rapid 3 tier web application d
 - Preconfigured npm scripts
 
 **From there support for the following is added:**
+
+To see view a diff between what this project adds to the default NestJS project boiler plate, then diff the head of the main branch against commit ID dedf27d0c01a9aaaae95ad4186814a111341eb77.
+
 - Dotenv configuration: https://docs.nestjs.com/techniques/configuration
 - Environment variable configuration validation: https://docs.nestjs.com/techniques/configuration#schema-validation
 - MVC Server Side Rendering: https://docs.nestjs.com/techniques/mvc
@@ -39,12 +54,13 @@ This repository serves as a jumping off point for rapid 3 tier web application d
 ## Development Dependencies
 
 Development tools:
-- brew
+- Brew
   - https://brew.sh/
   - postgres
-- docker
-- node version manager
+- Docker
+- Node version manager
   - https://github.com/nvm-sh/nvm
+  - Automatic NVM usage: https://github.com/nvm-sh/nvm?tab=readme-ov-file#deeper-shell-integration
 
 ```bash
 # use nvm to install node from the .nvmrc file
@@ -53,36 +69,7 @@ $ nvm install
 $ nvm use
 # install node dependencies
 $ npm install
-
-# if you run into an issue installing sharp on apple M1 see the link below:
-# https://github.com/lovell/sharp/issues/2460#issuecomment-751491241 
 ```
-
-<!-- ```bash
-# Apple M1 support & troubleshooting resources: 
-# https://github.com/nvm-sh/nvm#macos-troubleshooting
-# https://www.reddit.com/r/node/comments/lp9xlk/mac_mini_m1_issues_with_node_js_15/
-
-# open x86 shell with rosetta
-$ arch -x86_64 zsh
-# install node version manager & use the version from the .nvmrc file
-$ nvm install
-# Now check that the architecture is correct:
-$ node -p process.arch
-x64
-# It is now safe to return to the arm64 zsh process:
-$ exit
-# We're back to a native shell:
-$ arch
-arm64
-# set the in use node version from the .nvmrc file's verision
-$ nvm use
-# verify that the despite running in an arm shell node architecture returns x86
-$ node -p process.arch
-x64
-# install node dependencies
-$ npm install
-``` -->
 
 ## Running the app
 
@@ -246,9 +233,49 @@ $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/depl
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT | Used for S3 compatible object file storage | Optional depending on file storage type ✅ |
 
+## Quirks
+
 ## Stay in touch
 
 - Website - [https://lazz.tech/](https://lazz.tech/)
 
 ## License
-MIT
+
+Choose your own highly permisive license, either The Unlicense, CC0, or MIT-0.
+
+---
+
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to <https://unlicense.org>
+
+---
+
+MIT-0 License
+
+Copyright (c) 2025 Lazztech
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

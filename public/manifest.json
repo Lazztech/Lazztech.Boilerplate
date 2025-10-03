@@ -1,7 +1,12 @@
 {
   "short_name": "Lazztech Template",
   "name": "Lazztech Template",
-  "icons": [],
+  "icons": [
+    {
+        "src": "/icons/lazztech_icon.webp",
+        "sizes": "1000x1000"
+    }
+  ],
   "id": "/",
   "start_url": "/",
   "background_color": "#3367D6",

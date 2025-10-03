@@ -1,0 +1,6 @@
+/* Used by the npm run build:tailwind script to "compile" tailwind usage into a static, pruned down css output
+that only contains the relivant tailwind code used in the application source. This is to minimize the bundle size
+and response bandwidth/latency. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

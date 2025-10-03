@@ -1,0 +1,10 @@
+{{!-- 
+    hx-boost 'automagically' replaces all anchor tags with htmx logic that swaps out the body of the html with the response.
+    This results in a smoother user experience where the body gets swapped out without a full page reload similar to a PWA.
+    https://htmx.org/attributes/hx-boost/ 
+    https://htmx.org/quirks/#some-people-don-t-like-hx-boost
+--}}
+<div hx-boost="true" class="navbar bg-base-100 shadow-sm">
+    <a href="/" class="btn btn-ghost text-xl">{{appName}}</a>
+    <a href="/about" class="btn btn-ghost">About</a>
+</div>
