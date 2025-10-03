@@ -4,8 +4,8 @@ import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { User } from 'src/dal/entity/user.entity';
-import { PasswordReset } from 'src/dal/entity/passwordReset.entity';
+import { User } from '../dal/entity/user.entity';
+import { PasswordReset } from '../dal/entity/passwordReset.entity';
 
 @Module({
   imports: [
