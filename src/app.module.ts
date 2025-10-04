@@ -9,6 +9,7 @@ import * as path from 'path';
 import { SqliteDriver } from '@mikro-orm/sqlite';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AuthModule } from './auth/auth.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -17,6 +18,9 @@ import { AuthModule } from './auth/auth.module';
       validationSchema: Joi.object({
         APP_NAME: Joi.string().required(),
         ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
+        PUBLIC_VAPID_KEY: Joi.optional(),
+        PRIVATE_VAPID_KEY: Joi.optional(),
+        SITE_URL: Joi.optional(),
         DATABASE_TYPE: Joi.string()
           .valid('sqlite', 'postgres')
           .default('sqlite'),
@@ -162,6 +166,7 @@ import { AuthModule } from './auth/auth.module';
       },
     }),
     AuthModule,
+    NotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

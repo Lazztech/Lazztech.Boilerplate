@@ -13,6 +13,7 @@ import {
 import { File } from './file.entity';
 import { ShareableId } from './shareableId.entity';
 import { PasswordReset } from './passwordReset.entity';
+import { UserDevice } from './userDevice.entity';
 
 @Entity()
 export class User extends ShareableId {
@@ -67,6 +68,8 @@ export class User extends ShareableId {
     inversedBy: 'user',
   })
   public passwordReset!: Ref<PasswordReset>;
+
+  public userDevices = new Collection<UserDevice>(this);
 
   @OneToMany(() => File, (file) => file.createdBy)
   public fileUploads = new Collection<File>(this);

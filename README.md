@@ -275,6 +275,7 @@ $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/depl
 | ----------- | ----------- | ----------- | ----------- |
 | APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Boilerplate |
 | ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ | ChangeMe! |
+| SITE_URL | Used for PWA icon URL | ✅ |
 | PUBLIC_VAPID_KEY | Used for web push notifications | ✅ |
 | PRIVATE_VAPID_KEY | Used for web push notifications | ✅ |
 | EMAIL_TRANSPORT | Used for emailing users | ✅ | 'gmail' or 'mailgun' defaults to gmail |
