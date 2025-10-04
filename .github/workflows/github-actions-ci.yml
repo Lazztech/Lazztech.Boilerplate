@@ -44,7 +44,6 @@ jobs:
         CI: true
         APP_NAME: Lazztech.Boilerplate
         ACCESS_TOKEN_SECRET: SecretKey
-        FIREBASE_SERVER_KEY: test
         PUSH_NOTIFICATION_ENDPOINT: test
         EMAIL_FROM_ADDRESS: test
         EMAIL_PASSWORD: test
@@ -81,7 +80,6 @@ jobs:
         CI: true
         APP_NAME: Lazztech.Boilerplate
         ACCESS_TOKEN_SECRET: SecretKey
-        FIREBASE_SERVER_KEY: test
         PUSH_NOTIFICATION_ENDPOINT: test
         EMAIL_FROM_ADDRESS: test
         EMAIL_PASSWORD: test
@@ -104,13 +102,12 @@ jobs:
       # 'kill %1' kills background job: https://unix.stackexchange.com/a/104822
       run: |
         nohup npm run start:prod >> app.log 2>&1 &
-        timeout 30 bash -c 'until echo > /dev/tcp/localhost/8080; do cat app.log && sleep 0.5; done'
+        timeout 30 bash -c 'until echo > /dev/tcp/localhost/3000; do cat app.log && sleep 0.5; done'
         kill %1
       env:
         CI: true
         APP_NAME: Lazztech.Boilerplate
         ACCESS_TOKEN_SECRET: SecretKey
-        FIREBASE_SERVER_KEY: test
         PUSH_NOTIFICATION_ENDPOINT: test
         EMAIL_FROM_ADDRESS: test
         EMAIL_PASSWORD: test
