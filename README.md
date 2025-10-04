@@ -274,15 +274,10 @@ $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/depl
 | Parameter | Function | Optional | Example |
 | ----------- | ----------- | ----------- | ----------- |
 | APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Boilerplate |
-| ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ | ChangeMe! |
-| SITE_URL | Used for PWA icon URL | ✅ |
-| PUBLIC_VAPID_KEY | Used for web push notifications | ✅ |
-| PRIVATE_VAPID_KEY | Used for web push notifications | ✅ |
-| EMAIL_TRANSPORT | Used for emailing users | ✅ | 'gmail' or 'mailgun' defaults to gmail |
-| EMAIL_API_KEY | Used for emailing users | required for mailgun |
-| EMAIL_DOMAIN | Used for emailing users | required for mailgun |
-| EMAIL_FROM_ADDRESS | Used for emailing users | ⚠️ | admin@example.com |
-| EMAIL_PASSWORD | Used for emailing users | ✅ when transport is mailgun |
+| ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ change for production | ChangeMe! |
+| SITE_URL | Used for PWA icon URL | ⚠️ change for production | https://mysite.com |
+| PUBLIC_VAPID_KEY | Used for web push notifications | ⚠️ change for production |
+| PRIVATE_VAPID_KEY | Used for web push notifications | ⚠️ change for production |
 | DATABASE_TYPE | Used for selecting sqlite or postgres | Defaults to sqlite ✅ | 'sqlite' or 'postgres' |
 | DATABASE_HOST | Used for connecting to database | Optional depending on database type ✅ |
 | DATABASE_PORT | Used for connecting to database | Optional depending on database type ✅ |

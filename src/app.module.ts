@@ -20,7 +20,7 @@ import { NotificationModule } from './notification/notification.module';
         ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
         PUBLIC_VAPID_KEY: Joi.optional(),
         PRIVATE_VAPID_KEY: Joi.optional(),
-        SITE_URL: Joi.optional(),
+        SITE_URL: Joi.string().default('https://mysite.com'),
         DATABASE_TYPE: Joi.string()
           .valid('sqlite', 'postgres')
           .default('sqlite'),
