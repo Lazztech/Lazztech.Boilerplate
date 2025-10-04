@@ -1,5 +1,5 @@
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/postgresql';
+import { EntityRepository } from '@mikro-orm/core';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { S3Module, S3ModuleOptions } from 'nestjs-s3';

@@ -26,7 +26,6 @@ export class AppController {
   @Render('index')
   getHello(): any {
     return {
-      isProd: this.configService.get('NODE_ENV') == 'prod',
       appName: this.configService.get('APP_NAME') as string,
       message: this.appService.getHello(),
     };

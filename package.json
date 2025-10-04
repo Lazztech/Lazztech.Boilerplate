@@ -6,13 +6,14 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build && npm run build:tailwind",
-    "build:tailwind": "tailwindcss -i ./views/assets/tailwind.css -o ./public/main.css --minify",
+    "build": "nest build && npm run tailwind",
+    "tailwind": "tailwindcss -i ./views/assets/tailwind.css -o ./public/main.css --minify",
+    "tailwind:watch": "tailwindcss -i ./views/assets/tailwind.css -o ./public/main.css --minify --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "npm run build:tailwind && nest start",
-    "start:dev": "npm run build:tailwind && nest start --watch",
-    "start:debug": "npm run build:tailwind && nest start --debug --watch",
+    "start": "npm run tailwind && nest start",
+    "start:dev": "concurrently \"nest start --watch\" \"npm run tailwind:watch\"",
+    "start:debug": "concurrently \"nest start --debug --watch\" \"npm run tailwind:watch\"",
     "start:prod": "node dist/main",
     "lighthouse": "lhci autorun",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -77,6 +78,7 @@
     "@types/jest": "^30.0.0",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "concurrently": "^9.2.1",
     "daisyui": "^4.11.1",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
@@ -110,7 +112,7 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "transformIgnorePatterns": [
-        "node_modules/(?!(uuid)/)"
+      "node_modules/(?!(uuid)/)"
     ]
   }
 }

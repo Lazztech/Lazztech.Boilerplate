@@ -11,6 +11,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
+  app.set('view cache', process.env.NODE_ENV === 'production');
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
   /** Serve htmx from node_modules
