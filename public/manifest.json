@@ -9,10 +9,10 @@
   ],
   "id": "/",
   "start_url": "/",
-  "background_color": "#3367D6",
+  "theme_color": "#222428",
+  "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",
-  "theme_color": "#3367D6",
   "shortcuts": [],
   "description": "Lazztech Boilerplate",
   "screenshots": []

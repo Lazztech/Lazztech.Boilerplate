@@ -2,10 +2,10 @@ import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityManager, EntityRepository } from '@mikro-orm/sqlite';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/dal/entity/user.entity';
+import { User } from '../dal/entity/user.entity';
 import webpush from 'web-push';
 import _ from 'lodash';
-import { UserDevice } from 'src/dal/entity/userDevice.entity';
+import { UserDevice } from '../dal/entity/userDevice.entity';
 import { PushNotificationDto } from './dto/pushNotification.dto';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class NotificationService {
     private readonly em: EntityManager,
   ) {
     webpush.setVapidDetails(
-      this.configService.get('APP_NAME') || '',
+      this.configService.get('SITE_URL') || '',
       this.configService.get<string>('PUBLIC_VAPID_KEY') || '',
       this.configService.get<string>('PRIVATE_VAPID_KEY') || '',
     );
