@@ -18,6 +18,7 @@ module.exports = {
         'uses-text-compression': 'off',
         'render-blocking-insight': 'off',
         'render-blocking-resources': 'off',
+        'forced-reflow-insight': 'warn',
       },
     },
     upload: {
