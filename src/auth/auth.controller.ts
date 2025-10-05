@@ -33,9 +33,9 @@ export class AuthController {
     };
   }
 
-  @Get('signup')
-  @Render('auth/signup')
-  getSignup(): any {
+  @Get('register')
+  @Render('auth/register')
+  getRegister(): any {
     return {
       appName: this.configService.get('APP_NAME') as string,
     };

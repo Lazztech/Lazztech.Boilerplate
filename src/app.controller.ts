@@ -39,31 +39,50 @@ export class AppController {
   @Post('message')
   async postMessages(@Body() body: any) {
     const message = body.message as string;
-    this.message$.next(`<strong>User:</strong> ${message}`);
+    this.message$.next(`
+      <div class='chat chat-end'>
+        <div class='chat-header'>
+          User
+        </div>
+        <div class='chat-bubble'>${message}</div>
+      </div>
+      `);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     this.message$.next(`
-      <p><strong>Assistant:</strong> 1</p>
-    `);
+      <div class='chat chat-start'>
+        <div class='chat-header'>
+          Assistant
+        </div>
+        <div class='chat-bubble'>1</div>
+      </div>
+      `);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     this.message$.next(`
-      <p><strong>Assistant:</strong> 2</p>
-    `);
+      <div class='chat chat-start'>
+        <div class='chat-header'>
+          Assistant
+        </div>
+        <div class='chat-bubble'>2</div>
+      </div>
+      `);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     this.message$.next(`
-      <p><strong>Assistant:</strong> 3</p>
-    `);
+      <div class='chat chat-start'>
+        <div class='chat-header'>
+          Assistant
+        </div>
+        <div class='chat-bubble'>3</div>
+      </div>
+      `);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     this.message$.next(`
-      <p><strong>Assistant:</strong> Hello World</p>
-    `);
+      <div class='chat chat-start'>
+        <div class='chat-header'>
+          Assistant
+        </div>
+        <div class='chat-bubble'>Hello World</div>
+      </div>
+      `);
     this.logger.debug(`done with ${this.postMessages.name}`);
-  }
-
-  @Get('/about')
-  @Render('about')
-  about() {
-    return {
-      appName: this.configService.get('APP_NAME'),
-    };
   }
 }
