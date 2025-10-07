@@ -2,7 +2,6 @@ import {
   Cascade,
   Collection,
   Entity,
-  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryKey,
@@ -11,8 +10,8 @@ import {
   Unique,
 } from '@mikro-orm/core';
 import { File } from './file.entity';
-import { ShareableId } from './shareableId.entity';
 import { PasswordReset } from './passwordReset.entity';
+import { ShareableId } from './shareableId.entity';
 import { UserDevice } from './userDevice.entity';
 
 @Entity()
@@ -20,44 +19,18 @@ export class User extends ShareableId {
   @PrimaryKey()
   public id!: number;
 
-  @Unique()
-  @Property({ nullable: true })
-  public username?: string;
-
   @Property({ fieldName: 'firstName', nullable: true })
   public firstName?: string;
 
   @Property({ fieldName: 'lastName', nullable: true })
   public lastName?: string;
 
-  @Property({ nullable: true })
-  public birthdate?: string;
-
-  @Property({ nullable: true })
-  public description?: string;
-
-  /**
-   * Exposed as a field resolver
-   */
-  @ManyToOne({
-    entity: () => File,
-    ref: true,
-    nullable: true,
-  })
-  public profileImage?: Ref<File>;
-
   @Unique()
   @Property({ nullable: true })
   public email?: string;
 
-  @Property({ nullable: true })
-  public phoneNumber?: string;
-
   @Property()
   public password!: string;
-
-  @Property({ nullable: true })
-  public lastOnline?: string;
 
   @OneToOne({
     entity: () => PasswordReset,

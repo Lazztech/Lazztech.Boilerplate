@@ -1,25 +1,66 @@
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../dal/entity/user.entity';
+import * as bcrypt from 'bcryptjs';
+import { ChangePassword } from './dto/changePassword.input';
+import { Payload } from './dto/payload.dto';
 
 @Injectable()
 export class AuthService {
+  private logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(User)
     private readonly userRepository: EntityRepository<User>,
     private jwtService: JwtService,
+    private readonly em: EntityManager,
   ) {}
 
-  async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.userRepository.findOne({ username });
+  async register(email: string, password: string) {
+    this.logger.debug(this.register.name);
+    const existingUser = await this.userRepository.findOne({ email });
+    if (existingUser) {
+      this.logger.debug(`User already exists with email address: ${email}`);
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = this.userRepository.create({
+      email,
+      password: hashedPassword,
+    } as User);
+    await this.em.persistAndFlush(user);
+
+    return this.jwtService.sign({ userId: user.id } as Payload);
+  }
+
+  async signIn(email: string, pass: string): Promise<any> {
+    const user = await this.userRepository.findOne({ email });
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  public async changePassword(userId: any, details: ChangePassword) {
+    this.logger.debug(this.changePassword.name);
+    const user = await this.userRepository.findOneOrFail({ id: userId });
+
+    if (await bcrypt.compare(details.oldPassword, user.password)) {
+      const newHashedPassword = await bcrypt.hash(details.newPassword, 12);
+      user.password = newHashedPassword;
+      return await this.em.persistAndFlush(user);
+    }
   }
 }

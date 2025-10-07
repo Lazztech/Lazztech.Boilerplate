@@ -19,7 +19,13 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
+  @Post('register')
+  async postRegister(
+    @Body() registerDto: Record<string, string>,
+  ): Promise<any> {
+    await this.authService.register(registerDto.email, registerDto.password);
+  }
+
   @Post('login')
   signIn(@Body() signInDto: Record<string, any>) {
     return this.authService.signIn(signInDto.username, signInDto.password);

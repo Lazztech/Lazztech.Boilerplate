@@ -1,0 +1,36 @@
+<div class='flex flex-col justify-center items-center h-full'>
+  <form hx-post='/auth/register' hx-trigger='submit'>
+    <fieldset
+      class='fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4'
+    >
+      <legend class='fieldset-legend'>Register</legend>
+
+      <label class='label'>Email</label>
+      <label class='input validator'>
+        <input name='email' type='email' placeholder='Email' required />
+      </label>
+      <div class='validator-hint hidden'>Enter valid email address</div>
+
+      <label class='label'>Password</label>
+      <label class='input validator'>
+        <input
+          name='password'
+          type='password'
+          required
+          placeholder='Password'
+          minlength='8'
+          pattern='(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}'
+          title='Must be more than 8 characters, including number, lowercase letter, uppercase letter'
+        />
+      </label>
+      <p class='validator-hint hidden'>
+        Must be more than 8 characters, including
+        <br />At least one number
+        <br />At least one lowercase letter
+        <br />At least one uppercase letter
+      </p>
+
+      <button type='submit' class='btn btn-neutral mt-4'>Register</button>
+    </fieldset>
+  </form>
+</div>

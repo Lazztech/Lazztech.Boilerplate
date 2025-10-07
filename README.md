@@ -11,13 +11,13 @@ graph TB
         D[PWA Service Worker]
         E[Web Push Notifications]
         F[Controllers]
-        
+
         A --> C
         B --> C
         D --> E
         C --> F
     end
-    
+
     subgraph "Business Logic Layer"
         G[NestJS Core]
         H[Dependency Injection Modules]
@@ -29,7 +29,7 @@ graph TB
         N[Configuration Service]
         O[Dotenv Config]
         P[Schema Validation]
-        
+
         F --> G
         G --> H
         H --> I
@@ -41,7 +41,7 @@ graph TB
         N --> O
         N --> P
     end
-    
+
     subgraph "Data Layer"
         Q[MikroORM]
         R[User Entity]
@@ -50,7 +50,7 @@ graph TB
         U[Migration System]
         V[Local Disk Storage]
         W[S3 Storage]
-        
+
         I --> Q
         K --> Q
         Q --> R
@@ -75,7 +75,7 @@ https://developer.chrome.com/docs/lighthouse/overview
 
 **It starts off from a freshly generated NestJS project which provides the following:**
 
-- Boiler plate application inspired by Spring and Angular 
+- Boiler plate application inspired by Spring and Angular
   - Module based dependency injection
   - Example controller
   - Example service
@@ -115,6 +115,7 @@ To see view a diff between what this project adds to the default NestJS project 
 ## Development Dependencies
 
 Development tools:
+
 - Brew
   - https://brew.sh/
   - postgres
@@ -159,11 +160,14 @@ $ npm run test:cov
 ```
 
 ## Postgres
+
 A local instance of postgres running in a docker container for testing against a prod DB replica.
 Pgadmin is not required, but recommend for ease of use. Alternatively the database-client VSCode extension may be used.
+
 - https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-database-client2
 
 Create database dump and import to local database
+
 ```bash
 # prepare gitignored data folder if it's not already present
 $ mkdir ./data
@@ -229,29 +233,64 @@ services:
 ```
 
 ## Migrations
-Custom scripts have been added to streamline and simplify handling migrations with two database contexts.
+
+Migrations are managed via the mikro-orm CLI.
+
+Config values are available via the following:
+
 ```bash
-# each script comes in sqlite | postgres | all variations
-# scripts ending with "all" perform the action on both databases
 # Note: due to configuration differences, run build before generating sqlite migrations!
 
-# create a migration generated from the entity schema
-$ npm run migration:generate:<sqlite|postgres|all>
+# Create a Sqlite Migration
+$ npx mikro-orm migration:create --config ./src/dal/mikro-orm.sqlite.config.ts
 
-# create a blank migration
-$ npm run migration:create:<sqlite|postgres|all>
+# Create a Postgresql Migration
+$ npx mikro-orm migration:create --config .src/dal/mikro-orm.postgres.config.ts
+```
 
-# apply migrations
-$ npm run migration:up:<sqlite|postgres|all>
+```bash
+$ npx mikro-orm
+Usage: mikro-orm <command> [options]
 
-# revert most recently applied migration
-$ npm run migration:down:<sqlite|postgres|all>
+Commands:
+  mikro-orm cache:clear             Clear metadata cache
+  mikro-orm cache:generate          Generate metadata cache
+  mikro-orm generate-entities       Generate entities based on current database
+                                    schema
+  mikro-orm database:create         Create your database if it does not exist
+  mikro-orm database:import <file>  Imports the SQL file to the database
+  mikro-orm seeder:run              Seed the database using the seeder class
+  mikro-orm seeder:create <seeder>  Create a new seeder class
+  mikro-orm schema:create           Create database schema based on current
+                                    metadata
+  mikro-orm schema:drop             Drop database schema based on current
+                                    metadata
+  mikro-orm schema:update           Update database schema based on current
+                                    metadata
+  mikro-orm schema:fresh            Drop and recreate database schema based on
+                                    current metadata
+  mikro-orm migration:create        Create new migration with current schema
+                                    diff
+  mikro-orm migration:up            Migrate up to the latest version
+  mikro-orm migration:down          Migrate one step down
+  mikro-orm migration:list          List all executed migrations
+  mikro-orm migration:check         Check if migrations are needed. Useful for
+                                    bash scripts.
+  mikro-orm migration:pending       List all pending migrations
+  mikro-orm migration:fresh         Clear the database and rerun all migrations
+  mikro-orm debug                   Debug CLI configuration
 
-# lists pending queries to executed based on the entity schema
-$ npm run migration:log:all
+Options:
+      --config                  Set path to the ORM configuration file   [array]
+      --contextName, --context  Set name of config to load out of the ORM
+                                configuration file. Used when config file
+                                exports an array or a function
+                                                   [string] [default: "default"]
+  -v, --version                 Show version number                    [boolean]
+  -h, --help                    Show help                              [boolean]
 
-# displays what migrations have been applied to the databases
-$ npm run migration:show:all
+Examples:
+  mikro-orm schema:update --run  Runs schema synchronization
 ```
 
 ## Web Push Notifications
@@ -261,7 +300,6 @@ $ npm run migration:show:all
 $ npx web-push generate-vapid-keys
 ```
 
-
 ## Scripts
 
 ```bash
@@ -269,26 +307,27 @@ $ npx web-push generate-vapid-keys
 # note: the buildTagAndPushDocker.sh uses docker buildx for m1 support to cross compile to x86
 $ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/deployToDev.sh && ./scripts/deployToStage.sh
 ```
+
 ## Configuration
 
-| Parameter | Function | Optional | Example |
-| ----------- | ----------- | ----------- | ----------- |
-| APP_NAME | Used when sending emails to call out the name of the service | ❌ | Lazztech Boilerplate |
-| ACCESS_TOKEN_SECRET | Used for jwt tokens | ⚠️ change for production | ChangeMe! |
-| SITE_URL | Used for PWA icon URL | ⚠️ change for production | https://mysite.com |
-| PUBLIC_VAPID_KEY | Used for web push notifications | ⚠️ change for production |
-| PRIVATE_VAPID_KEY | Used for web push notifications | ⚠️ change for production |
-| DATABASE_TYPE | Used for selecting sqlite or postgres | Defaults to sqlite ✅ | 'sqlite' or 'postgres' |
-| DATABASE_HOST | Used for connecting to database | Optional depending on database type ✅ |
-| DATABASE_PORT | Used for connecting to database | Optional depending on database type ✅ |
-| DATABASE_USER | Used for connecting to database | Optional depending on database type ✅ |
-| DATABASE_PASS | Used for connecting to database | Optional depending on database type ✅ |
-| DATABASE_SCHEMA | Used for connecting to database | Optional depending on database type ✅ |
-| DATABASE_SSL | To configure whether to use SSL for database | Optional depending on database type ✅ |
-| FILE_STORAGE_TYPE | For selecting local or S3 compatible storage configuration | Defaults to local ✅ | Select 'local' or 'object' |
-| OBJECT_STORAGE_ACCESS_KEY_ID | Used for S3 compatible object file storage | Optional depending on file storage type ✅ |
-| OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage | Optional depending on file storage type ✅ |
-| OBJECT_STORAGE_ENDPOINT | Used for S3 compatible object file storage | Optional depending on file storage type ✅ |
+| Parameter                        | Function                                                     | Optional                                   | Example                    |
+| -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------- |
+| APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate       |
+| ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                  |
+| SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com         |
+| PUBLIC_VAPID_KEY                 | Used for web push notifications                              | ⚠️ change for production                   |
+| PRIVATE_VAPID_KEY                | Used for web push notifications                              | ⚠️ change for production                   |
+| DATABASE_TYPE                    | Used for selecting sqlite or postgres                        | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'     |
+| DATABASE_HOST                    | Used for connecting to database                              | Optional depending on database type ✅     |
+| DATABASE_PORT                    | Used for connecting to database                              | Optional depending on database type ✅     |
+| DATABASE_USER                    | Used for connecting to database                              | Optional depending on database type ✅     |
+| DATABASE_PASS                    | Used for connecting to database                              | Optional depending on database type ✅     |
+| DATABASE_SCHEMA                  | Used for connecting to database                              | Optional depending on database type ✅     |
+| DATABASE_SSL                     | To configure whether to use SSL for database                 | Optional depending on database type ✅     |
+| FILE_STORAGE_TYPE                | For selecting local or S3 compatible storage configuration   | Defaults to local ✅                       | Select 'local' or 'object' |
+| OBJECT_STORAGE_ACCESS_KEY_ID     | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 
 ## Quirks
 

@@ -1,15 +1,16 @@
-import { Logger, Module } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { MikroOrmModule, MikroOrmModuleOptions } from '@mikro-orm/nestjs';
-import { Connection, IDatabaseDriver } from '@mikro-orm/core';
+import { Connection, IDatabaseDriver, MikroORM } from '@mikro-orm/core';
 import * as path from 'path';
-import { SqliteDriver } from '@mikro-orm/sqlite';
-import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { AuthModule } from './auth/auth.module';
 import { NotificationModule } from './notification/notification.module';
+import { Migrator } from '@mikro-orm/migrations';
+import postgresMikroOrmConfig from './dal/mikro-orm.postgres.config';
+import sqliteMikroOrmConfig from './dal/mikro-orm.sqlite.config';
 
 @Module({
   imports: [
@@ -101,9 +102,9 @@ import { NotificationModule } from './notification/notification.module';
           migrations: {
             pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
             transactional: true,
-            disableForeignKeys: false,
           },
-          entities: [__dirname + '/dal/entity/**/*.*.*'],
+          extensions: [Migrator],
+          autoLoadEntities: true,
         } as MikroOrmModuleOptions<IDatabaseDriver<Connection>>;
         switch (configService.get('DATABASE_TYPE', 'sqlite')) {
           case 'sqlite':
@@ -118,11 +119,7 @@ import { NotificationModule } from './notification/notification.module';
             );
             return {
               ...commonSettings,
-              migrations: {
-                ...commonSettings.migrations,
-                path: __dirname + '/dal/migrations/sqlite/',
-              },
-              driver: SqliteDriver,
+              ...sqliteMikroOrmConfig,
               baseDir: __dirname,
               dbName: configService.get(
                 'DATABASE_SCHEMA',
@@ -138,11 +135,7 @@ import { NotificationModule } from './notification/notification.module';
             );
             return {
               ...commonSettings,
-              migrations: {
-                ...commonSettings.migrations,
-                path: __dirname + '/dal/migrations/postgres/',
-              },
-              driver: PostgreSqlDriver,
+              ...postgresMikroOrmConfig,
               dbName: configService.get('DATABASE_SCHEMA', 'postgres'),
               host: configService.get('DATABASE_HOST', 'localhost'),
               port: configService.get<number>('DATABASE_PORT', 5432),
@@ -171,6 +164,12 @@ import { NotificationModule } from './notification/notification.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
+export class AppModule implements OnModuleInit {
   public static logger = new Logger(AppModule.name);
+
+  constructor(private readonly orm: MikroORM) {}
+
+  async onModuleInit(): Promise<void> {
+    await this.orm.getMigrator().up();
+  }
 }

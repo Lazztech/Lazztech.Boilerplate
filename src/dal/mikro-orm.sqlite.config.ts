@@ -1,7 +1,11 @@
-const mikroOrmSqliteConfig = {
-  type: 'sqlite',
-  contextName: 'sqliteConfig',
+import { Options } from '@mikro-orm/core';
+import { Migrator } from '@mikro-orm/migrations';
+import { SqliteDriver } from '@mikro-orm/sqlite';
+
+export default {
   name: 'sqlite',
+  driver: SqliteDriver,
+  extensions: [Migrator],
   dbName: './data/sqlite3.db',
   entities: ['./src/dal/entity/**/*.*.*'],
   entitiesTs: ['./dist/dal/entity/**/*.*.*'],
@@ -9,9 +13,6 @@ const mikroOrmSqliteConfig = {
     path: './dist/dal/migrations/sqlite',
     pathTs: './src/dal/migrations/sqlite',
     transactional: true,
-    snapshot: false // see https://github.com/mikro-orm/mikro-orm/issues/2710
   },
   debug: true,
-};
-
-module.exports = mikroOrmSqliteConfig;
+} as Options;
