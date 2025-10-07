@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
-import { EntityRepository } from '@mikro-orm/core';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { JwtModule } from '@nestjs/jwt';
 
 describe('AuthService', () => {
@@ -20,6 +20,14 @@ describe('AuthService', () => {
         {
           provide: getRepositoryToken(User),
           useClass: EntityRepository,
+        },
+        {
+          provide: EntityManager,
+          useValue: {
+            query: jest.fn(),
+            // you can mock other functions inside
+            // the entity manager object, my case only needed query method
+          },
         },
       ],
     }).compile();
