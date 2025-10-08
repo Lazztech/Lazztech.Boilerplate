@@ -1,44 +1,42 @@
-<html lang='en'>
-
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <meta charset='UTF-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {{! https://developer.chrome.com/docs/lighthouse/seo/meta-description }}
-    <meta name='description' content='Put your description here.' />
+    <meta name="description" content="Put your description here." />
     <title>{{appName}}</title>
-    {{! Used inconjunction with service worker sw.js to enable PWA (Progressive Web App) functionality. }}
-    <link rel='manifest' href='/manifest.json' />
-    {{! Served htmx from node_modules, look to main.ts to see how this is performed.
-    https://htmx.org/docs/#installing
+    {{! Used inconjunction with service worker sw.js to enable PWA (Progressive
+    Web App) functionality. }}
+    <link rel="manifest" href="/manifest.json" />
+    {{! Served htmx from node_modules, look to main.ts to see how this is
+    performed. https://htmx.org/docs/#installing
     https://blog.wesleyac.com/posts/why-not-javascript-cdn }}
-    <script src='/htmx/htmx.min.js'></script>
-    <script src='/htmx/sse.js'></script>
+    <script src="/htmx/htmx.min.js"></script>
+    <script src="/htmx/sse.js"></script>
     {{! Include the build output from TailwindCSS and DaisyUI }}
-    <link href='/main.css' rel='stylesheet' />
+    <link href="/main.css" rel="stylesheet" />
   </head>
 
-  {{! 
-    hx-boost 'automagically' replaces all anchor tags with htmx logic that swaps out the body of the html with the response.
-    This results in a smoother user experience where the body gets swapped out without a full page reload similar to a PWA.
-    https://htmx.org/attributes/hx-boost/ 
-    https://htmx.org/quirks/#some-people-don-t-like-hx-boost
-  }}
-  <body hx-boost='true' hx-ext='sse' class='h-screen flex flex-col'>
-    {{! 
-        Caution: Triple brackets in handlebarsjs disables auto-escaping and may pose a XSS risk with HTMX.
-        However the exception to this rule is when loading hbs rendered content which is pre-santized
-        by the handlebars templatinng engine as it get's rendered.
-        https://handlebarsjs.com/guide/expressions.html#literal-segments
-        https://htmx.org/essays/web-security-basics-with-htmx/ 
-    }}
-    {{{body}}}
+  {{! hx-boost 'automagically' replaces all anchor tags with htmx logic that
+  swaps out the body of the html with the response. This results in a smoother
+  user experience where the body gets swapped out without a full page reload
+  similar to a PWA. https://htmx.org/attributes/hx-boost/
+  https://htmx.org/quirks/#some-people-don-t-like-hx-boost }}
+  <body hx-boost="true" hx-ext="sse" class="h-screen flex flex-col">
+    {{! Caution: Triple brackets in handlebarsjs disables auto-escaping and may
+    pose a XSS risk with HTMX. However the exception to this rule is when
+    loading hbs rendered content which is pre-santized by the handlebars
+    templatinng engine as it get's rendered.
+    https://handlebarsjs.com/guide/expressions.html#literal-segments
+    https://htmx.org/essays/web-security-basics-with-htmx/ }} {{{body}}}
   </body>
 
-  {{! The service worker is used in conjunction with the manifest.json to
-    enable PWA (Progressive Web App) functionality. }}
+  {{! The service worker is used in conjunction with the manifest.json to enable
+  PWA (Progressive Web App) functionality. }}
   <script>
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register("/sw.js"); }
+      navigator.serviceWorker.register('/sw.js');
+    }
   </script>
-
 </html>
