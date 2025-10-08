@@ -24,9 +24,6 @@ async function bootstrap() {
     prefix: '/htmx/',
   });
 
-  // Starts listening for shutdown hooks https://mikro-orm.io/docs/usage-with-nestjs#app-shutdown-and-cleanup
-  app.enableShutdownHooks();
-
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

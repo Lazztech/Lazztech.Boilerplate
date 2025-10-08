@@ -1,47 +1,37 @@
-<!doctype html>
-<html lang="en">
+<html lang='en'>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{!-- https://developer.chrome.com/docs/lighthouse/seo/meta-description --}}
-    <meta name="description" content="Put your description here.">
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    {{! https://developer.chrome.com/docs/lighthouse/seo/meta-description }}
+    <meta name='description' content='Put your description here.' />
     <title>{{appName}}</title>
-    {{!-- Used inconjunction with service worker sw.js to enable PWA (Progressive Web App) functionality. --}}
-    <link rel="manifest" href="/manifest.json" />
-    {{!-- Served htmx from node_modules, look to main.ts to see how this is performed.
+    {{! Used inconjunction with service worker sw.js to enable PWA (Progressive Web App) functionality. }}
+    <link rel='manifest' href='/manifest.json' />
+    {{! Served htmx from node_modules, look to main.ts to see how this is performed.
     https://htmx.org/docs/#installing
-    https://blog.wesleyac.com/posts/why-not-javascript-cdn --}}
-    <script src="/htmx/htmx.min.js"></script>
-    <script src="/htmx/sse.js"></script>
-    {{!-- Include the build output from TailwindCSS and DaisyUI --}}
-    <link href="/main.css" rel="stylesheet">
-</head>
+    https://blog.wesleyac.com/posts/why-not-javascript-cdn }}
+    <script src='/htmx/htmx.min.js'></script>
+    <script src='/htmx/sse.js'></script>
+    {{! Include the build output from TailwindCSS and DaisyUI }}
+    <link href='/main.css' rel='stylesheet' />
+  </head>
 
-<body hx-boost='true' hx-ext="sse" class="h-screen flex flex-col">
-    {{!-- Load navbar partial --}}
-    {{>navbar}}
-    {{!-- 
+  <body hx-ext='sse' class='h-screen flex flex-col'>
+    {{! 
         Caution: Triple brackets in handlebarsjs disables auto-escaping and may pose a XSS risk with HTMX.
         However the exception to this rule is when loading hbs rendered content which is pre-santized
         by the handlebars templatinng engine as it get's rendered.
         https://handlebarsjs.com/guide/expressions.html#literal-segments
         https://htmx.org/essays/web-security-basics-with-htmx/ 
-    --}}
+    }}
     {{{body}}}
-    <div class="dock">     
-        <button class="dock-active">
-            <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><polyline points="1 11 12 2 23 11" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="2"></polyline><path d="m5,13v7c0,1.105.895,2,2,2h10c1.105,0,2-.895,2-2v-7" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><line x1="12" y1="22" x2="12" y2="18" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></line></g></svg>
-            <span class="dock-label">Home</span>
-        </button>
-    </div>
-</body>
+  </body>
 
-<script>
-    // The service worker is used in conjunction with the manifest.json to enable PWA (Progressive Web App) functionality.
-    if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register("/sw.js");
-    }
-</script>
+  <script>
+    // The service worker is used in conjunction with the manifest.json to
+    enable PWA (Progressive Web App) functionality. if ('serviceWorker' in
+    navigator) { navigator.serviceWorker.register("/sw.js"); }
+  </script>
 
 </html>
