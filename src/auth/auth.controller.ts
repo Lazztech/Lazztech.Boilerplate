@@ -2,9 +2,8 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
+  Redirect,
   Render,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +18,7 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Redirect('/')
   @Post('register')
   async postRegister(
     @Body() registerDto: Record<string, string>,

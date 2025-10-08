@@ -11,6 +11,7 @@ export abstract class ShareableId {
     this.shareableId = uuid();
   }
 
+  // Indended to be used to indicate that it's been reported
   @Property({ nullable: true })
   public flagged?: boolean;
 

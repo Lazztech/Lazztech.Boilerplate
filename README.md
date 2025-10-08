@@ -116,9 +116,6 @@ To see view a diff between what this project adds to the default NestJS project 
 
 Development tools:
 
-- Brew
-  - https://brew.sh/
-  - postgres
 - Docker
 - Node version manager
   - https://github.com/nvm-sh/nvm
