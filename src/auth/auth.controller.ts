@@ -5,11 +5,15 @@ import {
   Post,
   Redirect,
   Render,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
+import { type Response } from 'express';
+import { User } from './user.decorator';
+import { Payload } from './dto/payload.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,17 +22,33 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
-  @Redirect('/')
+  @Redirect('/auth/profile')
   @Post('register')
   async postRegister(
     @Body() registerDto: Record<string, string>,
+    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.com/techniques/cookies#use-with-express-default
   ): Promise<any> {
-    await this.authService.register(registerDto.email, registerDto.password);
+    const jwt = await this.authService.register(
+      registerDto.email,
+      registerDto.password,
+    );
+    response.cookie('access_token', jwt);
   }
 
+  @Redirect('/auth/profile')
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  postLogin(
+    @Body() signInDto: Record<string, any>,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const jwt = this.authService.signIn(signInDto.username, signInDto.password);
+    response.cookie('access_token', jwt);
+  }
+
+  @Redirect('/')
+  @Get('logout')
+  getLogout(@Res({ passthrough: true }) response: Response) {
+    response.cookie('access_token', undefined);
   }
 
   @Get('login')
@@ -50,9 +70,11 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
-  getProfile(): any {
+  getProfile(@User() user: Payload): any {
+    console.log(user);
     return {
       appName: this.configService.get('APP_NAME') as string,
+      user,
     };
   }
 }

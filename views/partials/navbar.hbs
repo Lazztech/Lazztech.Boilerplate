@@ -4,8 +4,13 @@
   </div>
   <div class="flex-none">
     <ul class="menu menu-horizontal px-1">
+      {{#if user}}
+      <li><a href="/auth/logout">logout</a></li>
+      <li><a href="/auth/profile">{{user.email}}</a></li>
+      {{else}}
       <li><a href="/auth/register">register</a></li>
       <li><a href="/auth/login">login</a></li>
+      {{/if}}
     </ul>
   </div>
 </div>

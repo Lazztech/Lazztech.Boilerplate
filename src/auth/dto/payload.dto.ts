@@ -1,3 +1,4 @@
 export class Payload {
-  userId: any;
+  userId?: any;
+  email?: any;
 }

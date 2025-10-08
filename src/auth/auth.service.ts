@@ -24,7 +24,7 @@ export class AuthService {
     private readonly em: EntityManager,
   ) {}
 
-  async register(email: string, password: string) {
+  async register(email: string, password: string): Promise<string> {
     this.logger.debug(this.register.name);
     const existingUser = await this.userRepository.findOne({ email });
     if (existingUser) {
@@ -39,18 +39,21 @@ export class AuthService {
     } as User);
     await this.em.persistAndFlush(user);
 
-    return this.jwtService.sign({ userId: user.id } as Payload);
+    return this.jwtService.signAsync({
+      userId: user.id,
+      email: user.email,
+    } as Payload);
   }
 
-  async signIn(email: string, pass: string): Promise<any> {
+  async signIn(email: string, pass: string): Promise<string> {
     const user = await this.userRepository.findOne({ email });
     if (user?.password !== pass) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    return this.jwtService.signAsync({
+      userId: user.id,
+      email: user.email,
+    } as Payload);
   }
 
   public async changePassword(userId: any, details: ChangePassword) {

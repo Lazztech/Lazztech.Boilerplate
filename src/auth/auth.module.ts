@@ -14,7 +14,7 @@ import { PasswordReset } from '../dal/entity/passwordReset.entity';
       useFactory: (configService: ConfigService) => ({
         global: true,
         secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
-        signOptions: { expiresIn: '60s' },
+        signOptions: { expiresIn: '7d' },
       }),
     }),
     MikroOrmModule.forFeature([PasswordReset, User]),

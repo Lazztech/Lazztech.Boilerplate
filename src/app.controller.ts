@@ -10,6 +10,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Subject } from 'rxjs';
 import { AppService } from './app.service';
+import { User } from './auth/user.decorator';
+import { Payload } from './auth/dto/payload.dto';
 
 @Controller()
 export class AppController {
@@ -24,11 +26,12 @@ export class AppController {
 
   @Get()
   @Render('index')
-  getHello(): any {
+  getHello(@User() user: Payload): any {
     return {
       appName: this.configService.get('APP_NAME') as string,
       message: this.appService.getHello(),
       isRootPath: true,
+      email: user?.email,
     };
   }
 
