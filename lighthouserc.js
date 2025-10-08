@@ -19,6 +19,7 @@ module.exports = {
         'render-blocking-insight': 'off',
         'render-blocking-resources': 'off',
         'forced-reflow-insight': 'warn',
+        'document-latency-insight': 'warn',
       },
     },
     upload: {
