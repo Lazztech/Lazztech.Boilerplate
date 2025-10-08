@@ -16,7 +16,7 @@ import path from 'path';
         const commonSettings = {
           logger: (message) => console.log(message),
           allowGlobalContext: true,
-          debug: configService.get('NODE_ENV') == 'development' ? true : false,
+          debug: configService.get('NODE_ENV') == 'development',
           migrations: {
             pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
             transactional: true,
@@ -24,17 +24,9 @@ import path from 'path';
           extensions: [Migrator],
           autoLoadEntities: true,
         } as MikroOrmModuleOptions<IDatabaseDriver<Connection>>;
+
         switch (configService.get('DATABASE_TYPE', 'sqlite')) {
           case 'sqlite':
-            DalModule.logger.log(
-              `Using sqlite db: ${path.join(
-                process.cwd(),
-                configService.get(
-                  'DATABASE_SCHEMA',
-                  path.join('data', 'sqlite3.db'),
-                ),
-              )}`,
-            );
             return {
               ...commonSettings,
               ...sqliteMikroOrmConfig,
@@ -45,12 +37,6 @@ import path from 'path';
               ),
             } as MikroOrmModuleOptions<IDatabaseDriver<Connection>>;
           case 'postgres':
-            DalModule.logger.log(
-              `Using postgres db: ${configService.get(
-                'DATABASE_SCHEMA',
-                'postgres',
-              )}, host: ${configService.get('DATABASE_HOST', 'localhost')}`,
-            );
             return {
               ...commonSettings,
               ...postgresMikroOrmConfig,
@@ -79,5 +65,29 @@ import path from 'path';
   ],
 })
 export class DalModule {
-  public static logger = new Logger(DalModule.name);
+  private logger = new Logger(DalModule.name);
+
+  constructor(private configService: ConfigService) {
+    switch (configService.get('DATABASE_TYPE', 'sqlite')) {
+      case 'sqlite':
+        this.logger.log(
+          `Using sqlite db: ${path.join(
+            process.cwd(),
+            configService.get(
+              'DATABASE_SCHEMA',
+              path.join('data', 'sqlite3.db'),
+            ),
+          )}`,
+        );
+        break;
+      case 'postgres':
+        this.logger.log(
+          `Using postgres db: ${this.configService.get(
+            'DATABASE_SCHEMA',
+            'postgres',
+          )}, host: ${configService.get('DATABASE_HOST', 'localhost')}`,
+        );
+        break;
+    }
+  }
 }
