@@ -300,9 +300,8 @@ $ npx web-push generate-vapid-keys
 ## Scripts
 
 ```bash
-# test, build & push container, deploy dev and deploy stage
-# note: the buildTagAndPushDocker.sh uses docker buildx for m1 support to cross compile to x86
-$ ./scripts/preCommit.sh && ./scripts/buildTagAndPushDocker.sh && ./scripts/deployToDev.sh && ./scripts/deployToStage.sh
+# Helper script to run the primary pipeline steps locally before commiting
+$ ./scripts/preCommit.sh
 ```
 
 ## Configuration
