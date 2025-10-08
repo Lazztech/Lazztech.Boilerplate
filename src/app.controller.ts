@@ -28,6 +28,7 @@ export class AppController {
     return {
       appName: this.configService.get('APP_NAME') as string,
       message: this.appService.getHello(),
+      isRootPath: true,
     };
   }
 
