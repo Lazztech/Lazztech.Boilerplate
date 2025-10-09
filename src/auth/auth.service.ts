@@ -45,9 +45,10 @@ export class AuthService {
     } as Payload);
   }
 
-  async signIn(email: string, pass: string): Promise<string> {
-    const user = await this.userRepository.findOne({ email });
-    if (user?.password !== pass) {
+  async signIn(email: string, password: string): Promise<string> {
+    const user = await this.userRepository.findOneOrFail({ email });
+    const valid = await bcrypt.compare(password, user?.password);
+    if (!valid) {
       throw new UnauthorizedException();
     }
     return this.jwtService.signAsync({

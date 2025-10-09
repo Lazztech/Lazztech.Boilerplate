@@ -37,11 +37,14 @@ export class AuthController {
 
   @Redirect('/auth/profile')
   @Post('login')
-  postLogin(
+  async postLogin(
     @Body() signInDto: Record<string, any>,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const jwt = this.authService.signIn(signInDto.username, signInDto.password);
+    const jwt = await this.authService.signIn(
+      signInDto.email,
+      signInDto.password,
+    );
     response.cookie('access_token', jwt);
   }
 
