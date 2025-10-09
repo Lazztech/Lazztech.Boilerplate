@@ -50,8 +50,8 @@ import path from 'path';
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
-                path: './src/dal/migrations/sqlite',
-                pathTs: './dist/dal/migrations/sqlite',
+                path: './src/dal/migrations/postgres',
+                pathTs: './dist/dal/migrations/postgres',
                 transactional: true,
               },
               driverOptions: {
