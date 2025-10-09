@@ -25,7 +25,6 @@ import path from 'path';
               ),
               entities: ['./dist/dal/entity'],
               entitiesTs: ['./src/dal/entity'],
-              // optionally you can override the base directory (defaults to `process.cwd()`)
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
@@ -46,6 +45,15 @@ import path from 'path';
               port: configService.get<number>('DATABASE_PORT', 5432),
               user: configService.get('DATABASE_USER', 'postgres'),
               password: configService.get('DATABASE_PASS', 'postgres'),
+              entities: ['./dist/dal/entity'],
+              entitiesTs: ['./src/dal/entity'],
+              extensions: [Migrator],
+              migrations: {
+                pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
+                path: './src/dal/migrations/sqlite',
+                pathTs: './dist/dal/migrations/sqlite',
+                transactional: true,
+              },
               driverOptions: {
                 connection: {
                   ssl: configService.get('DATABASE_SSL')
