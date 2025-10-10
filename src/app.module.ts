@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { DalModule } from './dal/dal.module';
 import { NotificationModule } from './notification/notification.module';
 import { FileModule } from './file/file.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -92,6 +93,7 @@ import { FileModule } from './file/file.module';
     DalModule,
     AuthModule,
     FileModule,
+    EmailModule,
     NotificationModule,
   ],
   controllers: [AppController],
