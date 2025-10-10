@@ -74,7 +74,6 @@ export class AuthController {
   @Get('profile')
   @Render('auth/profile')
   getProfile(@User() user: Payload): any {
-    console.log(user);
     return {
       appName: this.configService.get('APP_NAME') as string,
       user,
