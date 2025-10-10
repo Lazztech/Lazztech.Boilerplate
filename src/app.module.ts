@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { DalModule } from './dal/dal.module';
 import { NotificationModule } from './notification/notification.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { NotificationModule } from './notification/notification.module';
     }),
     DalModule,
     AuthModule,
+    FileModule,
     NotificationModule,
   ],
   controllers: [AppController],
