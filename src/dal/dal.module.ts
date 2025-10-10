@@ -73,6 +73,10 @@ import path from 'path';
             );
         }
       },
+      // "feat: add driver option to get around issues with useFactory and inject #204"
+      // https://github.com/mikro-orm/nestjs/pull/204
+      driver:
+        process.env.DATABASE_TYPE == 'sqlite' ? SqliteDriver : PostgreSqlDriver,
     }),
   ],
 })
