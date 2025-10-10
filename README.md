@@ -239,10 +239,10 @@ Config values are available via the following:
 # Note: due to configuration differences, run build before generating sqlite migrations!
 
 # Create a Sqlite Migration
-$ npx mikro-orm migration:create --config ./src/dal/mikro-orm.sqlite.cli-config.ts
+$ npx mikro-orm migration:create --config mikro-orm.sqlite.cli-config.ts
 
 # Create a Postgresql Migration
-$ npx mikro-orm migration:create --config .src/dal/mikro-orm.postgres.cli-config.ts
+$ npx mikro-orm migration:create --config mikro-orm.postgres.cli-config.ts
 ```
 
 ```bash
