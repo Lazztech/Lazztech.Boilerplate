@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { AppModule } from './app.module';
-import { join } from 'path';
-import hbs from 'hbs';
 import cookieParser from 'cookie-parser';
+import hbs from 'hbs';
+import { join } from 'path';
+import { AppModule } from './app.module';
+import { ValidationError } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -14,6 +15,17 @@ async function bootstrap() {
   app.setViewEngine('hbs');
   app.set('view cache', process.env.NODE_ENV === 'production');
   hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+  hbs.registerHelper(
+    'filterErrors',
+    function (errors: ValidationError[], property) {
+      return errors
+        ?.filter((error) => error.property === property)
+        .flatMap((e) => Object.values(e.constraints || {}));
+    },
+  );
+  hbs.registerHelper('json', function (context) {
+    return JSON.stringify(context);
+  });
 
   /** Serve htmx from node_modules
    * https://htmx.org/docs/#installing

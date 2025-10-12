@@ -4,32 +4,54 @@
   <form hx-post="/auth/register" hx-trigger="submit" hx-target="body">
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+      hx-post="/auth/validate/register"
+      hx-trigger="change, keyup delay:200ms"
+      hx-include="input"
+      hx-target="body"
     >
       <legend class="fieldset-legend">Register</legend>
 
       <label class="label">Email</label>
-      <label class="input validator">
-        <input name="email" type="email" placeholder="Email" required />
+      <label class="input {{#if (filterErrors errors "email")}}input-error{{/if}}">
+        <input
+          name="email"
+          type="email"
+          value="{{input.email}}"
+          placeholder="Email"
+          required
+        />
       </label>
-      <div class="validator-hint hidden">Enter valid email address</div>
+      {{#each (filterErrors errors "email")}}
+      <p class="error">{{this}}</p>
+      {{/each}}
 
       <label class="label">Password</label>
-      <label class="input validator">
+      <label class="input {{#if (filterErrors errors "password")}}input-error{{/if}}">
         <input
           name="password"
           type="password"
+          value="{{input.password}}"
           required
           placeholder="Password"
-          minlength="8"
-          pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-          title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
         />
       </label>
-      <p class="validator-hint hidden">
-        Must be more than 8 characters, including
-        <br />At least one number <br />At least one lowercase letter <br />At
-        least one uppercase letter
-      </p>
+      {{#each (filterErrors errors "password")}}
+      <p class="error">{{this}}</p>
+      {{/each}}
+
+      <label class="label">Confirm Password</label>
+      <label class="input {{#if (filterErrors errors "confirmPassword")}}input-error{{/if}}">
+        <input
+          name="confirmPassword"
+          type="password"
+          value="{{input.confirmPassword}}"
+          required
+          placeholder="Password"
+        />
+      </label>
+      {{#each (filterErrors errors "confirmPassword")}}
+      <p class="error">{{this}}</p>
+      {{/each}}
 
       <button type="submit" class="btn btn-neutral mt-4">Register</button>
     </fieldset>
