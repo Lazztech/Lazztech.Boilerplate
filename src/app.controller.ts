@@ -28,7 +28,6 @@ export class AppController {
   @Render('index')
   getHello(@User() user: Payload): any {
     return {
-      appName: this.configService.get('APP_NAME') as string,
       message: this.appService.getHello(),
       isRootPath: true,
       email: user?.email,

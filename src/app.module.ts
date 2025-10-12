@@ -1,5 +1,11 @@
 import { MikroORM } from '@mikro-orm/core';
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import {
+  Logger,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 import * as path from 'path';
@@ -10,6 +16,7 @@ import { DalModule } from './dal/dal.module';
 import { NotificationModule } from './notification/notification.module';
 import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
+import { ViewContextMiddleware } from './middleware/view-context.middleware';
 
 @Module({
   imports: [
@@ -99,12 +106,16 @@ import { EmailModule } from './email/email.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule implements OnModuleInit {
+export class AppModule implements OnModuleInit, NestModule {
   public static logger = new Logger(AppModule.name);
 
   constructor(private readonly orm: MikroORM) {}
 
   async onModuleInit(): Promise<void> {
     await this.orm.getMigrator().up();
+  }
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(ViewContextMiddleware).forRoutes('*');
   }
 }

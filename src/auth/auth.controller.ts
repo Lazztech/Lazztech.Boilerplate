@@ -39,7 +39,6 @@ export class AuthController {
   @Post('validate/register')
   async getRegisterValidate(@Body() body: RegisterDto) {
     return {
-      appName: this.configService.get('APP_NAME') as string,
       input: body,
       errors: await transformAndValidate(RegisterDto, body).catch((e) => e),
     };
@@ -66,26 +65,17 @@ export class AuthController {
 
   @Get('login')
   @Render('auth/login')
-  getLogin(): any {
-    return {
-      appName: this.configService.get('APP_NAME') as string,
-    };
-  }
+  getLogin(): any {}
 
   @Get('register')
   @Render('auth/register')
-  getRegister(): any {
-    return {
-      appName: this.configService.get('APP_NAME') as string,
-    };
-  }
+  getRegister(): any {}
 
   @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
   getProfile(@User() user: Payload): any {
     return {
-      appName: this.configService.get('APP_NAME') as string,
       user,
     };
   }
