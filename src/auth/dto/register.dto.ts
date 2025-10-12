@@ -1,11 +1,11 @@
 import {
   IsEmail,
   IsNotEmpty,
-  MinLength,
-  Matches,
   IsString,
-  ValidateIf,
+  Matches,
+  MinLength,
 } from 'class-validator';
+import { Match } from '../match.decorator';
 
 export class RegisterDto {
   @IsString()
@@ -22,15 +22,6 @@ export class RegisterDto {
   })
   password: string;
 
-  @IsString()
-  @IsNotEmpty({ message: 'Password confirmation is required' })
-  @MinLength(8, { message: 'Password must be at least 8 characters long' })
-  @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, {
-    message:
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number',
-  })
-  @ValidateIf((o: RegisterDto) => o.password !== o.confirmPassword, {
-    message: 'Passwords must match',
-  })
+  @Match('password', { message: 'Passwords must match' })
   confirmPassword: string;
 }
