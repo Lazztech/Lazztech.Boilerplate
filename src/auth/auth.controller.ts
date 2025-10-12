@@ -37,7 +37,6 @@ export class AuthController {
     try {
       await transformAndValidate(RegisterDto, body);
     } catch (validationErrors) {
-      console.log(validationErrors);
       return {
         input: body,
         validationErrors,
