@@ -325,7 +325,31 @@ $ ./scripts/preCommit.sh
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 
-## Quirks
+## To Do
+
+- [x] Serve htmx etc locally not via CDN Wesley Aptekar-Cassels | Reasons to avoid Javascript CDNs
+- [x] Comment code and add links where relevant
+- [x] Setup nav and htmx boost
+- [x] Update tests to pass
+- [x] Add n-tier architecture mermaidjs diagram
+- [x] Cache htmx and tailwind css in PWA service worker
+- [x] Add PWA offline page
+- [x] Move root ‘assets’ folder to a more logical place so the root directory isn’t cluttered
+- [x] Ensure the hbs tags auto terminate for htmx security and if need be comment the related documentation
+- [x] Add google lighthouse score
+- [x] Add PWA icons
+- [x] Add favicon
+- [x] Add PWA install prompt
+- [x] Add readme note about auto nvm use command set up.
+- [x] Fix hanging pipeline e2e step
+- [x] Setup profile, login, and registration pages
+- [x] Server side based validation
+- [ ] Add global view state for appName and user
+- [ ] Add MermaidJS ER diagram to README for boilerplate entities
+- [ ] Add email support for password reset
+- [ ] Setup UI for web and mobile
+- [ ] Setup web push
+- [ ] Review if I should be importing modules in the nests unit tests
 
 ## Stay in touch
 

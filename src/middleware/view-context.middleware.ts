@@ -19,7 +19,7 @@ export class ViewContextMiddleware implements NestMiddleware {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
       });
-      // Asign payload to gloabal view state
+      // Assign payload to gloabal view state
       res.locals.user = payload;
     } catch {
       this.logger.debug('User payload not available');
