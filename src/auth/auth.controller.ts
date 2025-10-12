@@ -60,7 +60,7 @@ export class AuthController {
   @Redirect('/')
   @Get('logout')
   getLogout(@Res({ passthrough: true }) response: Response) {
-    response.cookie('access_token', undefined);
+    response.clearCookie('access_token');
   }
 
   @Get('login')
