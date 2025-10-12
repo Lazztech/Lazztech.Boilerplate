@@ -39,6 +39,7 @@ export class AuthController {
   @Post('validate/register')
   async getRegisterValidate(@Body() body: RegisterDto) {
     return {
+      appName: this.configService.get('APP_NAME') as string,
       input: body,
       errors: await transformAndValidate(RegisterDto, body).catch((e) => e),
     };
