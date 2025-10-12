@@ -89,7 +89,7 @@ https://developer.chrome.com/docs/lighthouse/overview
 
 **From there support for the following is added:**
 
-To see view a diff between what this project adds to the default NestJS project boiler plate, then diff the head of the main branch against commit ID dedf27d0c01a9aaaae95ad4186814a111341eb77.
+See the [diff between what this project adds to the default NestJS project](https://github.com/Lazztech/Lazztech.Boilerplate/compare/dedf27d0c01a9aaaae95ad4186814a111341eb77...main#diff) boilerplate.
 
 - Dotenv configuration: https://docs.nestjs.com/techniques/configuration
 - Environment variable configuration validation: https://docs.nestjs.com/techniques/configuration#schema-validation
@@ -344,7 +344,7 @@ $ ./scripts/preCommit.sh
 - [x] Fix hanging pipeline e2e step
 - [x] Setup profile, login, and registration pages
 - [x] Server side based validation
-- [ ] Add global view state for appName and user
+- [x] Add global view state for appName and user
 - [ ] Add MermaidJS ER diagram to README for boilerplate entities
 - [ ] Add email support for password reset
 - [ ] Setup UI for web and mobile
