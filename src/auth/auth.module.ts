@@ -21,5 +21,6 @@ import { PasswordReset } from '../dal/entity/passwordReset.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [JwtModule],
 })
 export class AuthModule {}

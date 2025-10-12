@@ -1,13 +1,29 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class ViewContextMiddleware implements NestMiddleware {
-  constructor(private configService: ConfigService) {}
+  private logger = new Logger(ViewContextMiddleware.name);
 
-  use(req: Request, res: Response, next: NextFunction) {
+  constructor(
+    private configService: ConfigService,
+    private jwtService: JwtService,
+  ) {}
+
+  async use(req: Request, res: Response, next: NextFunction) {
     res.locals.appName = this.configService.get<string>('APP_NAME');
+    try {
+      const token = req.cookies?.['access_token'] as string;
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+      });
+      // Asign payload to gloabal view state
+      res.locals.user = payload;
+    } catch {
+      this.logger.debug('User payload not available');
+    }
     next();
   }
 }
