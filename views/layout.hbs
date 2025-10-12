@@ -21,7 +21,7 @@
   {{! hx-boost 'automagically' replaces all anchor tags with htmx logic that
   swaps out the body of the html with the response. This results in a smoother
   user experience where the body gets swapped out without a full page reload
-  similar to a PWA. https://htmx.org/attributes/hx-boost/
+  similar to a SPA. https://htmx.org/attributes/hx-boost/
   https://htmx.org/quirks/#some-people-don-t-like-hx-boost }}
   <body hx-boost="true" hx-ext="sse" class="h-screen flex flex-col">
     {{! Caution: Triple brackets in handlebarsjs disables auto-escaping and may
