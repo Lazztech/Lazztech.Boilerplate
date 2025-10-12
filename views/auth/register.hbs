@@ -12,7 +12,7 @@
       <legend class="fieldset-legend">Register</legend>
 
       <label class="label">Email</label>
-      <label class="input {{#if (filterErrors errors "email")}}input-error{{/if}}">
+      <label class="input {{#if (filterErrors validationErrors "email")}}input-error{{/if}}">
         <input
           id="email"
           name="email"
@@ -22,12 +22,12 @@
           required
         />
       </label>
-      {{#each (filterErrors errors "email")}}
+      {{#each (filterErrors validationErrors "email")}}
       <p class="text-error">{{this}}</p>
       {{/each}}
 
       <label class="label">Password</label>
-      <label class="input {{#if (filterErrors errors "password")}}input-error{{/if}}">
+      <label class="input {{#if (filterErrors validationErrors "password")}}input-error{{/if}}">
         <input
           id="password"
           name="password"
@@ -37,12 +37,12 @@
           placeholder="Password"
         />
       </label>
-      {{#each (filterErrors errors "password")}}
+      {{#each (filterErrors validationErrors "password")}}
       <p class="text-error">{{this}}</p>
       {{/each}}
 
       <label class="label">Confirm Password</label>
-      <label class="input {{#if (filterErrors errors "confirmPassword")}}input-error{{/if}}">
+      <label class="input {{#if (filterErrors validationErrors "confirmPassword")}}input-error{{/if}}">
         <input
           id="confirmPassword"
           name="confirmPassword"
@@ -52,11 +52,11 @@
           placeholder="Password"
         />
       </label>
-      {{#each (filterErrors errors "confirmPassword")}}
+      {{#each (filterErrors validationErrors "confirmPassword")}}
       <p class="text-error">{{this}}</p>
       {{/each}}
 
-      <button type="submit" {{#if errors}}disabled{{/if}} class="btn btn-neutral mt-4">Register</button>
+      <button type="submit" {{#if validationErrors}}disabled{{/if}} class="btn btn-neutral mt-4">Register</button>
     </fieldset>
   </form>
 </div>

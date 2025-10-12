@@ -7,11 +7,8 @@ import {
   Render,
   Sse,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Subject } from 'rxjs';
 import { AppService } from './app.service';
-import { User } from './auth/user.decorator';
-import { Payload } from './auth/dto/payload.dto';
 
 @Controller()
 export class AppController {
@@ -19,18 +16,14 @@ export class AppController {
 
   private message$ = new Subject<string>();
 
-  constructor(
-    private readonly appService: AppService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly appService: AppService) {}
 
   @Get()
   @Render('index')
-  getHello(@User() user: Payload): any {
+  getHello(): any {
     return {
       message: this.appService.getHello(),
       isRootPath: true,
-      email: user?.email,
     };
   }
 

@@ -8,7 +8,6 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { transformAndValidate } from 'class-transformer-validator';
 import { type Response } from 'express';
 import { AuthGuard } from './auth.guard';
@@ -19,10 +18,7 @@ import { User } from './user.decorator';
 
 @Controller('auth')
 export class AuthController {
-  constructor(
-    private authService: AuthService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Redirect('/auth/profile')
   @Post('register')
@@ -38,10 +34,15 @@ export class AuthController {
   @Render('auth/register')
   @Post('validate/register')
   async getRegisterValidate(@Body() body: RegisterDto) {
-    return {
-      input: body,
-      errors: await transformAndValidate(RegisterDto, body).catch((e) => e),
-    };
+    try {
+      await transformAndValidate(RegisterDto, body);
+    } catch (validationErrors) {
+      console.log(validationErrors);
+      return {
+        input: body,
+        validationErrors,
+      };
+    }
   }
 
   @Redirect('/auth/profile')

@@ -18,6 +18,10 @@ async function bootstrap() {
   hbs.registerHelper(
     'filterErrors',
     function (errors: ValidationError[], property) {
+      // Check if errors exists and is an array
+      if (!errors || !Array.isArray(errors)) {
+        return;
+      }
       return errors
         ?.filter((error) => error.property === property)
         .flatMap((e) => Object.values(e.constraints || {}));
