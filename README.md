@@ -112,6 +112,54 @@ See the [diff between what this project adds to the default NestJS project](http
 - Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
 - VSCode Recommended Extensions
 
+## Boilerplate Entities Relation Diagram
+
+The following shows the included database entities that are used by the ORM to produce the following database table relations.
+
+```mermaid
+erDiagram
+    ShareableId {
+        string shareableId
+        boolean flagged
+        boolean banned
+    }
+
+    User {
+        int id PK
+        string firstName
+        string lastName
+        string email UK
+        string password
+        int passwordResetId FK
+    }
+
+    PasswordReset {
+        int id PK
+        string pin
+    }
+
+    UserDevice {
+        int id PK
+        json webPushSubscription
+        int userId FK
+    }
+
+    File {
+        int id PK
+        string fileName UK
+        string mimetype
+        string createdOn
+        int createdByUserId FK
+    }
+
+    ShareableId ||--o{ User : extends
+    ShareableId ||--o{ File : extends
+
+    User ||--o| PasswordReset : "has one"
+    User ||--o{ UserDevice : "has many"
+    User ||--o{ File : "uploads many"
+```
+
 ## Development Dependencies
 
 Development tools:
@@ -345,7 +393,7 @@ $ ./scripts/preCommit.sh
 - [x] Setup profile, login, and registration pages
 - [x] Server side based validation
 - [x] Add global view state for appName and user
-- [ ] Add MermaidJS ER diagram to README for boilerplate entities
+- [x] Add MermaidJS ER diagram to README for boilerplate entities
 - [ ] Add email support for password reset
 - [ ] Setup UI for web and mobile
 - [ ] Setup web push
