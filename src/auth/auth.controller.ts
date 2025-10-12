@@ -12,9 +12,8 @@ import { transformAndValidate } from 'class-transformer-validator';
 import { type Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { Payload } from './dto/payload.dto';
 import { RegisterDto } from './dto/register.dto';
-import { User } from './user.decorator';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -47,12 +46,12 @@ export class AuthController {
   @Redirect('/auth/profile')
   @Post('login')
   async postLogin(
-    @Body() signInDto: Record<string, any>,
+    @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     const jwt = await this.authService.signIn(
-      signInDto.email,
-      signInDto.password,
+      loginDto.email,
+      loginDto.password,
     );
     response.cookie('access_token', jwt);
   }
@@ -74,9 +73,5 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
-  getProfile(@User() user: Payload): any {
-    return {
-      user,
-    };
-  }
+  getProfile(): any {}
 }
