@@ -1,5 +1,5 @@
 <div class='dock'>
-  <a {{#if isRootPath}}class='dock-active'{{/if}} href='/'>
+  <a {{#ifEquals baseUrl ""}} class='dock-active' {{/ifEquals}} href='/'>
     <svg
       class='size-[1.2em]'
       xmlns='http://www.w3.org/2000/svg'

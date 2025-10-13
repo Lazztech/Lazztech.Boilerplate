@@ -30,6 +30,9 @@ async function bootstrap() {
   hbs.registerHelper('json', function (context) {
     return JSON.stringify(context);
   });
+  hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
+    return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+  });
 
   /** Serve htmx from node_modules
    * https://htmx.org/docs/#installing

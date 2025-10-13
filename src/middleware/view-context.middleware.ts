@@ -14,6 +14,7 @@ export class ViewContextMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     res.locals.appName = this.configService.get<string>('APP_NAME');
+    res.locals.baseUrl = req.baseUrl;
     try {
       const token = req.cookies?.['access_token'] as string;
       const payload = await this.jwtService.verifyAsync(token, {

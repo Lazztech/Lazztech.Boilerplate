@@ -19,6 +19,9 @@ describe('AppController (e2e)', () => {
     app.setBaseViewsDir(join(__dirname, '..', 'views'));
     app.setViewEngine('hbs');
     hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+    hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+    });
     await app.init();
   });
 
