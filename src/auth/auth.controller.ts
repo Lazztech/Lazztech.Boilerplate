@@ -35,6 +35,7 @@ export class AuthController {
   async getRegisterValidate(@Body() body: RegisterDto) {
     try {
       await transformAndValidate(RegisterDto, body);
+      return { input: body };
     } catch (validationErrors) {
       return {
         input: body,
