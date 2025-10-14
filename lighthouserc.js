@@ -20,6 +20,7 @@ module.exports = {
         'render-blocking-resources': 'off',
         'forced-reflow-insight': 'warn',
         'document-latency-insight': 'warn',
+        'meta-viewport': 'warn',
       },
     },
     upload: {
