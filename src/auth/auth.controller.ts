@@ -52,17 +52,24 @@ export class AuthController {
     }
   }
 
-  @Redirect('/auth/profile')
+  @Render('auth/login')
   @Post('login')
   async postLogin(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const jwt = await this.authService.signIn(
-      loginDto.email,
-      loginDto.password,
-    );
-    response.cookie('access_token', jwt);
+    try {
+      const jwt = await this.authService.signIn(
+        loginDto.email,
+        loginDto.password,
+      );
+      response.cookie('access_token', jwt);
+      return response.redirect('/auth/profile');
+    } catch (error) {
+      return {
+        error,
+      };
+    }
   }
 
   @Redirect('/')
