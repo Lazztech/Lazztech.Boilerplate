@@ -12,22 +12,30 @@ import { transformAndValidate } from 'class-transformer-validator';
 import { type Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Redirect('/auth/profile')
+  @Render('auth/register')
   @Post('register')
   async postRegister(
     @Body() body: RegisterDto,
     @Res({ passthrough: true }) response: Response, // https://docs.nestjs.com/techniques/cookies#use-with-express-default
   ): Promise<any> {
-    await transformAndValidate(RegisterDto, body);
+    try {
+      await transformAndValidate(RegisterDto, body);
+    } catch (validationErrors: unknown) {
+      return {
+        input: body,
+        validationErrors,
+      };
+    }
     const jwt = await this.authService.register(body.email, body.password);
     response.cookie('access_token', jwt);
+    return response.redirect('/auth/profile');
   }
 
   @Render('auth/register')
