@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0"
     />
     {{! https://developer.chrome.com/docs/lighthouse/seo/meta-description }}
     <meta name="description" content="Put your description here." />
@@ -19,6 +19,16 @@
     <script src="/htmx/sse.js"></script>
     {{! Include the build output from TailwindCSS and DaisyUI }}
     <link href="/main.css" rel="stylesheet" />
+    {{!--
+    https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone
+    --}}
+    <style>
+      @supports (-webkit-overflow-scrolling: touch) {
+        input {
+          font-size: 16px;
+        }
+      }
+    </style>
   </head>
 
   {{! hx-boost 'automagically' replaces all anchor tags with htmx logic that
