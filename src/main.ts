@@ -39,11 +39,17 @@ async function bootstrap() {
    * https://htmx.org/docs/#installing
    * https://blog.wesleyac.com/posts/why-not-javascript-cdn */
   app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx.org/dist'), {
-    prefix: '/htmx/',
+    prefix: '/modules/',
   });
   app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx-ext-sse/'), {
-    prefix: '/htmx/',
+    prefix: '/modules/',
   });
+  app.useStaticAssets(
+    join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
+    {
+      prefix: '/modules/',
+    },
+  );
 
   app.use(cookieParser());
   app.useGlobalFilters(new ErrorViewFilter());

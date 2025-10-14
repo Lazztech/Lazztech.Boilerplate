@@ -12,11 +12,12 @@
     {{! Used inconjunction with service worker sw.js to enable PWA (Progressive
     Web App) functionality. }}
     <link rel="manifest" href="/manifest.json" />
-    {{! Served htmx from node_modules, look to main.ts to see how this is
+    {{! Served modules from node_modules, look to main.ts to see how this is
     performed. https://htmx.org/docs/#installing
     https://blog.wesleyac.com/posts/why-not-javascript-cdn }}
-    <script src="/htmx/htmx.min.js"></script>
-    <script src="/htmx/sse.js"></script>
+    <script src="/modules/htmx.min.js"></script>
+    <script src="/modules/sse.js"></script>
+    <script type="module" src="/modules/pwa-install.bundle.js"></script>
     {{! Include the build output from TailwindCSS and DaisyUI }}
     <link href="/main.css" rel="stylesheet" />
     {{!--
@@ -37,6 +38,13 @@
   similar to a SPA. https://htmx.org/attributes/hx-boost/
   https://htmx.org/quirks/#some-people-don-t-like-hx-boost }}
   <body hx-boost="true" hx-ext="sse" class="touch-none h-screen flex flex-col">
+    <pwa-install
+      manifest-url="/manifest.json"
+      install-description="Install our app for a better experience"
+      disable-chrome="false"
+    >
+    </pwa-install>
+
     {{! Caution: Triple brackets in handlebarsjs disables auto-escaping and may
     pose a XSS risk with HTMX. However the exception to this rule is when
     loading hbs rendered content which is pre-santized by the handlebars

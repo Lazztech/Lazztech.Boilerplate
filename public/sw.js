@@ -7,8 +7,8 @@ var preLoad = function () {
   const urlsToCache = [
     '/',
     '/offline.html',
-    '/htmx/htmx.min.js',
-    '/htmx/sse.js',
+    '/modules/htmx.min.js',
+    '/modules/sse.js',
     '/main.css',
     '/favicon.ico',
   ];
