@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="viewport-fit=cover, width=device-width, initial-scale=1.0"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     {{! https://developer.chrome.com/docs/lighthouse/seo/meta-description }}
     <meta name="description" content="Put your description here." />
@@ -26,7 +26,7 @@
   user experience where the body gets swapped out without a full page reload
   similar to a SPA. https://htmx.org/attributes/hx-boost/
   https://htmx.org/quirks/#some-people-don-t-like-hx-boost }}
-  <body hx-boost="true" hx-ext="sse" class="h-screen flex flex-col">
+  <body hx-boost="true" hx-ext="sse" class="touch-none h-screen flex flex-col">
     {{! Caution: Triple brackets in handlebarsjs disables auto-escaping and may
     pose a XSS risk with HTMX. However the exception to this rule is when
     loading hbs rendered content which is pre-santized by the handlebars
