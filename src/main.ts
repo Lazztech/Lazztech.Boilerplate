@@ -5,6 +5,7 @@ import hbs from 'hbs';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationError } from '@nestjs/common';
+import { ErrorViewFilter } from './error-view.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -45,6 +46,7 @@ async function bootstrap() {
   });
 
   app.use(cookieParser());
+  app.useGlobalFilters(new ErrorViewFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
