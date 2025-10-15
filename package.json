@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build && npm run tailwind",
-    "tailwind": "npx @tailwindcss/cli -i ./views/assets/tailwind.css -o ./public/main.css --minify",
-    "tailwind:watch": "npx @tailwindcss/cli -i ./views/assets/tailwind.css -o ./public/main.css --minify --watch",
+    "tailwind": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify",
+    "tailwind:watch": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "npm run tailwind && nest start",

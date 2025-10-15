@@ -3,3 +3,10 @@ that only contains the relivant tailwind code used in the application source. Th
 and response bandwidth/latency. */
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone */
+@supports (-webkit-overflow-scrolling: touch) {
+    input {
+        font-size: 16px;
+    }
+}

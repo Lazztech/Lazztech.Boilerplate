@@ -18,18 +18,8 @@
     <script src="/modules/htmx.min.js"></script>
     <script src="/modules/sse.js"></script>
     <script type="module" src="/modules/pwa-install.bundle.js"></script>
-    {{! Include the build output from TailwindCSS and DaisyUI }}
-    <link href="/main.css" rel="stylesheet" />
-    {{!--
-    https://stackoverflow.com/questions/2989263/disable-auto-zoom-in-input-text-tag-safari-on-iphone
-    --}}
-    <style>
-      @supports (-webkit-overflow-scrolling: touch) {
-        input {
-          font-size: 16px;
-        }
-      }
-    </style>
+    {{! Include assets/main.css and build output from TailwindCSS/DaisyUI }}
+    <link href="/bundle.css" rel="stylesheet" />
   </head>
 
   {{! hx-boost 'automagically' replaces all anchor tags with htmx logic that
