@@ -29,6 +29,12 @@
     hx-swap="beforeend"
     hx-target="#chat"
   ></div>
+  <script type="text/javascript">
+    var pwaInstall = document.getElementById('pwa-install');
+  </script>
+  <button onclick="pwaInstall.showDialog(true)" class="btn btn-neutral">
+    Force PWA Install Prompt
+  </button>
 </div>
 
 {{!-- Load dock partial --}} {{>dock}}

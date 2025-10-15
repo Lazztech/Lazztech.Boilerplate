@@ -28,26 +28,22 @@
   similar to a SPA. https://htmx.org/attributes/hx-boost/
   https://htmx.org/quirks/#some-people-don-t-like-hx-boost }}
   <body hx-boost="true" hx-ext="sse" class="touch-none h-screen flex flex-col">
-    <pwa-install
-      manifest-url="/manifest.json"
-      install-description="Install our app for a better experience"
-      disable-chrome="false"
-    >
-    </pwa-install>
-
     {{! Caution: Triple brackets in handlebarsjs disables auto-escaping and may
     pose a XSS risk with HTMX. However the exception to this rule is when
     loading hbs rendered content which is pre-santized by the handlebars
     templatinng engine as it get's rendered.
     https://handlebarsjs.com/guide/expressions.html#literal-segments
-    https://htmx.org/essays/web-security-basics-with-htmx/ }} {{{body}}}
+    https://htmx.org/essays/web-security-basics-with-htmx/ }} {{{body}}} {{! The
+    service worker is used in conjunction with the manifest.json to enable PWA
+    (Progressive Web App) functionality. }}
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js');
+      }
+    </script>
+    <pwa-install id="pwa-install" manifest-url="/manifest.json"></pwa-install>
+    <script type="text/javascript">
+      var pwaInstall = document.getElementById('pwa-install');
+    </script>
   </body>
-
-  {{! The service worker is used in conjunction with the manifest.json to enable
-  PWA (Progressive Web App) functionality. }}
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
-    }
-  </script>
 </html>
