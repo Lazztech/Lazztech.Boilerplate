@@ -51,10 +51,10 @@ pids
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
-public/main.css
-.lighthouseci/
 
+.lighthouseci/
 **/*.db
 **/*.sqlite
 **/*.sqlite3
 data/**
+public/bundle.css
