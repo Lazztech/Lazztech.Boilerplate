@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpStatus,
   Post,
   Redirect,
   Render,
@@ -14,25 +16,28 @@ import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
+import { User } from './user.decorator';
+import { Payload } from './dto/payload.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Render('auth/register')
   @Post('register')
   async postRegister(
     @Body() body: RegisterDto,
-    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.com/techniques/cookies#use-with-express-default
+    @Res() response: Response,
   ): Promise<any> {
     try {
       await transformAndValidate(RegisterDto, body);
     } catch (validationErrors: unknown) {
-      return {
+      return response.render('auth/register', {
+        layout: 'layout',
         input: body,
         validationErrors,
-      };
+      });
     }
+
     const jwt = await this.authService.register(body.email, body.password);
     response.cookie('access_token', jwt);
     return response.redirect('/auth/profile');
@@ -90,4 +95,15 @@ export class AuthController {
   @Get('profile')
   @Render('auth/profile')
   getProfile(): any {}
+
+  @UseGuards(AuthGuard)
+  @Redirect('/', HttpStatus.SEE_OTHER) // https://hypermedia.systems/htmx-patterns/#_a_response_code_gotcha
+  @Delete()
+  async delete(
+    @User() payload: Payload,
+    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.com/techniques/cookies#use-with-express-default
+  ) {
+    response.clearCookie('access_token');
+    await this.authService.deleteUser(payload.userId);
+  }
 }

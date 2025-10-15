@@ -1,3 +1,14 @@
 {{>navbar}}
-<h1>Profile</h1>
-{{user.email}} {{>dock}}
+<div class="flex flex-col justify-center items-center h-full gap-3">
+  <p>Profile</p>
+  <p>{{user.email}}</p>
+  <button
+    hx-delete="/auth"
+    hx-target="body"
+    hx-confirm="Are you sure you want to delete your account?"
+    class="btn btn-neutral"
+  >
+    Delete Account
+  </button>
+</div>
+{{>dock}}

@@ -67,4 +67,9 @@ export class AuthService {
       return await this.em.persistAndFlush(user);
     }
   }
+
+  async deleteUser(userId: any) {
+    const user = await this.userRepository.findOneOrFail({ id: userId });
+    await this.em.removeAndFlush(user);
+  }
 }
