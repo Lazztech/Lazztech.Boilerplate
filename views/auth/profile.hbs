@@ -1,12 +1,82 @@
 {{>navbar}}
-<div class="flex flex-col justify-center items-center h-full gap-3">
-  <p>Profile</p>
-  <p>{{user.email}}</p>
+<div class="flex flex-col justify-center items-center h-full gap-3">  
+    <form hx-post="/auth/register" hx-trigger="submit" hx-target="body">
+        <fieldset
+        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+        hx-post="/auth/validate/register"
+        hx-trigger="change, blur delay:500ms"
+        hx-include="input"
+        hx-target="body"
+        >
+        <legend class="fieldset-legend">Update Email</legend>
+
+        <label class="label">Email</label>
+        <label class="input {{#if (filterErrors validationErrors "email")}}input-error{{/if}}">
+            <input
+            id="email"
+            name="email"
+            type="email"
+            value="{{user.email}}"
+            placeholder="Email"
+            required
+            />
+        </label>
+        {{#each (filterErrors validationErrors "email")}}
+        <p class="text-error">{{this}}</p>
+        {{/each}}
+
+        <button type="submit" id="submit" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">Update</button>
+        </fieldset>
+    </form>
+
+    <form hx-post="/auth/register" hx-trigger="submit" hx-target="body">
+    <fieldset
+      class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+      hx-post="/auth/validate/register"
+      hx-trigger="change, blur delay:500ms"
+      hx-include="input"
+      hx-target="body"
+    >
+      <legend class="fieldset-legend">Change Password</legend>
+
+      <label class="label">Current Password</label>
+      <label class="input {{#if (filterErrors validationErrors "password")}}input-error{{/if}}">
+        <input
+          id="password"
+          name="password"
+          type="password"
+          value="{{input.password}}"
+          required
+          placeholder="Password"
+        />
+      </label>
+      {{#each (filterErrors validationErrors "password")}}
+      <p class="text-error">{{this}}</p>
+      {{/each}}
+
+      <label class="label">New Password</label>
+      <label class="input {{#if (filterErrors validationErrors "confirmPassword")}}input-error{{/if}}">
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          value="{{input.confirmPassword}}"
+          required
+          placeholder="Password"
+        />
+      </label>
+      {{#each (filterErrors validationErrors "confirmPassword")}}
+      <p class="text-error">{{this}}</p>
+      {{/each}}
+
+      <button type="submit" id="submit" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">Change</button>
+    </fieldset>
+  </form>
   <button
     hx-delete="/auth"
     hx-target="body"
     hx-confirm="Are you sure you want to delete your account?"
-    class="btn btn-neutral"
+    class="btn btn-error"
   >
     Delete Account
   </button>
