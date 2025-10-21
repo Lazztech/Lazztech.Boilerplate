@@ -10,3 +10,17 @@ and response bandwidth/latency. */
         font-size: 16px;
     }
 }
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Prevent iOS from resizing the viewport */
+body {
+  height: 100vh;
+  height: 100dvh; /* Use dynamic viewport height */
+}
