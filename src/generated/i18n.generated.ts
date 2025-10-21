@@ -6,6 +6,7 @@ import { Path } from "nestjs-i18n";
 /* prettier-ignore */
 export type I18nTranslations = {
     "lang": {
+        "APP_DESCRIPTION": string;
         "HOME": string;
         "LOGOUT": string;
         "REGISTER": string;
