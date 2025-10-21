@@ -16,6 +16,8 @@ export class ViewContextMiddleware implements NestMiddleware {
   async use(req: Request, res: Response, next: NextFunction) {
     res.locals.appName = this.configService.get<string>('APP_NAME');
     res.locals.baseUrl = req.baseUrl;
+    // Assign locale for i18n language selection
+    res.locals.locale = I18nContext.current()?.lang;
     try {
       const token = req.cookies?.['access_token'] as string;
       const payload = await this.jwtService.verifyAsync(token, {
@@ -23,8 +25,6 @@ export class ViewContextMiddleware implements NestMiddleware {
       });
       // Assign payload to gloabal view state
       res.locals.user = payload;
-      // Assign locale for i18n language selection
-      res.locals.locale = I18nContext.current()?.lang || 'en';
     } catch {
       this.logger.debug('User payload not available');
     }
