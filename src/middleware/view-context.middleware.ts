@@ -2,6 +2,7 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
+import { I18nContext } from 'nestjs-i18n';
 
 @Injectable()
 export class ViewContextMiddleware implements NestMiddleware {
@@ -22,6 +23,8 @@ export class ViewContextMiddleware implements NestMiddleware {
       });
       // Assign payload to gloabal view state
       res.locals.user = payload;
+      // Assign locale for i18n language selection
+      res.locals.locale = I18nContext.current()?.lang;
     } catch {
       this.logger.debug('User payload not available');
     }

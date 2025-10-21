@@ -17,6 +17,7 @@ import { NotificationModule } from './notification/notification.module';
 import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
 import { ViewContextMiddleware } from './middleware/view-context.middleware';
+import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 
 @Module({
   imports: [
@@ -96,6 +97,19 @@ import { ViewContextMiddleware } from './middleware/view-context.middleware';
         abortEarly: true,
       },
       isGlobal: true,
+    }),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      resolvers: [AcceptLanguageResolver],
+      loaderOptions: {
+        path: path.join(__dirname, '/i18n/'),
+        watch: true,
+      },
+      typesOutputPath: path.join(
+        __dirname,
+        '../src/generated/i18n.generated.ts',
+      ),
+      viewEngine: 'hbs',
     }),
     DalModule,
     AuthModule,

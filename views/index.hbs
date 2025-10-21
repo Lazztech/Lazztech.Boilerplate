@@ -16,10 +16,10 @@
       id="message"
       name="message"
       class="input"
-      placeholder="Your message"
+      placeholder="{{t 'lang.YOUR_MESSAGE'}}"
       required
     />
-    <button type="submit" class="btn btn-neutral">Send</button>
+    <button type="submit" class="btn btn-neutral">{{t 'lang.SEND'}}</button>
   </form>
   <div
     id="sse-listener"
@@ -33,7 +33,7 @@
     var pwaInstall = document.getElementById('pwa-install');
   </script>
   <button onclick="pwaInstall.showDialog(true)" class="btn btn-neutral">
-    Force PWA Install Prompt
+    {{t 'lang.FORCE_PWA'}}
   </button>
 </div>
 

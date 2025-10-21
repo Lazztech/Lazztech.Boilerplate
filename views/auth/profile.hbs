@@ -8,16 +8,16 @@
         hx-include="input"
         hx-target="body"
         >
-        <legend class="fieldset-legend">Update Email</legend>
+        <legend class="fieldset-legend">{{t 'lang.UPDATE_EMAIL'}}</legend>
 
-        <label class="label">Email</label>
+        <label class="label">{{t 'lang.EMAIL'}}</label>
         <label class="input {{#if (filterErrors validationErrors "email")}}input-error{{/if}}">
             <input
             id="email"
             name="email"
             type="email"
             value="{{user.email}}"
-            placeholder="Email"
+            placeholder="{{t 'lang.EMAIL'}}"
             required
             />
         </label>
@@ -25,7 +25,7 @@
         <p class="text-error">{{this}}</p>
         {{/each}}
 
-        <button type="submit" id="submit" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">Update</button>
+        <button type="submit" id="submit" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.UPDATE'}}</button>
         </fieldset>
     </form>
 
@@ -37,9 +37,9 @@
       hx-include="input"
       hx-target="body"
     >
-      <legend class="fieldset-legend">Change Password</legend>
+      <legend class="fieldset-legend">{{t 'lang.CHANGE_PASSWORD'}}</legend>
 
-      <label class="label">Current Password</label>
+      <label class="label">{{t 'lang.CURRENT_PASSWORD'}}</label>
       <label class="input {{#if (filterErrors validationErrors "password")}}input-error{{/if}}">
         <input
           id="password"
@@ -47,14 +47,14 @@
           type="password"
           value="{{input.password}}"
           required
-          placeholder="Password"
+          placeholder="{{t 'lang.PASSWORD'}}"
         />
       </label>
       {{#each (filterErrors validationErrors "password")}}
       <p class="text-error">{{this}}</p>
       {{/each}}
 
-      <label class="label">New Password</label>
+      <label class="label">{{t 'lang.NEW_PASSWORD'}}</label>
       <label class="input {{#if (filterErrors validationErrors "confirmPassword")}}input-error{{/if}}">
         <input
           id="confirmPassword"
@@ -62,14 +62,14 @@
           type="password"
           value="{{input.confirmPassword}}"
           required
-          placeholder="Password"
+          placeholder="{{t 'lang.PASSWORD'}}"
         />
       </label>
       {{#each (filterErrors validationErrors "confirmPassword")}}
       <p class="text-error">{{this}}</p>
       {{/each}}
 
-      <button type="submit" id="submit" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">Change</button>
+      <button type="submit" id="submit" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.CHANGE'}}</button>
     </fieldset>
   </form>
   <button
@@ -78,7 +78,7 @@
     hx-confirm="Are you sure you want to delete your account?"
     class="btn btn-error"
   >
-    Delete Account
+    {{t 'lang.DELETE_ACCOUNT'}}
   </button>
 </div>
 {{>dock}}
