@@ -107,6 +107,7 @@ See the [diff between what this project adds to the default NestJS project](http
   - User ORM entity
   - JWT Based Authentication: https://docs.nestjs.com/security/authentication
   - User password management and reset
+- nest-i18n internationalization https://nestjs-i18n.com/
 - Dockerfile and Docker Compose script
 - Github Actions Continous Integration Pipeline
 - Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/

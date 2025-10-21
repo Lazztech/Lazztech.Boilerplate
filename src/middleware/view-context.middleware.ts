@@ -24,7 +24,7 @@ export class ViewContextMiddleware implements NestMiddleware {
       // Assign payload to gloabal view state
       res.locals.user = payload;
       // Assign locale for i18n language selection
-      res.locals.locale = I18nContext.current()?.lang;
+      res.locals.locale = I18nContext.current()?.lang || 'en';
     } catch {
       this.logger.debug('User payload not available');
     }
