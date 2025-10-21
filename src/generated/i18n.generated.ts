@@ -8,6 +8,8 @@ export type I18nTranslations = {
     "lang": {
         "APP_DESCRIPTION": string;
         "HOME": string;
+        "PROFILE": string;
+        "FILES": string;
         "LOGOUT": string;
         "REGISTER": string;
         "LOGIN": string;
