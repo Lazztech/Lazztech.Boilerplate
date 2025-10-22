@@ -18,6 +18,7 @@ import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
 import { ViewContextMiddleware } from './middleware/view-context.middleware';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
+import { OpenGraphModule } from './open-graph/open-graph.module';
 
 @Module({
   imports: [
@@ -116,6 +117,7 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
     FileModule,
     EmailModule,
     NotificationModule,
+    OpenGraphModule,
   ],
   controllers: [AppController],
   providers: [AppService],

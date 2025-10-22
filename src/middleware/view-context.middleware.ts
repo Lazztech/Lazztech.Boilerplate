@@ -15,6 +15,7 @@ export class ViewContextMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     res.locals.appName = this.configService.get<string>('APP_NAME');
+    res.locals.siteUrl = req.get('host');
     res.locals.baseUrl = req.baseUrl;
     // Assign locale for i18n language selection
     res.locals.locale = I18nContext.current()?.lang;

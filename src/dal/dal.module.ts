@@ -1,8 +1,8 @@
+import { BetterSqliteDriver } from '@mikro-orm/better-sqlite';
 import { Connection, IDatabaseDriver } from '@mikro-orm/core';
 import { Migrator } from '@mikro-orm/migrations';
 import { MikroOrmModule, MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { BetterSqliteDriver } from '@mikro-orm/better-sqlite';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import path from 'path';

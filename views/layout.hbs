@@ -11,6 +11,20 @@ https://nestjs-i18n.com/quick-start --}}
     />
     {{! https://developer.chrome.com/docs/lighthouse/seo/meta-description }}
     <meta name="description" content="{{t 'lang.APP_DESCRIPTION'}}" />
+    {{!-- Facebook Open Graph Meta Tags https://ogp.me/ --}}
+    <meta property="og:url" content="{{ogUrl}}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{{ogTitle}}" />
+    <meta property="og:description" content="{{ogDescription}}" />
+    <meta property="og:image" content="{{ogImage}}" />
+    {{!-- Twitter Open Graph Meta Tags https://ogp.me/ --}}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="twitter:domain" content="{{siteUrl}}" />
+    <meta property="twitter:url" content="{{ogUrl}}" />
+    <meta name="twitter:title" content="{{ogTitle}}" />
+    <meta name="twitter:description" content="{{ogDescription}}" />
+    <meta name="twitter:image" content="{{ogImage}}" />
+
     <title>{{appName}}</title>
     {{! Used inconjunction with service worker sw.js to enable PWA (Progressive
     Web App) functionality. }}

@@ -3,7 +3,7 @@ import { NotificationService } from './notification.service';
 import { ConfigService } from '@nestjs/config';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
-import { EntityManager, EntityRepository } from '@mikro-orm/sqlite';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { UserDevice } from '../dal/entity/userDevice.entity';
 
 describe('NotificationService', () => {

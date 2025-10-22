@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationController } from './notification.controller';
 import { User } from '../dal/entity/user.entity';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/sqlite';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { NotificationService } from './notification.service';
