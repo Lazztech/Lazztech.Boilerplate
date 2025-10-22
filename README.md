@@ -389,13 +389,13 @@ Other licenses such as MIT may be offered at discretion of Lazztech LLC and cont
 
 ## Lazztech LLC Cooperative Business Agreement
 
-Each project contributor shall be an independent contractor to Lazztech LLC. Projects shall be licensed as aGPL-v3 to account for base code contribution agreement and a mutually assured open source licensure activated upon state changes and network use as a form of distribution, defined by the aGPL-v3 license. Though additionally the code source of this project may be kept private or made public up to the project contributors best mutual agreement.
+Each project contributor shall be an independent contractor to Lazztech LLC. Projects shall be licensed as aGPL-v3 to account for base code contribution agreement and a mutually assured open source licensure activated upon state changes and network use as a form of distribution, defined by the aGPL-v3 license. Though additionally the source code of this project may be kept private or made public up to the project contributors best mutual agreement.
 
-From there, 20% of each project’s revenue shall be allocated to a business treasury for growth and business expenses. Then the remaining 80% of a given project’s revenue shall be split evenly to each contributor of said project. This is to ensure fairness of equity and alignment incentive structure to motivate for a cooperative lean contributor team, acting together in the best interests of a given projects fellow contributors.
+From there, 20% of each project’s revenue shall be allocated to a business treasury for growth and business expenses. Then the remaining 80% of a given project’s revenue shall be split evenly to each contributor of said project. This is to ensure fairness of equity, and alignment of incentive structure, to motivate for a cooperative lean contributor base, acting together in the best interests of a given projects shared values.
 
 Payment shall be made out to each contributor to a platform such as strike.com that produces a 1099 for annual tax self reporting of income as an independent contractor.
 
-This business agreement shall be maintained in all distributed work and contributions to the project shall be acknowledged as an agreement to these terms unless other licenses have been granted by Lazztech LLC and project contributors. Amendments may be made in the form of a PR reviewed and approved by all of the given projects’ contributors.
+This business agreement shall be maintained in all distributed work and contributions to the project shall be acknowledged as an agreement to these terms unless other licenses have been granted by Lazztech LLC and project contributors. Amendments may be made in the form of a PR, reviewed and approved by all of the given projects’ contributors.
 
 ## Stay in touch
 
