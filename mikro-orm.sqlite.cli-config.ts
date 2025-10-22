@@ -1,10 +1,10 @@
+import { BetterSqliteDriver } from '@mikro-orm/better-sqlite';
 import { Options } from '@mikro-orm/core';
 import { Migrator } from '@mikro-orm/migrations';
-import { SqliteDriver } from '@mikro-orm/sqlite';
 
 export default {
   name: 'sqlite',
-  driver: SqliteDriver,
+  driver: BetterSqliteDriver,
   extensions: [Migrator],
   dbName: './data/sqlite3.db',
   entities: ['./src/dal/entity/**/*.*.*'],

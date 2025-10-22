@@ -2,7 +2,7 @@ import { Connection, IDatabaseDriver } from '@mikro-orm/core';
 import { Migrator } from '@mikro-orm/migrations';
 import { MikroOrmModule, MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { SqliteDriver } from '@mikro-orm/sqlite';
+import { BetterSqliteDriver } from '@mikro-orm/better-sqlite';
 import { Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import path from 'path';
@@ -17,7 +17,7 @@ import path from 'path';
           case 'sqlite':
             return {
               name: 'sqlite',
-              driver: SqliteDriver,
+              driver: BetterSqliteDriver,
               baseDir: process.cwd(),
               dbName: configService.get(
                 'DATABASE_SCHEMA',
@@ -76,7 +76,9 @@ import path from 'path';
       // "feat: add driver option to get around issues with useFactory and inject #204"
       // https://github.com/mikro-orm/nestjs/pull/204
       driver:
-        process.env.DATABASE_TYPE == 'sqlite' ? SqliteDriver : PostgreSqlDriver,
+        process.env.DATABASE_TYPE == 'sqlite'
+          ? BetterSqliteDriver
+          : PostgreSqlDriver,
     }),
   ],
 })
