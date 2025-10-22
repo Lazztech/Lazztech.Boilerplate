@@ -2,6 +2,10 @@
 
 This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, accross various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
 
+This boilerplate is architected with inspiration from, though not dogmatically following, the values spoken to in the speech [Building the Hundred-Year Web Service with htmx - Alexander Petros](https://www.youtube.com/watch?v=lASLZ9TgXyc)
+
+- https://unplannedobsolescence.com/talks/building-the-hundred-year-web-service/
+
 ```mermaid
 graph TB
     subgraph "Presentation Layer"
@@ -107,7 +111,8 @@ See the [diff between what this project adds to the default NestJS project](http
   - User ORM entity
   - JWT Based Authentication: https://docs.nestjs.com/security/authentication
   - User password management and reset
-- nest-i18n internationalization https://nestjs-i18n.com/
+- nest-i18n internationalization: https://nestjs-i18n.com/
+- Open-Graph link previews: https://ogp.me/
 - Dockerfile and Docker Compose script
 - Github Actions Continous Integration Pipeline
 - Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
@@ -374,47 +379,24 @@ $ ./scripts/preCommit.sh
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 
+## License
+
+GNU AGPLv3
+
+---
+
+Other licenses such as MIT may be offered at discretion of Lazztech LLC and contributors of this project. See more below.
+
+## Lazztech LLC Cooperative Business Agreement
+
+Each project contributor shall be an independent contractor to Lazztech LLC. Projects shall be licensed as aGPL-v3 to account for base code contribution agreement and a mutually assured open source licensure activated upon state changes and network use as a form of distribution, defined by the aGPL-v3 license. Though additionally the code source of this project may be kept private or made public up to the project contributors best mutual agreement.
+
+From there, 20% of each project’s revenue shall be allocated to a business treasury for growth and business expenses. Then the remaining 80% of a given project’s revenue shall be split evenly to each contributor of said project. This is to ensure fairness of equity and alignment incentive structure to motivate for a cooperative lean contributor team, acting together in the best interests of a given projects fellow contributors.
+
+Payment shall be made out to each contributor to a platform such as strike.com that produces a 1099 for annual tax self reporting of income as an independent contractor.
+
+This business agreement shall be maintained in all distributed work and contributions to the project shall be acknowledged as an agreement to these terms unless other licenses have been granted by Lazztech LLC and project contributors. Amendments may be made in the form of a PR reviewed and approved by all of the given projects’ contributors.
+
 ## Stay in touch
 
 - Website - [https://lazz.tech/](https://lazz.tech/)
-
-## License
-
-Choose your own highly permisive license, either The Unlicense, CC0, or MIT-0.
-
----
-
-This is free and unencumbered software released into the public domain.
-
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
-
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-For more information, please refer to <https://unlicense.org>
-
----
-
-MIT-0 License
-
-Copyright (c) 2025 Lazztech
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
