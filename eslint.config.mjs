@@ -6,7 +6,11 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs', './src/dal/migrations/**/*'],
+    ignores: [
+      'eslint.config.mjs',
+      './src/dal/migrations/**/*',
+      './src/i18n/generated/**/*',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
