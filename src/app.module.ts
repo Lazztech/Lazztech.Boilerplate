@@ -107,8 +107,8 @@ import { OpenGraphModule } from './open-graph/open-graph.module';
         watch: true,
       },
       typesOutputPath: path.join(
-        __dirname,
-        '../src/generated/i18n.generated.ts',
+        process.cwd(),
+        'dist/i18n/generated/i18n.generated.ts',
       ),
       viewEngine: 'hbs',
     }),
