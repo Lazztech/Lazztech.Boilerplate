@@ -379,23 +379,31 @@ $ ./scripts/preCommit.sh
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 
+## Lazztech LLC Cooperative Business Agreement
+
+Each project contributor (“Contributor”) shall act as an independent contractor to Lazztech LLC (“Company”) and not as an employee, partner, or agent. Contributors are solely responsible for their own taxes, insurance, and legal compliance related to income earned through the Company.
+
+Projects shall be licensed under the GNU Affero General Public License v3 (AGPLv3) to account for base code contribution agreement and a mutually assured open source licensure, activated upon state changes and network use as a form of distribution, defined by the AGPLv3 license. Though additionally the source code of this project may be kept private or made public as determined by unanimous agreement of the project’s Active Contributors.
+
+From there, 20% of each project’s revenue shall be allocated to Lazztech LLC as a business treasury for growth and business expenses. Then the remaining 80% of a given project’s revenue shall be split evenly to each Active Contributor of said project. This is to ensure fairness of equity, and alignment of incentive structure, to motivate for a cooperative lean contributor base, acting together in the best interests of a given projects Active Contributors.
+
+An Active Contributor is defined as any individual who has made at least one material contribution such as a code commit, pull request, documentation update, or other substantive input to a project that has been accepted or merged within the previous ninety (90) calendar days, measured from the date of their last substantive contribution.
+
+If the project continues to generate revenue without requiring further maintenance, updates, or development, the ninety-day countdown toward inactive status for all existing Active Contributors shall be paused, and will reset upon the next substantive contribution. During such periods, contributors who made substantive contributions prior to that time shall continue to receive their proportional share of revenue in accordance with this agreement.
+
+Inactive contributors may regain active status at any time by making a new contribution, reviewed and approved by all current Active Contributors. Determinations of contributor activity and contribution history shall be verified through the project’s version control system or other mutually agreed-upon record keeping method.
+
+Payments shall be made to each eligible contributor through Strike.com or a similar payment processor capable of issuing 1099 tax forms. Contributors are responsible for reporting their income and complying with all applicable tax laws.
+
+This business agreement shall be maintained in all derivative projects distributed by Lazztech LLC and contributors. Contributions to the project shall be acknowledged as an agreement to these terms unless other licenses have been granted by Lazztech LLC and project contributors. Amendments may be made to this projects business agreement in the form of a PR, reviewed and approved by all of the given projects’ Active Contributors.
+
 ## License
 
 GNU AGPLv3
 
 ---
 
-Other licenses such as MIT may be offered at discretion of Lazztech LLC and contributors of this project. See more below.
-
-## Lazztech LLC Cooperative Business Agreement
-
-Each project contributor shall be an independent contractor to Lazztech LLC. Projects shall be licensed as aGPL-v3 to account for base code contribution agreement and a mutually assured open source licensure activated upon state changes and network use as a form of distribution, defined by the aGPL-v3 license. Though additionally the source code of this project may be kept private or made public up to the project contributors best mutual agreement.
-
-From there, 20% of each project’s revenue shall be allocated to a business treasury for growth and business expenses. Then the remaining 80% of a given project’s revenue shall be split evenly to each contributor of said project. This is to ensure fairness of equity, and alignment of incentive structure, to motivate for a cooperative lean contributor base, acting together in the best interests of a given projects shared values.
-
-Payment shall be made out to each contributor to a platform such as strike.com that produces a 1099 for annual tax self reporting of income as an independent contractor.
-
-This business agreement shall be maintained in all distributed work and contributions to the project shall be acknowledged as an agreement to these terms unless other licenses have been granted by Lazztech LLC and project contributors. Amendments may be made in the form of a PR, reviewed and approved by all of the given projects’ contributors.
+Other licenses such as MIT may be offered at discretion of Lazztech LLC and contributors of this project.
 
 ## Stay in touch
 
