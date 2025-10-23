@@ -210,6 +210,20 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
+## Docker
+
+```bash
+# Build and tag docker container
+$ docker build --no-cache -f docker/Dockerfile . -t lazztech-boilerplate:latest
+
+# Cross-compile build to a given target deployment platform
+# Useful for building on ARM CPU development machines or for compiling for ARM on x86
+$ docker buildx build --platform linux/amd64 --no-cache -f docker/Dockerfile . -t lazztech-boilerplate:latest
+
+# Run the docker container from the built image
+$ docker run -p 3000:3000 lazztech-boilerplate
+```
+
 ## Postgres
 
 A local instance of postgres running in a docker container for testing against a prod DB replica.

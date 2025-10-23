@@ -1,4 +1,4 @@
-FROM node:24
+FROM node:22
 
 # Create app directory
 WORKDIR /app
@@ -14,11 +14,18 @@ RUN npm ci
 
 # Bundle app source
 COPY src ./src
+COPY views ./views
+COPY public ./public
 COPY tsconfig*.json ./
 COPY nest-cli.json .
+COPY tailwind.config.js .
+COPY .env .
 
 # Build app from source
 RUN npm run build
+
+# Remove the source
+RUN rm -rf ./src
 
 EXPOSE 8080
 CMD [ "npm", "run", "start:prod" ]
