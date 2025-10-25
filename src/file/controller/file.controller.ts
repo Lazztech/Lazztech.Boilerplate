@@ -5,13 +5,26 @@ import {
   Inject,
   Logger,
   Param,
+  Post,
+  Render,
   Res,
+  UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { type Response } from 'express';
 import { join } from 'path';
 import sharp from 'sharp';
+import { AuthGuard } from '../../auth/auth.guard';
+import { Payload } from '../../auth/dto/payload.dto';
+import { User } from '../../auth/user.decorator';
 import { FILE_SERVICE } from '../file-service.token';
 import { type FileServiceInterface } from '../interfaces/file-service.interface';
+import {
+  MultipartFiles,
+  MultipartFileStream,
+  MultipartInterceptor,
+} from '@proventuslabs/nestjs-multipart-form';
+import { Observable } from 'rxjs';
 
 @Controller('file')
 export class FileController {
@@ -22,9 +35,27 @@ export class FileController {
     private readonly fileService: FileServiceInterface,
   ) {}
 
+  @Get('files')
+  @Render('files')
+  async getFiles() {}
+
+  @UseGuards(AuthGuard)
+  @Post('upload')
+  @UseInterceptors(MultipartInterceptor())
+  uploadFile(
+    @User() payload: Payload,
+    @MultipartFiles('file') file$: Observable<MultipartFileStream>,
+  ) {
+    console.log(file$);
+    return this.fileService.storeImageFromFileUpload(file$, payload.userId);
+  }
+
   @Get(':fileName')
   @Header('Cache-Control', 'public, max-age=86400') // public for CDN, max-age= 24hrs in seconds
-  async get(@Param('fileName') fileName: string, @Res() response: Response) {
+  async getFile(
+    @Param('fileName') fileName: string,
+    @Res() response: Response,
+  ) {
     const readable = await this.fileService.get(fileName);
     readable
       ?.on('error', (err) => {

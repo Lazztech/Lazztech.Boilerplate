@@ -1,15 +1,16 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
-import { InjectS3, type S3 } from 'nestjs-s3';
-import { FileServiceInterface } from '../interfaces/file-service.interface';
-import { randomUUID } from 'crypto';
-import { ConfigService } from '@nestjs/config';
-import { FileUpload } from '../interfaces/file-upload.interface';
-import sharp from 'sharp';
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { File } from '../../dal/entity/file.entity';
-import { EntityRepository } from '@mikro-orm/core';
-import { EntityManager } from '@mikro-orm/core';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
+import { randomUUID } from 'crypto';
+import { InjectS3, type S3 } from 'nestjs-s3';
+import { lastValueFrom, mergeMap, Observable, tap } from 'rxjs';
+import sharp from 'sharp';
 import Stream, { Readable } from 'stream';
+import { File } from '../../dal/entity/file.entity';
+import { FileServiceInterface } from '../interfaces/file-service.interface';
+import { pipeline } from 'stream/promises';
 
 @Injectable()
 export class S3FileService implements FileServiceInterface {
@@ -27,28 +28,38 @@ export class S3FileService implements FileServiceInterface {
   }
 
   public async storeImageFromFileUpload(
-    upload: Promise<FileUpload> | FileUpload,
+    upload$: Observable<MultipartFileStream>,
     userId: any,
   ): Promise<File> {
-    const { createReadStream, mimetype } = await upload;
-    console.log(upload);
-    if (!mimetype?.startsWith('image/')) {
-      throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
-    }
-
     const fileName = randomUUID() + '.webp';
     const transformer = sharp()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
-
     const uploadStream = this.uploadStream(fileName);
 
-    createReadStream()
-      .pipe(transformer)
-      .pipe(uploadStream.writeStream)
-      .on('error', () => {
-        new HttpException('Could not save image', HttpStatus.BAD_REQUEST);
-      });
+    try {
+      // https://rxjs.dev/api/index/function/lastValueFrom
+      await lastValueFrom(
+        upload$.pipe(
+          // https://rxjs.dev/api/operators/tap
+          tap((fileStream: MultipartFileStream) => {
+            if (!fileStream.mimetype?.startsWith('image/')) {
+              throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
+            }
+          }),
+          // transform and write using node stream pipeline which returns a Promise
+          // https://rxjs.dev/api/operators/mergeMap
+          mergeMap((fileStream: MultipartFileStream) =>
+            // https://stackoverflow.com/questions/58875655/whats-the-difference-between-pipe-and-pipeline-on-streams
+            pipeline(fileStream, transformer, uploadStream.writeStream),
+          ),
+        ),
+      );
+      uploadStream.writeStream.destroy();
+    } catch (error) {
+      uploadStream.writeStream.destroy();
+      throw error;
+    }
 
     const file = this.fileRepository.create({
       fileName,

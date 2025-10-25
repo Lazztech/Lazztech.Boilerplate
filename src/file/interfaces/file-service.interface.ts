@@ -1,5 +1,6 @@
+import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
+import { Observable } from 'rxjs';
 import { File } from 'src/dal/entity/file.entity';
-import { FileUpload } from './file-upload.interface';
 import { Readable } from 'stream';
 
 export interface FileServiceInterface {
@@ -9,7 +10,7 @@ export interface FileServiceInterface {
    * @returns imageFileName as it's stored from the upload
    */
   storeImageFromFileUpload(
-    upload: Promise<FileUpload> | FileUpload,
+    upload$: Observable<MultipartFileStream>,
     userId: any,
   ): Promise<File>;
   delete(fileName: string): Promise<void>;

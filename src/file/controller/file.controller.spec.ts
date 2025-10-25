@@ -6,6 +6,7 @@ import { LocalFileService } from '../local-file/local-file.service';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { File } from '../../dal/entity/file.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { JwtService } from '@nestjs/jwt';
 
 describe('FileController', () => {
   let controller: FileController;
@@ -14,6 +15,7 @@ describe('FileController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FileController],
       providers: [
+        JwtService,
         {
           provide: FILE_SERVICE,
           useClass: LocalFileService,

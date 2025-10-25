@@ -4,11 +4,11 @@ import { NotificationController } from './notification.controller';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
 import { UserDevice } from '../dal/entity/userDevice.entity';
-import { JwtService } from '@nestjs/jwt';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([User, UserDevice])],
-  providers: [NotificationService, JwtService],
+  imports: [AuthModule, MikroOrmModule.forFeature([User, UserDevice])],
+  providers: [NotificationService],
   controllers: [NotificationController],
 })
 export class NotificationModule {}

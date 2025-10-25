@@ -9,10 +9,21 @@ import * as path from 'path';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { File } from '../dal/entity/file.entity';
 import { S3Module, S3ModuleOptions } from 'nestjs-s3';
+import { AuthModule } from '../auth/auth.module';
+import { MultipartModule } from '@proventuslabs/nestjs-multipart-form';
 
 @Module({
   imports: [
+    AuthModule,
     MikroOrmModule.forFeature([File]),
+    MultipartModule.register({
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+        files: 5,
+      },
+      autodrain: true, // Auto-drain unread files (default: true)
+      bubbleErrors: false, // Bubble errors after controller ends (default: false)
+    }),
     S3Module.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {

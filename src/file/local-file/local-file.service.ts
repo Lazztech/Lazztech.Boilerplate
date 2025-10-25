@@ -1,3 +1,5 @@
+import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   HttpException,
   HttpStatus,
@@ -6,16 +8,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v1 as uuidv1 } from 'uuid';
-import { FileServiceInterface } from '../interfaces/file-service.interface';
+import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
+import { randomUUID } from 'crypto';
 import * as fs from 'fs';
+import { Readable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
 import * as path from 'path';
-import { FileUpload } from '../interfaces/file-upload.interface';
+import { lastValueFrom, mergeMap, Observable, tap } from 'rxjs';
 import sharp from 'sharp';
-import { Readable, Stream } from 'stream';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { File } from '../../dal/entity/file.entity';
+import { FileServiceInterface } from '../interfaces/file-service.interface';
 
 @Injectable()
 export class LocalFileService implements FileServiceInterface {
@@ -37,19 +39,40 @@ export class LocalFileService implements FileServiceInterface {
   }
 
   async storeImageFromFileUpload(
-    upload: FileUpload | Promise<FileUpload>,
+    upload$: Observable<MultipartFileStream>,
     userId: any,
   ): Promise<File> {
-    const { createReadStream, mimetype } = await upload;
-    if (!mimetype?.startsWith('image/')) {
-      throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
-    }
-
-    const fileName = uuidv1() + '.webp';
+    const fileName = randomUUID() + '.webp';
     const transformer = sharp()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
-    await this.saveFile(fileName, createReadStream().pipe(transformer));
+    const writeStream = fs.createWriteStream(
+      path.join(this.directory, fileName),
+    );
+
+    try {
+      // https://rxjs.dev/api/index/function/lastValueFrom
+      await lastValueFrom(
+        upload$.pipe(
+          // https://rxjs.dev/api/operators/tap
+          tap((fileStream: MultipartFileStream) => {
+            if (!fileStream.mimetype?.startsWith('image/')) {
+              throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
+            }
+          }),
+          // transform and write using node stream pipeline which returns a Promise
+          // https://rxjs.dev/api/operators/mergeMap
+          mergeMap((fileStream: MultipartFileStream) =>
+            // https://stackoverflow.com/questions/58875655/whats-the-difference-between-pipe-and-pipeline-on-streams
+            pipeline(fileStream, transformer, writeStream),
+          ),
+        ),
+      );
+      writeStream.destroy();
+    } catch (error) {
+      writeStream.destroy();
+      throw error;
+    }
 
     // repository.create => save pattern used to so that the @BeforeInsert decorated method
     // will fire generating a uuid for the shareableId
@@ -96,13 +119,6 @@ export class LocalFileService implements FileServiceInterface {
       .unlink(path.join(this.directory, file.fileName))
       .catch((err) => this.logger.warn(err));
     return this.fileRepository.getEntityManager().removeAndFlush(file);
-  }
-
-  private saveFile(
-    fileName: string,
-    data: Buffer | string | Stream,
-  ): Promise<void> {
-    return fs.promises.writeFile(path.join(this.directory, fileName), data);
   }
 
   setupDir() {
