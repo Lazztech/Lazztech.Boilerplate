@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectS3, type S3 } from 'nestjs-s3';
 import { FileServiceInterface } from '../interfaces/file-service.interface';
-import { v1 as uuidv1 } from 'uuid';
+import { randomUUID } from 'crypto';
 import { ConfigService } from '@nestjs/config';
 import { FileUpload } from '../interfaces/file-upload.interface';
 import sharp from 'sharp';
@@ -32,38 +32,31 @@ export class S3FileService implements FileServiceInterface {
   ): Promise<File> {
     const { createReadStream, mimetype } = await upload;
     console.log(upload);
-    return new Promise((resolve) => {
-      if (!mimetype?.startsWith('image/')) {
-        throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
-      }
+    if (!mimetype?.startsWith('image/')) {
+      throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
+    }
 
-      const fileName = uuidv1() + '.webp';
-      const transformer = sharp()
-        .webp({ quality: 100 })
-        .resize(1080, 1080, { fit: sharp.fit.inside });
+    const fileName = randomUUID() + '.webp';
+    const transformer = sharp()
+      .webp({ quality: 100 })
+      .resize(1080, 1080, { fit: sharp.fit.inside });
 
-      const uploadStream = this.uploadStream(fileName);
+    const uploadStream = this.uploadStream(fileName);
 
-      createReadStream()
-        .pipe(transformer)
-        .pipe(uploadStream.writeStream)
-        .on('error', () => {
-          new HttpException('Could not save image', HttpStatus.BAD_REQUEST);
-        });
-
-      // await completion of upload
-      uploadStream.promise.then(async () => {
-        // repository.create => save pattern used to so that the @BeforeInsert decorated method
-        // will fire generating a uuid for the shareableId
-        const file = this.fileRepository.create({
-          fileName,
-          createdOn: new Date().toISOString(),
-          createdBy: userId,
-        });
-        await this.em.persistAndFlush(file);
-        resolve(file);
+    createReadStream()
+      .pipe(transformer)
+      .pipe(uploadStream.writeStream)
+      .on('error', () => {
+        new HttpException('Could not save image', HttpStatus.BAD_REQUEST);
       });
+
+    const file = this.fileRepository.create({
+      fileName,
+      createdOn: new Date().toISOString(),
+      createdBy: userId,
     });
+    await this.em.persistAndFlush(file);
+    return file;
   }
 
   private uploadStream(key: string) {

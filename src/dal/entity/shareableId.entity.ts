@@ -1,5 +1,5 @@
 import { BeforeCreate, Property } from '@mikro-orm/core';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'crypto';
 
 export abstract class ShareableId {
   @Property({ fieldName: 'shareableId' })
@@ -8,7 +8,7 @@ export abstract class ShareableId {
   // Only fires is repostiory.create is used for before save
   @BeforeCreate()
   private addId() {
-    this.shareableId = uuid();
+    this.shareableId = randomUUID();
   }
 
   // Indended to be used to indicate that it's been reported

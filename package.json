@@ -54,7 +54,6 @@
     "rxjs": "^7.8.1",
     "sharp": "^0.34.4",
     "tailwindcss": "^4.1.14",
-    "uuid": "^13.0.0",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
@@ -113,9 +112,6 @@
       "!**/*.module.*"
     ],
     "coverageDirectory": "../coverage",
-    "testEnvironment": "node",
-    "transformIgnorePatterns": [
-      "node_modules/(?!(uuid)/)"
-    ]
+    "testEnvironment": "node"
   }
 }
