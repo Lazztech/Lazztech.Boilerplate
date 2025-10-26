@@ -13,13 +13,15 @@ module.exports = {
         // Relax or disable frontend-specific checks for backend APIs
         'network-dependency-tree-insight': 'warn',
         'unminified-javascript': 'warn',
-        'unused-css-rules': 'warn',
         'unused-javascript': 'warn',
+        // compressions is expected upon deployment behind a reverse proxy
         'uses-text-compression': 'warn',
-        'render-blocking-insight': 'warn',
         'render-blocking-resources': 'warn',
         'forced-reflow-insight': 'warn',
         'document-latency-insight': 'warn',
+        // Assertions not be necessary
+        'unused-css-rules': 'warn',
+        'render-blocking-insight': 'warn',
         'image-delivery-insight': 'warn',
       },
     },
