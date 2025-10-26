@@ -27,6 +27,10 @@ export class AppController {
     };
   }
 
+  @Get('offline.html')
+  @Render('offline')
+  getOffline() {}
+
   @Sse('sse')
   getChatStream() {
     return this.message$;
