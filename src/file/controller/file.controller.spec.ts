@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { File } from '../../dal/entity/file.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../../dal/entity/user.entity';
 
 describe('FileController', () => {
   let controller: FileController;
@@ -23,6 +24,10 @@ describe('FileController', () => {
         ConfigService,
         {
           provide: getRepositoryToken(File),
+          useClass: EntityRepository,
+        },
+        {
+          provide: getRepositoryToken(User),
           useClass: EntityRepository,
         },
         {

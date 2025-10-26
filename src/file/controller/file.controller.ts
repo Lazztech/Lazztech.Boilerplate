@@ -25,6 +25,9 @@ import {
   MultipartInterceptor,
 } from '@proventuslabs/nestjs-multipart-form';
 import { Observable } from 'rxjs';
+import { InjectRepository } from '@mikro-orm/nestjs';
+import { EntityRepository } from '@mikro-orm/core';
+import { User as UserEntity } from '../../dal/entity/user.entity';
 
 @Controller('file')
 export class FileController {
@@ -33,21 +36,39 @@ export class FileController {
   constructor(
     @Inject(FILE_SERVICE)
     private readonly fileService: FileServiceInterface,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: EntityRepository<UserEntity>,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get('files')
   @Render('files')
-  async getFiles() {}
+  async getFiles(@User() payload: Payload) {
+    const user = await this.userRepository.findOne(
+      { id: payload.userId },
+      { populate: ['fileUploads'] },
+    );
+    return {
+      files: user?.fileUploads,
+    };
+  }
 
   @UseGuards(AuthGuard)
   @Post('upload')
   @UseInterceptors(MultipartInterceptor())
-  uploadFile(
+  @Render('files')
+  async uploadFile(
     @User() payload: Payload,
     @MultipartFiles('file') file$: Observable<MultipartFileStream>,
   ) {
-    console.log(file$);
-    return this.fileService.storeImageFromFileUpload(file$, payload.userId);
+    await this.fileService.storeImageFromFileUpload(file$, payload.userId);
+    const user = await this.userRepository.findOne(
+      { id: payload.userId },
+      { populate: ['fileUploads'] },
+    );
+    return {
+      files: user?.fileUploads,
+    };
   }
 
   @Get(':fileName')

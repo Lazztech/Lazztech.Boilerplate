@@ -4,12 +4,17 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Response } from 'express';
 
 @Catch()
 export class ErrorViewFilter implements ExceptionFilter {
+  private logger = new Logger(ErrorViewFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost) {
+    this.logger.warn(exception);
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();

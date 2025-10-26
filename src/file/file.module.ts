@@ -11,14 +11,15 @@ import { File } from '../dal/entity/file.entity';
 import { S3Module, S3ModuleOptions } from 'nestjs-s3';
 import { AuthModule } from '../auth/auth.module';
 import { MultipartModule } from '@proventuslabs/nestjs-multipart-form';
+import { User } from '../dal/entity/user.entity';
 
 @Module({
   imports: [
     AuthModule,
-    MikroOrmModule.forFeature([File]),
+    MikroOrmModule.forFeature([File, User]),
     MultipartModule.register({
       limits: {
-        fileSize: 10 * 1024 * 1024, // 10MB
+        fileSize: 100 * 1024 * 1024, // 100MB
         files: 5,
       },
       autodrain: true, // Auto-drain unread files (default: true)
