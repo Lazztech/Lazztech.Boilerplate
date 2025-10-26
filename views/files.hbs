@@ -22,22 +22,27 @@
     {{/each}}
   </div>
 
-  <form
-    id="form"
-    hx-encoding="multipart/form-data"
-    hx-post="/file/upload"
-    hx-indicator="#loading"
-    hx-target="main"
-    hx-select="main"
-    class="fixed bottom-15 left-0 right-0 p-4 shadow-lg bg-gradient-to-t from-base-100 via-base-100/50 to-transparent flex gap-2 items-center justify-center"
+  <div
+    class="fixed bottom-15 left-0 right-0 p-4 shadow-lg bg-gradient-to-t from-base-100 via-base-100/50 to-transparent"
   >
-    <input type="file" name="file" class="file-input" />
-    <button class="btn btn-neutral">Upload</button>
-    <span
-      id="loading"
-      class="htmx-indicator loading loading-ring loading-sm"
-    ></span>
-  </form>
+    <form
+      id="form"
+      hx-encoding="multipart/form-data"
+      hx-post="/file/upload"
+      hx-indicator="#loading"
+      hx-target="main"
+      hx-select="main"
+      hx-swap="outerHTML"
+      class="flex gap-2 items-center justify-center"
+    >
+      <input type="file" name="file" class="file-input" />
+      <button class="btn btn-neutral">Upload</button>
+      <span
+        id="loading"
+        class="htmx-indicator loading loading-ring loading-sm"
+      ></span>
+    </form>
+  </div>
 </main>
 {{>dock}}
 <script>

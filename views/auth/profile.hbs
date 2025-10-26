@@ -1,5 +1,5 @@
 {{>navbar}}
-<div class="flex flex-col justify-center items-center h-full gap-3">  
+<main class="flex flex-col justify-center items-center h-full gap-3">  
     <form hx-post="/auth/register" hx-trigger="submit" hx-target="body">
         <fieldset
         class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
@@ -25,7 +25,7 @@
         <p class="text-error">{{this}}</p>
         {{/each}}
 
-        <button type="submit" id="submit" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.UPDATE'}}</button>
+        <button type="submit" id="submit-email" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.UPDATE'}}</button>
         </fieldset>
     </form>
 
@@ -48,6 +48,7 @@
           value="{{input.password}}"
           required
           placeholder="{{t 'lang.PASSWORD'}}"
+          autocomplete="new-password"
         />
       </label>
       {{#each (filterErrors validationErrors "password")}}
@@ -69,7 +70,7 @@
       <p class="text-error">{{this}}</p>
       {{/each}}
 
-      <button type="submit" id="submit" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.CHANGE'}}</button>
+      <button type="submit" id="submit-password" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.CHANGE'}}</button>
     </fieldset>
   </form>
   <button
@@ -80,5 +81,5 @@
   >
     {{t 'lang.DELETE_ACCOUNT'}}
   </button>
-</div>
+</main>
 {{>dock}}

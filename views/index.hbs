@@ -1,26 +1,9 @@
 {{!-- Load navbar partial --}} {{>navbar}}
 
-<div class="flex flex-col justify-center items-center h-full">
+<main class="p-20 flex flex-col justify-center items-center h-full">
   <div id="chat">
     <!-- Chat messages will be displayed here -->
   </div>
-  <form
-    id="messageForm"
-    hx-post="/message"
-    hx-trigger="submit"
-    hx-swap="beforeend"
-    hx-target="#chat"
-  >
-    <input
-      type="text"
-      id="message"
-      name="message"
-      class="input"
-      placeholder="{{t 'lang.YOUR_MESSAGE'}}"
-      required
-    />
-    <button type="submit" class="btn btn-neutral">{{t 'lang.SEND'}}</button>
-  </form>
   <div
     id="sse-listener"
     hx-ext="sse"
@@ -29,12 +12,38 @@
     hx-swap="beforeend"
     hx-target="#chat"
   ></div>
-  <script type="text/javascript">
-    var pwaInstall = document.getElementById('pwa-install');
-  </script>
-  <button onclick="pwaInstall.showDialog(true)" class="btn btn-neutral">
-    {{t 'lang.FORCE_PWA'}}
-  </button>
-</div>
+
+  <div
+    class="fixed bottom-15 left-0 right-0 p-4 shadow-lg bg-gradient-to-t from-base-100 via-base-100/50 to-transparent"
+  >
+    <div class="flex flex-row gap-2 items-center justify-center">
+      <form
+        id="messageForm"
+        hx-post="/message"
+        hx-trigger="submit"
+        hx-swap="beforeend"
+        hx-target="#chat"
+        class="flex flex-row gap-2 items-center"
+      >
+        <input
+          type="text"
+          id="message"
+          name="message"
+          class="input"
+          placeholder="{{t 'lang.YOUR_MESSAGE'}}"
+          required
+        />
+        <button type="submit" class="btn btn-neutral">{{t 'lang.SEND'}}</button>
+      </form>
+      <button onclick="pwaInstall.showDialog(true)" class="btn btn-neutral">
+        {{t 'lang.FORCE_PWA'}}
+      </button>
+    </div>
+  </div>
+</main>
 
 {{!-- Load dock partial --}} {{>dock}}
+
+<script type="text/javascript">
+  var pwaInstall = document.getElementById('pwa-install');
+</script>
