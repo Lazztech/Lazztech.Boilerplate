@@ -1,6 +1,9 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { AuthGuard } from '../auth/auth.guard';
+import { User } from 'src/auth/user.decorator';
+import { Payload } from 'src/auth/dto/payload.dto';
+import { PushSubscription } from 'web-push';
 
 @Controller('notification')
 export class NotificationController {
@@ -8,10 +11,12 @@ export class NotificationController {
 
   @UseGuards(AuthGuard)
   @Post('subscribe')
-  async postSubscribe(@Body() body: any) {
-    const userId = 1;
+  async postSubscribe(
+    @User() payload: Payload,
+    @Body() body: { subscription: PushSubscription },
+  ) {
     await this.notificationService.addUserWebPushNotificationSubscription(
-      userId,
+      payload.userId,
       body.subscription,
     );
   }
