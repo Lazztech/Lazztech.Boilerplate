@@ -11,15 +11,16 @@ module.exports = {
       preset: 'lighthouse:recommended',
       assertions: {
         // Relax or disable frontend-specific checks for backend APIs
-        'network-dependency-tree-insight': 'off',
-        'unminified-javascript': 'off',
-        'unused-css-rules': 'off',
-        'unused-javascript': 'off',
-        'uses-text-compression': 'off',
-        'render-blocking-insight': 'off',
-        'render-blocking-resources': 'off',
+        'network-dependency-tree-insight': 'warn',
+        'unminified-javascript': 'warn',
+        'unused-css-rules': 'warn',
+        'unused-javascript': 'warn',
+        'uses-text-compression': 'warn',
+        'render-blocking-insight': 'warn',
+        'render-blocking-resources': 'warn',
         'forced-reflow-insight': 'warn',
         'document-latency-insight': 'warn',
+        'image-delivery-insight': 'warn',
       },
     },
     upload: {
