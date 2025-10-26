@@ -1,6 +1,6 @@
 {{>navbar}}
 
-<main>
+<main class="flex flex-col justify-center items-center h-full">
   {{#if error}}
   <div
     role="alert"
@@ -22,39 +22,38 @@
     <span>{{error.message}}</span>
   </div>
   {{/if}}
-  <div class="flex flex-col justify-center items-center h-full">
-    <form hx-post="/auth/login" hx-trigger="submit" hx-target="body">
-      <fieldset
-        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
-      >
-        <legend class="fieldset-legend">{{t 'lang.LOGIN'}}</legend>
 
-        <label class="label">{{t 'lang.EMAIL'}}</label>
-        <label class="input">
-          <input
-            name="email"
-            type="email"
-            placeholder="{{t 'lang.EMAIL'}}"
-            required
-          />
-        </label>
+  <form hx-post="/auth/login" hx-trigger="submit" hx-target="body">
+    <fieldset
+      class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
+    >
+      <legend class="fieldset-legend">{{t 'lang.LOGIN'}}</legend>
 
-        <label class="label">{{t 'lang.PASSWORD'}}</label>
-        <label class="input">
-          <input
-            name="password"
-            type="password"
-            required
-            placeholder="{{t 'lang.PASSWORD'}}"
-          />
-        </label>
+      <label class="label">{{t 'lang.EMAIL'}}</label>
+      <label class="input">
+        <input
+          name="email"
+          type="email"
+          placeholder="{{t 'lang.EMAIL'}}"
+          required
+        />
+      </label>
 
-        <button type="submit" class="btn btn-neutral mt-4">
-          {{t 'lang.LOGIN'}}
-        </button>
-      </fieldset>
-    </form>
-  </div>
+      <label class="label">{{t 'lang.PASSWORD'}}</label>
+      <label class="input">
+        <input
+          name="password"
+          type="password"
+          required
+          placeholder="{{t 'lang.PASSWORD'}}"
+        />
+      </label>
+
+      <button type="submit" class="btn btn-neutral mt-4">
+        {{t 'lang.LOGIN'}}
+      </button>
+    </fieldset>
+  </form>
 </main>
 
 {{>dock}}

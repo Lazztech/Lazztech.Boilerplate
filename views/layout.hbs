@@ -25,6 +25,15 @@ https://nestjs-i18n.com/quick-start --}}
     <meta name="twitter:description" content="{{ogDescription}}" />
     <meta name="twitter:image" content="{{ogImage}}" />
 
+    {{!--
+    https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html
+    --}}
+    <link rel="apple-touch-icon" href="assets/lazztech_icon.png" />
+
+    {{!-- https://htmx.org/reference/#config --}} {{!--
+    https://htmx.org/attributes/hx-swap/#modifiers --}}
+    <meta name="htmx-config" content='{"globalViewTransitions": "true"}' />
+
     <title>{{appName}}</title>
     {{! Used inconjunction with service worker sw.js to enable PWA (Progressive
     Web App) functionality. }}

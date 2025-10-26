@@ -9,7 +9,7 @@ var preLoad = function () {
     '/offline.html',
     '/modules/htmx.min.js',
     '/modules/sse.js',
-    '/main.css',
+    '/bundle.css',
     '/favicon.ico',
   ];
 
@@ -32,7 +32,6 @@ self.addEventListener('fetch', function (event) {
 var checkResponse = function (request) {
   return new Promise(function (fulfill, reject) {
     fetch(request.clone()).then(function (response) {
-      // ← Clone here too
       if (response.status !== 404) {
         fulfill(response);
       } else {
@@ -43,6 +42,10 @@ var checkResponse = function (request) {
 };
 
 var addToCache = function (request) {
+  if (request.method !== 'GET') {
+    return Promise.resolve();
+  }
+
   return caches.open('offline').then(function (cache) {
     return fetch(request).then(function (response) {
       console.log(response.url + ' was cached');
@@ -52,6 +55,10 @@ var addToCache = function (request) {
 };
 
 var returnFromCache = function (request) {
+  if (request.method !== 'GET') {
+    return fetch(request);
+  }
+
   return caches.open('offline').then(function (cache) {
     return cache.match(request).then(function (matching) {
       if (!matching || matching.status == 404) {
