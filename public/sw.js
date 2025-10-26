@@ -26,12 +26,13 @@ self.addEventListener('fetch', function (event) {
       return returnFromCache(event.request);
     }),
   );
-  event.waitUntil(addToCache(event.request));
+  event.waitUntil(addToCache(event.request.clone()));
 });
 
 var checkResponse = function (request) {
   return new Promise(function (fulfill, reject) {
-    fetch(request).then(function (response) {
+    fetch(request.clone()).then(function (response) {
+      // ← Clone here too
       if (response.status !== 404) {
         fulfill(response);
       } else {
@@ -45,7 +46,7 @@ var addToCache = function (request) {
   return caches.open('offline').then(function (cache) {
     return fetch(request).then(function (response) {
       console.log(response.url + ' was cached');
-      return cache.put(request, response);
+      return cache.put(request, response.clone());
     });
   });
 };
