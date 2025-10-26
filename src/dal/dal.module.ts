@@ -28,8 +28,8 @@ import path from 'path';
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
-                path: './src/dal/migrations/sqlite',
-                pathTs: './dist/dal/migrations/sqlite',
+                path: path.join(__dirname, 'migrations/sqlite'),
+                pathTs: path.join(__dirname, 'migrations/sqlite'),
                 transactional: true,
               },
               logger: (message) => console.log(message),
@@ -50,8 +50,8 @@ import path from 'path';
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
-                path: './src/dal/migrations/postgres',
-                pathTs: './dist/dal/migrations/postgres',
+                path: path.join(__dirname, 'migrations/postgres'),
+                pathTs: path.join(__dirname, 'migrations/sqlite'),
                 transactional: true,
               },
               driverOptions: {
