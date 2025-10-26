@@ -1,5 +1,6 @@
 {{>navbar}}
 <main class="p-20">
+  {{baseUrl}} {{siteUrl}}
   <div class="flex flex-wrap gap-4 p-4 items-center justify-center">
     {{#each files}}
     <div class="card bg-base-100 w-96 shadow-sm">
@@ -12,7 +13,13 @@
         <div class="card-actions justify-end">
           <button
             class="btn btn-primary"
-            onclick="shareFile('{{this.fileName}}', '/file/{{this.fileName}}')"
+            onclick="navigator.clipboard.writeText('{{../siteUrl}}/share?shareableId={{this.shareableId}}&type=file'); alert('Copied!')"
+          >
+            Copy Text
+          </button>
+          <button
+            class="btn btn-primary"
+            onclick="shareFile('{{this.fileName}}', '/share?shareableId={{this.shareableId}}&type=file')"
           >
             Share
           </button>
@@ -46,7 +53,7 @@
 </main>
 {{>dock}}
 <script>
-  async function shareFile(fileName, fileUrl) {
+  async function shareFile(title, url) {
     if (!navigator.share) {
       alert('Sharing is not supported on this browser');
       return;
@@ -54,8 +61,8 @@
 
     try {
       await navigator.share({
-        title: fileName,
-        url: fileUrl,
+        title,
+        url,
       });
     } catch (err) {
       if (err.name !== 'AbortError') {

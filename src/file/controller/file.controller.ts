@@ -94,7 +94,7 @@ export class FileController {
     @Res() response: Response,
   ) {
     const watermark = await sharp(
-      join(process.cwd(), 'public', 'assets', 'icon_1000x1000.webp'),
+      join(process.cwd(), 'public', 'assets', 'lazztech_icon.webp'),
     )
       .resize(150, 150)
       .extend({

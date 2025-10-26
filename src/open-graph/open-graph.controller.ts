@@ -7,7 +7,7 @@ export class OpenGraphController {
   constructor(private readonly openGraphService: OpenGraphService) {}
 
   @Get()
-  @Render('index')
+  @Render('share')
   share(
     @Query('shareableId') shareableId: string,
     @Query('type') type: string,

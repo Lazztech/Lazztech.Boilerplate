@@ -27,14 +27,20 @@ export class OpenGraphService {
     req: Request,
   ) {
     if (type == 'file') {
-      const file = await this.fileRepository.findOne({ shareableId });
+      const file = await this.fileRepository.findOne(
+        { shareableId },
+        {
+          populate: ['createdBy'],
+        },
+      );
+      const createdBy = await file?.createdBy.load();
       return {
         ogUrl: `${req.protocol}://${req.get('host')}/file/${shareableId}`,
         ogTitle: file?.fileName,
-        ogDescription: '',
-        ogImage: file?.fileName
-          ? this.fileUrlService.getFileUrl(file?.fileName, req)
-          : '',
+        ogDescription: `From ${createdBy?.email}`,
+        ogImage: this.fileUrlService.getWatermarkedFileUrl(shareableId, req),
+        file,
+        createdBy,
       };
     }
   }
