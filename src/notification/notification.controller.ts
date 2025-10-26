@@ -1,8 +1,8 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { User } from 'src/auth/user.decorator';
-import { Payload } from 'src/auth/dto/payload.dto';
+import { User } from '../auth/user.decorator';
+import { Payload } from '../auth/dto/payload.dto';
 import { PushSubscription } from 'web-push';
 
 @Controller('notification')
