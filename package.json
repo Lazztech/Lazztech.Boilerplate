@@ -7,8 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build && npm run generate:tailwind",
-    "generate:sw": "npx workbox generateSW",
-    "generate:sw:watch": "npx workbox generateSW --watch",
+    "generate:sw": "npx workbox injectManifest",
+    "generate:sw:watch": "npx workbox injectManifest --watch",
     "generate:tailwind": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify",
     "generate:tailwind:watch": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -57,7 +57,10 @@
     "rxjs": "^7.8.1",
     "sharp": "^0.34.4",
     "tailwindcss": "^4.1.14",
-    "web-push": "^3.6.7"
+    "web-push": "^3.6.7",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

@@ -1,11 +1,6 @@
 module.exports = {
-	globDirectory: 'public/',
-	globPatterns: [
-		'**/*.{png,webp,css,ico,json,txt}'
-	],
-	swDest: 'public/assets/js/sw.js',
-	ignoreURLParametersMatching: [
-		/^utm_/,
-		/^fbclid$/
-	]
+  globDirectory: 'public/',
+  globPatterns: ['**/*.{png,webp,css,ico,js,json,txt}'],
+  swDest: 'public/sw.js',
+  swSrc: 'views/assets/src-sw.js',
 };

@@ -72,6 +72,13 @@ This boilerplate is setup with PWA support out of the box. This includes an [ins
 
 [Fireship: Progressive Web Apps in 100 Seconds // Build a PWA from Scratch](https://www.youtube.com/watch?v=sFsRylCQblw)
 
+The workbox generated service worker takes from the `workbox-config.js`, this takes from a `view/assets/src-sw.js` and outputs a generated `/public/js/sw.js`.
+
+```bash
+# generate a new sw.js after any changes to src-sw.js
+$ npm run generate:sw
+```
+
 Also checkout the link below for some examples of what's possible with Progressive Web Apps modern web APIs.
 
 https://whatpwacando.today/
