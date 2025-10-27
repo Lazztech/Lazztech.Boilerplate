@@ -66,6 +66,16 @@ graph TB
     end
 ```
 
+**Progressive Web App (PWA)**
+
+This boilerplate is setup with PWA support out of the box. This includes an [installation prompt that works across platforms](https://github.com/khmyznikov/pwa-install) to guide the user to install the PWA as a traditional "App" on their devices. This works across all major platforms, desktop, and mobile. This project's service worker uses https://workboxjs.org. See the video below for a primer on PWAs and service workers with workbox.
+
+[Fireship: Progressive Web Apps in 100 Seconds // Build a PWA from Scratch](https://www.youtube.com/watch?v=sFsRylCQblw)
+
+Also checkout the link below for some examples of what's possible with Progressive Web Apps modern web APIs.
+
+https://whatpwacando.today/
+
 **Google Lighthouse**
 
 This all also results in a starting point for developing a web app with a perfect google lighthouse score.
