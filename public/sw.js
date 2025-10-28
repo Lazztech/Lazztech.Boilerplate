@@ -2629,7 +2629,13 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     defaultRouter2.setCatchHandler(handler);
   }
 
+  // node_modules/workbox-core/clientsClaim.js
+  function clientsClaim() {
+    self.addEventListener("activate", () => self.clients.claim());
+  }
+
   // views/assets/src-sw.ts
+  clientsClaim();
   precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"9e3a582c64d9437347e344b30ccc967d","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"icons/icon_1000x1000.webp"},{"revision":"ba833a413cf3014b8b30e51a3b973e51","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
   var STRATEGY = new NetworkFirst();
   warmStrategyCache({

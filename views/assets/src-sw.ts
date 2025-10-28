@@ -2,6 +2,13 @@ import { precacheAndRoute } from 'workbox-precaching';
 import { warmStrategyCache } from 'workbox-recipes';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
 import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
+import { clientsClaim } from 'workbox-core';
+
+// https://developer.chrome.com/docs/workbox/modules/workbox-core#clients_claim
+// This clientsClaim() should be at the top level
+// of your service worker, not inside of, e.g.,
+// an event handler.
+clientsClaim();
 
 declare const self: ServiceWorkerGlobalScope;
 
