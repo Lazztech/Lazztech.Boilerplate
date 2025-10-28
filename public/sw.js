@@ -2636,11 +2636,13 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     urls: ["/modules/htmx.min.js", "/modules/sse.js"],
     strategy: STRATEGY
   });
-  registerRoute(({ url, sameOrigin }) => {
+  registerRoute(({ url, request, sameOrigin }) => {
+    const isHtmxRequest = request.headers.get("HX-Request") === "true";
+    const shouldRegisterRoute = sameOrigin || isHtmxRequest;
     console.log(
-      `registerRoute - URL: ${url.pathname}, sameOrigin: ${sameOrigin}`
+      `SW intercepted request, is (sameOrigin || isHtmxRequest): ${shouldRegisterRoute}, URL: ${url.pathname}, sameOrigin: ${sameOrigin}, HTMX: ${isHtmxRequest}`
     );
-    return sameOrigin;
+    return shouldRegisterRoute;
   }, STRATEGY);
   var FALLBACK_HTML_URL = "/offline.html";
   var FALLBACK_STRATEGY = new StaleWhileRevalidate();

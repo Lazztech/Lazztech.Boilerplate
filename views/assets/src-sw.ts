@@ -17,11 +17,15 @@ warmStrategyCache({
 });
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-routing
-registerRoute(({ url, sameOrigin }) => {
+registerRoute(({ url, request, sameOrigin }) => {
+  const isHtmxRequest = request.headers.get('HX-Request') === 'true';
+  // Match same-origin requests OR HTMX requests
+  const shouldRegisterRoute = sameOrigin || isHtmxRequest;
   console.log(
-    `registerRoute - URL: ${url.pathname}, sameOrigin: ${sameOrigin}`,
+    `SW intercepted request, is (sameOrigin || isHtmxRequest): ${shouldRegisterRoute}, URL: ${url.pathname}, sameOrigin: ${sameOrigin}, HTMX: ${isHtmxRequest}`,
   );
-  return sameOrigin;
+
+  return shouldRegisterRoute;
 }, STRATEGY);
 
 // https://developer.chrome.com/docs/workbox/managing-fallback-responses#comprehensive_fallbacks
