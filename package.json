@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build && npm run generate:tailwind",
-    "generate:sw": "npx workbox injectManifest",
+    "generate:sw": "esbuild --outfile=views/assets/src-sw.js --bundle views/assets/src-sw.ts && npx workbox injectManifest",
     "generate:sw:watch": "npx workbox injectManifest --watch",
     "generate:tailwind": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify",
     "generate:tailwind:watch": "npx @tailwindcss/cli -i ./views/assets/main.css -o ./public/bundle.css --minify --watch",
@@ -57,10 +57,7 @@
     "rxjs": "^7.8.1",
     "sharp": "^0.34.4",
     "tailwindcss": "^4.1.14",
-    "web-push": "^3.6.7",
-    "workbox-precaching": "^7.3.0",
-    "workbox-routing": "^7.3.0",
-    "workbox-strategies": "^7.3.0"
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
@@ -83,6 +80,7 @@
     "@types/web-push": "^3.6.4",
     "concurrently": "^9.2.1",
     "daisyui": "^5.1.27",
+    "esbuild": "^0.25.11",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
@@ -98,7 +96,11 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0",
-    "workbox-cli": "^7.3.0"
+    "workbox-cli": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-recipes": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0"
   },
   "jest": {
     "moduleFileExtensions": [

@@ -6,6 +6,7 @@
     "dist", 
     "**/*spec.ts", 
     "public", 
-    "**/mikro-orm.*.cli-config.*"
+    "**/mikro-orm.*.cli-config.*",
+    "views"
   ]
 }
