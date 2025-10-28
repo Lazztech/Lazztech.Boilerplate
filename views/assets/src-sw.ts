@@ -12,14 +12,16 @@ precacheAndRoute(self.__WB_MANIFEST);
 const STRATEGY = new NetworkFirst();
 
 warmStrategyCache({
-  urls: ['/', '/modules/htmx.min.js', '/modules/sse.js'],
+  urls: ['/modules/htmx.min.js', '/modules/sse.js'],
   strategy: STRATEGY,
 });
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-routing
-registerRoute((event) => {
-  console.log(`registerRoute callback:`, event);
-  return event.sameOrigin;
+registerRoute(({ url, sameOrigin }) => {
+  console.log(
+    `registerRoute - URL: ${url.pathname}, sameOrigin: ${sameOrigin}`,
+  );
+  return sameOrigin;
 }, STRATEGY);
 
 // https://developer.chrome.com/docs/workbox/managing-fallback-responses#comprehensive_fallbacks
