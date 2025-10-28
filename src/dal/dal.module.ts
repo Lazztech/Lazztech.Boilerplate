@@ -51,7 +51,7 @@ import path from 'path';
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
                 path: path.join(__dirname, 'migrations/postgres'),
-                pathTs: path.join(__dirname, 'migrations/sqlite'),
+                pathTs: path.join(__dirname, 'migrations/postgres'),
                 transactional: true,
               },
               driverOptions: {
