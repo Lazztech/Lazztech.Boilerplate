@@ -1,8 +1,8 @@
+import { clientsClaim } from 'workbox-core';
 import { precacheAndRoute } from 'workbox-precaching';
 import { warmStrategyCache } from 'workbox-recipes';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
-import { NetworkFirst, StaleWhileRevalidate } from 'workbox-strategies';
-import { clientsClaim } from 'workbox-core';
+import { NetworkFirst } from 'workbox-strategies';
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-core#clients_claim
 // This clientsClaim() should be at the top level
@@ -16,11 +16,13 @@ declare const self: ServiceWorkerGlobalScope;
 // build tools to precache a list of URLs, including fallbacks.
 precacheAndRoute(self.__WB_MANIFEST);
 
-const STRATEGY = new NetworkFirst();
+const CACHE_STRATEGY = new NetworkFirst();
+const FALLBACK_HTML_URL = '/offline.html';
 
+// Warm the runtime cache with a list of asset URLs
 warmStrategyCache({
-  urls: ['/modules/htmx.min.js', '/modules/sse.js'],
-  strategy: STRATEGY,
+  urls: ['/', FALLBACK_HTML_URL, '/modules/htmx.min.js', '/modules/sse.js'],
+  strategy: CACHE_STRATEGY,
 });
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-routing
@@ -33,18 +35,9 @@ registerRoute(({ url, request, sameOrigin }) => {
   );
 
   return shouldRegisterRoute;
-}, STRATEGY);
+}, CACHE_STRATEGY);
 
-// https://developer.chrome.com/docs/workbox/managing-fallback-responses#comprehensive_fallbacks
-const FALLBACK_HTML_URL = '/offline.html';
-const FALLBACK_STRATEGY = new StaleWhileRevalidate();
-
-// Warm the runtime cache with a list of asset URLs
-warmStrategyCache({
-  urls: [FALLBACK_HTML_URL],
-  strategy: FALLBACK_STRATEGY,
-});
-
+// https://developer.chrome.com/docs/workbox/managing-fallback-responses
 // This "catch" handler is triggered when any of the other routes fail to
 // generate a response.
 setCatchHandler(async ({ event }) => {
@@ -54,7 +47,7 @@ setCatchHandler(async ({ event }) => {
   // use request.destination to match requests for specific resource types.
   console.log(`setCatchHandler callback:`, event);
 
-  return FALLBACK_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(
+  return CACHE_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(
     // If we don't have a fallback, return an error response.
     () => Response.error(),
   );

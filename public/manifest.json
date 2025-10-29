@@ -3,7 +3,7 @@
   "name": "Lazztech Boilerplate",
   "icons": [
     {
-        "src": "/icons/icon_1000x1000.webp",
+        "src": "/assets/lazztech_icon.webp",
         "sizes": "1000x1000"
     }
   ],

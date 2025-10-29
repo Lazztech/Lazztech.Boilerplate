@@ -60,7 +60,7 @@ export class NotificationService {
         JSON.stringify({
           notification: {
             ...notification,
-            icon: `${this.configService.get('SITE_URL')}/icons/icon_1000x1000.webp`,
+            icon: `${this.configService.get('SITE_URL')}/assets/lazztech_icon.webp`,
           },
         }),
       )

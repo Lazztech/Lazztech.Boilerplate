@@ -5,6 +5,58 @@
   } catch (e) {
   }
 
+  // node_modules/workbox-core/_private/logger.js
+  var logger = false ? null : (() => {
+    if (!("__WB_DISABLE_DEV_LOGS" in globalThis)) {
+      self.__WB_DISABLE_DEV_LOGS = false;
+    }
+    let inGroup = false;
+    const methodToColorMap = {
+      debug: `#7f8c8d`,
+      log: `#2ecc71`,
+      warn: `#f39c12`,
+      error: `#c0392b`,
+      groupCollapsed: `#3498db`,
+      groupEnd: null
+      // No colored prefix on groupEnd
+    };
+    const print = function(method, args) {
+      if (self.__WB_DISABLE_DEV_LOGS) {
+        return;
+      }
+      if (method === "groupCollapsed") {
+        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+          console[method](...args);
+          return;
+        }
+      }
+      const styles = [
+        `background: ${methodToColorMap[method]}`,
+        `border-radius: 0.5em`,
+        `color: white`,
+        `font-weight: bold`,
+        `padding: 2px 0.5em`
+      ];
+      const logPrefix = inGroup ? [] : ["%cworkbox", styles.join(";")];
+      console[method](...logPrefix, ...args);
+      if (method === "groupCollapsed") {
+        inGroup = true;
+      }
+      if (method === "groupEnd") {
+        inGroup = false;
+      }
+    };
+    const api = {};
+    const loggerMethods = Object.keys(methodToColorMap);
+    for (const key of loggerMethods) {
+      const method = key;
+      api[method] = (...args) => {
+        print(method, args);
+      };
+    }
+    return api;
+  })();
+
   // node_modules/workbox-core/models/messages/messages.js
   var messages = {
     "invalid-value": ({ paramName, validValueDescription, value }) => {
@@ -248,6 +300,9 @@
     isArrayOfClass
   };
 
+  // node_modules/workbox-core/models/quotaErrorCallbacks.js
+  var quotaErrorCallbacks = /* @__PURE__ */ new Set();
+
   // node_modules/workbox-core/_private/cacheNames.js
   var _cacheNameDetails = {
     googleAnalytics: "googleAnalytics",
@@ -289,63 +344,119 @@
     }
   };
 
-  // node_modules/workbox-core/_private/logger.js
-  var logger = false ? null : (() => {
-    if (!("__WB_DISABLE_DEV_LOGS" in globalThis)) {
-      self.__WB_DISABLE_DEV_LOGS = false;
+  // node_modules/workbox-core/_private/cacheMatchIgnoreParams.js
+  function stripParams(fullURL, ignoreParams) {
+    const strippedURL = new URL(fullURL);
+    for (const param of ignoreParams) {
+      strippedURL.searchParams.delete(param);
     }
-    let inGroup = false;
-    const methodToColorMap = {
-      debug: `#7f8c8d`,
-      log: `#2ecc71`,
-      warn: `#f39c12`,
-      error: `#c0392b`,
-      groupCollapsed: `#3498db`,
-      groupEnd: null
-      // No colored prefix on groupEnd
-    };
-    const print = function(method, args) {
-      if (self.__WB_DISABLE_DEV_LOGS) {
-        return;
+    return strippedURL.href;
+  }
+  async function cacheMatchIgnoreParams(cache, request, ignoreParams, matchOptions) {
+    const strippedRequestURL = stripParams(request.url, ignoreParams);
+    if (request.url === strippedRequestURL) {
+      return cache.match(request, matchOptions);
+    }
+    const keysOptions = Object.assign(Object.assign({}, matchOptions), { ignoreSearch: true });
+    const cacheKeys = await cache.keys(request, keysOptions);
+    for (const cacheKey of cacheKeys) {
+      const strippedCacheKeyURL = stripParams(cacheKey.url, ignoreParams);
+      if (strippedRequestURL === strippedCacheKeyURL) {
+        return cache.match(cacheKey, matchOptions);
       }
-      if (method === "groupCollapsed") {
-        if (/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-          console[method](...args);
-          return;
+    }
+    return;
+  }
+
+  // node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js
+  var supportStatus;
+  function canConstructResponseFromBodyStream() {
+    if (supportStatus === void 0) {
+      const testResponse = new Response("");
+      if ("body" in testResponse) {
+        try {
+          new Response(testResponse.body);
+          supportStatus = true;
+        } catch (error) {
+          supportStatus = false;
         }
       }
-      const styles = [
-        `background: ${methodToColorMap[method]}`,
-        `border-radius: 0.5em`,
-        `color: white`,
-        `font-weight: bold`,
-        `padding: 2px 0.5em`
-      ];
-      const logPrefix = inGroup ? [] : ["%cworkbox", styles.join(";")];
-      console[method](...logPrefix, ...args);
-      if (method === "groupCollapsed") {
-        inGroup = true;
-      }
-      if (method === "groupEnd") {
-        inGroup = false;
-      }
-    };
-    const api = {};
-    const loggerMethods = Object.keys(methodToColorMap);
-    for (const key of loggerMethods) {
-      const method = key;
-      api[method] = (...args) => {
-        print(method, args);
-      };
+      supportStatus = false;
     }
-    return api;
-  })();
+    return supportStatus;
+  }
+
+  // node_modules/workbox-core/_private/Deferred.js
+  var Deferred = class {
+    /**
+     * Creates a promise and exposes its resolve and reject functions as methods.
+     */
+    constructor() {
+      this.promise = new Promise((resolve, reject) => {
+        this.resolve = resolve;
+        this.reject = reject;
+      });
+    }
+  };
+
+  // node_modules/workbox-core/_private/executeQuotaErrorCallbacks.js
+  async function executeQuotaErrorCallbacks() {
+    if (true) {
+      logger.log(`About to run ${quotaErrorCallbacks.size} callbacks to clean up caches.`);
+    }
+    for (const callback of quotaErrorCallbacks) {
+      await callback();
+      if (true) {
+        logger.log(callback, "is complete.");
+      }
+    }
+    if (true) {
+      logger.log("Finished running callbacks.");
+    }
+  }
+
+  // node_modules/workbox-core/_private/getFriendlyURL.js
+  var getFriendlyURL = (url) => {
+    const urlObj = new URL(String(url), location.href);
+    return urlObj.href.replace(new RegExp(`^${location.origin}`), "");
+  };
+
+  // node_modules/workbox-core/_private/timeout.js
+  function timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
   // node_modules/workbox-core/_private/waitUntil.js
   function waitUntil(event, asyncFn) {
     const returnPromise = asyncFn();
     event.waitUntil(returnPromise);
     return returnPromise;
+  }
+
+  // node_modules/workbox-core/copyResponse.js
+  async function copyResponse(response, modifier) {
+    let origin = null;
+    if (response.url) {
+      const responseURL = new URL(response.url);
+      origin = responseURL.origin;
+    }
+    if (origin !== self.location.origin) {
+      throw new WorkboxError("cross-origin-copy-response", { origin });
+    }
+    const clonedResponse = response.clone();
+    const responseInit = {
+      headers: new Headers(clonedResponse.headers),
+      status: clonedResponse.status,
+      statusText: clonedResponse.statusText
+    };
+    const modifiedResponseInit = modifier ? modifier(responseInit) : responseInit;
+    const body = canConstructResponseFromBodyStream() ? clonedResponse.body : await clonedResponse.blob();
+    return new Response(body, modifiedResponseInit);
+  }
+
+  // node_modules/workbox-core/clientsClaim.js
+  function clientsClaim() {
+    self.addEventListener("activate", () => self.clients.claim());
   }
 
   // node_modules/workbox-precaching/_version.js
@@ -465,112 +576,6 @@
       _nestedGroup(`View previously precached URLs.`, urlsAlreadyPrecached);
       logger.groupEnd();
     }
-  }
-
-  // node_modules/workbox-core/_private/canConstructResponseFromBodyStream.js
-  var supportStatus;
-  function canConstructResponseFromBodyStream() {
-    if (supportStatus === void 0) {
-      const testResponse = new Response("");
-      if ("body" in testResponse) {
-        try {
-          new Response(testResponse.body);
-          supportStatus = true;
-        } catch (error) {
-          supportStatus = false;
-        }
-      }
-      supportStatus = false;
-    }
-    return supportStatus;
-  }
-
-  // node_modules/workbox-core/copyResponse.js
-  async function copyResponse(response, modifier) {
-    let origin = null;
-    if (response.url) {
-      const responseURL = new URL(response.url);
-      origin = responseURL.origin;
-    }
-    if (origin !== self.location.origin) {
-      throw new WorkboxError("cross-origin-copy-response", { origin });
-    }
-    const clonedResponse = response.clone();
-    const responseInit = {
-      headers: new Headers(clonedResponse.headers),
-      status: clonedResponse.status,
-      statusText: clonedResponse.statusText
-    };
-    const modifiedResponseInit = modifier ? modifier(responseInit) : responseInit;
-    const body = canConstructResponseFromBodyStream() ? clonedResponse.body : await clonedResponse.blob();
-    return new Response(body, modifiedResponseInit);
-  }
-
-  // node_modules/workbox-core/_private/getFriendlyURL.js
-  var getFriendlyURL = (url) => {
-    const urlObj = new URL(String(url), location.href);
-    return urlObj.href.replace(new RegExp(`^${location.origin}`), "");
-  };
-
-  // node_modules/workbox-core/_private/cacheMatchIgnoreParams.js
-  function stripParams(fullURL, ignoreParams) {
-    const strippedURL = new URL(fullURL);
-    for (const param of ignoreParams) {
-      strippedURL.searchParams.delete(param);
-    }
-    return strippedURL.href;
-  }
-  async function cacheMatchIgnoreParams(cache, request, ignoreParams, matchOptions) {
-    const strippedRequestURL = stripParams(request.url, ignoreParams);
-    if (request.url === strippedRequestURL) {
-      return cache.match(request, matchOptions);
-    }
-    const keysOptions = Object.assign(Object.assign({}, matchOptions), { ignoreSearch: true });
-    const cacheKeys = await cache.keys(request, keysOptions);
-    for (const cacheKey of cacheKeys) {
-      const strippedCacheKeyURL = stripParams(cacheKey.url, ignoreParams);
-      if (strippedRequestURL === strippedCacheKeyURL) {
-        return cache.match(cacheKey, matchOptions);
-      }
-    }
-    return;
-  }
-
-  // node_modules/workbox-core/_private/Deferred.js
-  var Deferred = class {
-    /**
-     * Creates a promise and exposes its resolve and reject functions as methods.
-     */
-    constructor() {
-      this.promise = new Promise((resolve, reject) => {
-        this.resolve = resolve;
-        this.reject = reject;
-      });
-    }
-  };
-
-  // node_modules/workbox-core/models/quotaErrorCallbacks.js
-  var quotaErrorCallbacks = /* @__PURE__ */ new Set();
-
-  // node_modules/workbox-core/_private/executeQuotaErrorCallbacks.js
-  async function executeQuotaErrorCallbacks() {
-    if (true) {
-      logger.log(`About to run ${quotaErrorCallbacks.size} callbacks to clean up caches.`);
-    }
-    for (const callback of quotaErrorCallbacks) {
-      await callback();
-      if (true) {
-        logger.log(callback, "is complete.");
-      }
-    }
-    if (true) {
-      logger.log("Finished running callbacks.");
-    }
-  }
-
-  // node_modules/workbox-core/_private/timeout.js
-  function timeout(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   // node_modules/workbox-strategies/_version.js
@@ -2180,80 +2185,6 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     }
   };
 
-  // node_modules/workbox-strategies/StaleWhileRevalidate.js
-  var StaleWhileRevalidate = class extends Strategy {
-    /**
-     * @param {Object} [options]
-     * @param {string} [options.cacheName] Cache name to store and retrieve
-     * requests. Defaults to cache names provided by
-     * {@link workbox-core.cacheNames}.
-     * @param {Array<Object>} [options.plugins] [Plugins]{@link https://developers.google.com/web/tools/workbox/guides/using-plugins}
-     * to use in conjunction with this caching strategy.
-     * @param {Object} [options.fetchOptions] Values passed along to the
-     * [`init`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters)
-     * of [non-navigation](https://github.com/GoogleChrome/workbox/issues/1796)
-     * `fetch()` requests made by this strategy.
-     * @param {Object} [options.matchOptions] [`CacheQueryOptions`](https://w3c.github.io/ServiceWorker/#dictdef-cachequeryoptions)
-     */
-    constructor(options = {}) {
-      super(options);
-      if (!this.plugins.some((p) => "cacheWillUpdate" in p)) {
-        this.plugins.unshift(cacheOkAndOpaquePlugin);
-      }
-    }
-    /**
-     * @private
-     * @param {Request|string} request A request to run this strategy for.
-     * @param {workbox-strategies.StrategyHandler} handler The event that
-     *     triggered the request.
-     * @return {Promise<Response>}
-     */
-    async _handle(request, handler) {
-      const logs = [];
-      if (true) {
-        finalAssertExports.isInstance(request, Request, {
-          moduleName: "workbox-strategies",
-          className: this.constructor.name,
-          funcName: "handle",
-          paramName: "request"
-        });
-      }
-      const fetchAndCachePromise = handler.fetchAndCachePut(request).catch(() => {
-      });
-      void handler.waitUntil(fetchAndCachePromise);
-      let response = await handler.cacheMatch(request);
-      let error;
-      if (response) {
-        if (true) {
-          logs.push(`Found a cached response in the '${this.cacheName}' cache. Will update with the network response in the background.`);
-        }
-      } else {
-        if (true) {
-          logs.push(`No response found in the '${this.cacheName}' cache. Will wait for the network response.`);
-        }
-        try {
-          response = await fetchAndCachePromise;
-        } catch (err) {
-          if (err instanceof Error) {
-            error = err;
-          }
-        }
-      }
-      if (true) {
-        logger.groupCollapsed(messages2.strategyStart(this.constructor.name, request));
-        for (const log of logs) {
-          logger.log(log);
-        }
-        messages2.printFinalResponse(response);
-        logger.groupEnd();
-      }
-      if (!response) {
-        throw new WorkboxError("no-response", { url: request.url, error });
-      }
-      return response;
-    }
-  };
-
   // node_modules/workbox-cacheable-response/_version.js
   try {
     self["workbox:cacheable-response:7.2.0"] && _();
@@ -2629,18 +2560,14 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     defaultRouter2.setCatchHandler(handler);
   }
 
-  // node_modules/workbox-core/clientsClaim.js
-  function clientsClaim() {
-    self.addEventListener("activate", () => self.clients.claim());
-  }
-
   // views/assets/src-sw.ts
   clientsClaim();
-  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"9e3a582c64d9437347e344b30ccc967d","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"icons/icon_1000x1000.webp"},{"revision":"ba833a413cf3014b8b30e51a3b973e51","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
-  var STRATEGY = new NetworkFirst();
+  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"000bec42710a350ea55cb4016d3f01d2","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
+  var CACHE_STRATEGY = new NetworkFirst();
+  var FALLBACK_HTML_URL = "/offline.html";
   warmStrategyCache({
-    urls: ["/modules/htmx.min.js", "/modules/sse.js"],
-    strategy: STRATEGY
+    urls: ["/", FALLBACK_HTML_URL, "/modules/htmx.min.js", "/modules/sse.js"],
+    strategy: CACHE_STRATEGY
   });
   registerRoute(({ url, request, sameOrigin }) => {
     const isHtmxRequest = request.headers.get("HX-Request") === "true";
@@ -2649,16 +2576,10 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
       `SW intercepted request, is (sameOrigin || isHtmxRequest): ${shouldRegisterRoute}, URL: ${url.pathname}, sameOrigin: ${sameOrigin}, HTMX: ${isHtmxRequest}`
     );
     return shouldRegisterRoute;
-  }, STRATEGY);
-  var FALLBACK_HTML_URL = "/offline.html";
-  var FALLBACK_STRATEGY = new StaleWhileRevalidate();
-  warmStrategyCache({
-    urls: [FALLBACK_HTML_URL],
-    strategy: FALLBACK_STRATEGY
-  });
+  }, CACHE_STRATEGY);
   setCatchHandler(async ({ event }) => {
     console.log(`setCatchHandler callback:`, event);
-    return FALLBACK_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(
+    return CACHE_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(
       // If we don't have a fallback, return an error response.
       () => Response.error()
     );
