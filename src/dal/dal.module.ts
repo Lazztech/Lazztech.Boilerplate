@@ -1,9 +1,9 @@
 import { BetterSqliteDriver } from '@mikro-orm/better-sqlite';
-import { Connection, IDatabaseDriver } from '@mikro-orm/core';
+import { Connection, IDatabaseDriver, MikroORM } from '@mikro-orm/core';
 import { Migrator } from '@mikro-orm/migrations';
 import { MikroOrmModule, MikroOrmModuleOptions } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { Logger, Module } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import path from 'path';
 
@@ -82,28 +82,35 @@ import path from 'path';
     }),
   ],
 })
-export class DalModule {
+export class DalModule implements OnModuleInit {
   private logger = new Logger(DalModule.name);
 
-  constructor(private configService: ConfigService) {
-    switch (configService.get('DATABASE_TYPE', 'sqlite')) {
+  constructor(
+    private configService: ConfigService,
+    private readonly orm: MikroORM,
+  ) {}
+
+  async onModuleInit() {
+    switch (this.configService.get('DATABASE_TYPE', 'sqlite')) {
       case 'sqlite':
         this.logger.log(
           `Using sqlite db: ${path.join(
             process.cwd(),
-            configService.get(
+            this.configService.get(
               'DATABASE_SCHEMA',
               path.join('data', 'sqlite3.db'),
             ),
           )}`,
         );
+        await this.orm.em.getConnection().execute('PRAGMA journal_mode = WAL;');
+        this.logger.log('SQLite WAL mode enabled');
         break;
       case 'postgres':
         this.logger.log(
           `Using postgres db: ${this.configService.get(
             'DATABASE_SCHEMA',
             'postgres',
-          )}, host: ${configService.get('DATABASE_HOST', 'localhost')}`,
+          )}, host: ${this.configService.get('DATABASE_HOST', 'localhost')}`,
         );
         break;
     }
