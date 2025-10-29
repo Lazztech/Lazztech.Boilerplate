@@ -22,5 +22,11 @@
   "TIME": "Time",
   "RETURN_TO_HOME": "Return to Home",
   "FORCE_PWA": "Force PWA Install Prompt",
-  "YOUR_MESSAGE": "Your Message"
+  "YOUR_MESSAGE": "Your Message",
+  "validation": {
+    "IS_EMAIL": "Please provide a valid email address",
+    "MIN_PASSWORD_LENGTH": "Password must be at least 8 characters long",
+    "PASSWORD_MUST_CONTAIN": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
+    "PASSWORDS_MUST_MATCH": "Passwords must match"
+  }
 }

@@ -30,6 +30,12 @@ export type I18nTranslations = {
         "RETURN_TO_HOME": string;
         "FORCE_PWA": string;
         "YOUR_MESSAGE": string;
+        "validation": {
+            "IS_EMAIL": string;
+            "MIN_PASSWORD_LENGTH": string;
+            "PASSWORD_MUST_CONTAIN": string;
+            "PASSWORDS_MUST_MATCH": string;
+        };
     };
 };
 /* prettier-ignore */
