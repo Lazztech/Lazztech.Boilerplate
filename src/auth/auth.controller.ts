@@ -18,6 +18,8 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { User } from './user.decorator';
 import { Payload } from './dto/payload.dto';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { plainToInstance } from 'class-transformer';
 
 @Controller('auth')
 export class AuthController {
@@ -45,16 +47,20 @@ export class AuthController {
 
   @Render('auth/register')
   @Post('validate/register')
-  async getRegisterValidate(@Body() body: RegisterDto) {
-    try {
-      await transformAndValidate(RegisterDto, body);
-      return { input: body };
-    } catch (validationErrors) {
+  async getRegisterValidate(
+    @I18n() i18n: I18nContext,
+    @Body() body: RegisterDto,
+  ) {
+    const instance = plainToInstance(RegisterDto, body);
+    const errors = await i18n.validate(instance);
+    if (errors.length) {
       return {
         input: body,
-        validationErrors,
+        validationErrors: errors,
       };
     }
+
+    return { input: body };
   }
 
   @Render('auth/login')
