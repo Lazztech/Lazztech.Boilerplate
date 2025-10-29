@@ -27,8 +27,18 @@ https://daisyui.com/components/drawer/#navbar-menu-for-desktop--sidebar-drawer-f
           </svg>
         </label>
       </div>
-      <div class="mx-2 flex-1 px-2">{{appName}}</div>
-      <div class="hidden flex-none lg:block">
+      <div class="mx-2 flex flex-row gap-2 px-2">
+        {{appName}}
+        <div class="relative size-6">
+          <div id="offline-indicator" class="absolute inset-0">
+            <span
+              id="loading"
+              class="htmx-indicator loading loading-ring loading-sm"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="hidden flex-none ml-auto lg:block">
         <ul class="menu menu-horizontal">
           <!-- Navbar menu content here -->
           {{#if user}}

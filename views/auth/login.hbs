@@ -19,11 +19,16 @@
         d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
-    <span>{{error.message}}</span>
+    <span>{{t 'lang.ERROR'}}</span>
   </div>
   {{/if}}
 
-  <form hx-post="/auth/login" hx-trigger="submit" hx-target="body">
+  <form
+    hx-post="/auth/login"
+    hx-indicator="#loading"
+    hx-trigger="submit"
+    hx-target="body"
+  >
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
     >

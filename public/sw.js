@@ -2562,7 +2562,7 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
 
   // views/assets/src-sw.ts
   clientsClaim();
-  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"000bec42710a350ea55cb4016d3f01d2","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
+  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"88b61b3e6cfcd9c89334cf50ee2361b0","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
   var CACHE_STRATEGY = new NetworkFirst();
   var FALLBACK_HTML_URL = "/offline.html";
   warmStrategyCache({
