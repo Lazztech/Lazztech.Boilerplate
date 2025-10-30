@@ -30,16 +30,24 @@ export class NotificationService {
   public async addUserWebPushNotificationSubscription(
     userId: any,
     subscription: webpush.PushSubscription,
+    userAgent: string,
   ): Promise<void> {
-    const user = await this.userRepository.findOne({ id: userId });
-    const userDevices = await user?.userDevices.loadItems();
+    const user = await this.userRepository.findOneOrFail(
+      { id: userId },
+      {
+        populate: ['userDevices'],
+      },
+    );
+    const userDevices = await user?.userDevices?.loadItems();
     if (
       user &&
       !userDevices?.find((x) => _.isEqual(x.webPushSubscription, subscription))
     ) {
       const userDevice = this.userDeviceRepository.create({
         user: user.id,
+        pushEndpoint: subscription.endpoint,
         webPushSubscription: subscription,
+        userAgent,
       });
       await this.em.persistAndFlush(userDevice);
     } else {

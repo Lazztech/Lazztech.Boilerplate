@@ -19,10 +19,10 @@ export class User extends ShareableId {
   @PrimaryKey()
   public id!: number;
 
-  @Property({ fieldName: 'firstName', nullable: true })
+  @Property({ nullable: true })
   public firstName?: string;
 
-  @Property({ fieldName: 'lastName', nullable: true })
+  @Property({ nullable: true })
   public lastName?: string;
 
   @Unique()
@@ -35,13 +35,13 @@ export class User extends ShareableId {
   @OneToOne({
     entity: () => PasswordReset,
     cascade: [Cascade.ALL],
-    fieldName: 'passwordResetId',
     nullable: true,
     ref: true,
     inversedBy: 'user',
   })
   public passwordReset!: Ref<PasswordReset>;
 
+  @OneToMany(() => UserDevice, (userDevice) => userDevice.user)
   public userDevices = new Collection<UserDevice>(this);
 
   @OneToMany(() => File, (file) => file.createdBy)

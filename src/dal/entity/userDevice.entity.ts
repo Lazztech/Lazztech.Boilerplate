@@ -3,6 +3,7 @@ import {
   ManyToOne,
   PrimaryKey,
   Property,
+  Unique,
   type Ref,
 } from '@mikro-orm/core';
 import webpush from 'web-push';
@@ -13,12 +14,18 @@ export class UserDevice {
   @PrimaryKey()
   public id!: number;
 
+  @Property()
+  public userAgent?: string;
+
+  @Property()
+  @Unique()
+  public pushEndpoint!: string; // taken from webPushSubscription as a unique device identifier
+
   @Property({ type: 'json', nullable: true })
   webPushSubscription?: webpush.PushSubscription;
 
   @ManyToOne({
     entity: () => User,
-    fieldName: 'userId',
     deleteRule: 'cascade',
     ref: true,
   })

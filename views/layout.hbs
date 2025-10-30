@@ -64,7 +64,25 @@ https://nestjs-i18n.com/quick-start --}}
     (Progressive Web App) functionality. }}
     <script>
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js');
+        navigator.serviceWorker.register('/sw.js').then(() => {
+          // Check for access_token cookie first
+          if (
+            document.cookie
+              .split('; ')
+              .find((row) => row.startsWith('access_token='))
+          ) {
+            // If authenticated set up web push notifications
+            import('/js/webPush.js').then((module) => {
+              module.default
+                .subscribe()
+                .catch((err) =>
+                  console.warn('Web push subscription failed:', err),
+                );
+            });
+          } else {
+            console.log('Not authenticated - skipping web push subscription');
+          }
+        });
       }
     </script>
     <pwa-install id="pwa-install" manifest-url="/manifest.json"></pwa-install>

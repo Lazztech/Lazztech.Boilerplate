@@ -26,7 +26,6 @@ export class File extends ShareableId {
 
   @ManyToOne({
     entity: () => User,
-    fieldName: 'createdByUserId',
     ref: true,
   })
   public createdBy!: Ref<User>;
