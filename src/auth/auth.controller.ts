@@ -63,7 +63,6 @@ export class AuthController {
     return { input: body };
   }
 
-  @Render('auth/login')
   @Post('login')
   async postLogin(
     @Body() loginDto: LoginDto,
@@ -77,9 +76,10 @@ export class AuthController {
       response.cookie('access_token', jwt);
       return response.redirect('/auth/profile');
     } catch (error) {
-      return {
+      return response.render('auth/login', {
+        layout: 'layout',
         error,
-      };
+      });
     }
   }
 
