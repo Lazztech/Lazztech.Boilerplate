@@ -1,8 +1,10 @@
 {{!-- Load navbar partial --}} {{>navbar}}
 
-<main class="p-20 flex flex-col justify-center items-center h-full">
-  <div id="chat">
-    <!-- Chat messages will be displayed here -->
+<main class="flex flex-col h-screen">
+  <div class="flex-1 overflow-y-auto p-20">
+    <div id="chat" class="flex flex-col justify-center items-center">
+      <!-- Chat messages will be displayed here -->
+    </div>
   </div>
   <div
     id="sse-listener"
