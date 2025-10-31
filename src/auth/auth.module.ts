@@ -6,6 +6,7 @@ import { ConfigService } from '@nestjs/config';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { EmailModule } from '../email/email.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PasswordReset } from '../dal/entity/passwordReset.entity';
       }),
     }),
     MikroOrmModule.forFeature([PasswordReset, User]),
+    EmailModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

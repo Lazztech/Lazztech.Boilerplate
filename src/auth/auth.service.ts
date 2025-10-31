@@ -10,8 +10,12 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../dal/entity/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { ChangePassword } from './dto/changePassword.input';
+import { ChangePassword } from './dto/changePassword.dto';
 import { Payload } from './dto/payload.dto';
+import { EmailService } from '../email/email.service';
+import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { randomInt } from 'crypto';
+import { ResetPassword } from './dto/resetPassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +26,9 @@ export class AuthService {
     private readonly userRepository: EntityRepository<User>,
     private jwtService: JwtService,
     private readonly em: EntityManager,
+    private emailService: EmailService,
+    @InjectRepository(PasswordReset)
+    private passwordResetRepository: EntityRepository<PasswordReset>,
   ) {}
 
   async register(email: string, password: string): Promise<string> {
@@ -71,5 +78,35 @@ export class AuthService {
   async deleteUser(userId: any) {
     const user = await this.userRepository.findOneOrFail({ id: userId });
     await this.em.removeAndFlush(user);
+  }
+
+  public async resetPassword(details: ResetPassword) {
+    this.logger.debug(this.resetPassword.name);
+    const user = await this.userRepository.findOneOrFail({
+      email: details.usersEmail,
+    });
+
+    const passwordReset = await user.passwordReset.load();
+
+    if (passwordReset?.pin === details.resetPin) {
+      const hashedPassword = await bcrypt.hash(details.newPassword, 12);
+      user.password = hashedPassword;
+      await this.em.persistAndFlush(user);
+    }
+  }
+
+  async sendPasswordResetEmail(email: string) {
+    this.logger.debug(this.sendPasswordResetEmail.name);
+    const user = await this.userRepository.findOneOrFail({ email });
+    const pin = randomInt(100000, 999999).toString();
+    await this.emailService.sendEmailFromPrimaryAddress({
+      to: user.email!,
+      subject: `Password reset for ${user.firstName} ${user.lastName}`,
+      text: `Hello, ${user.firstName}, please paste in the follow to reset your password: ${pin}`,
+      html: `<b>Hello, <strong>${user.firstName}</strong>, Please paste in the follow to reset your password: ${pin}</p>`,
+    });
+
+    const passwordReset = this.passwordResetRepository.create({ pin, user });
+    await this.em.persistAndFlush(passwordReset);
   }
 }

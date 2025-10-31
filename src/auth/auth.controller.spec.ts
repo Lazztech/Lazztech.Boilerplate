@@ -6,6 +6,8 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
+import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { EmailService } from '../email/email.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -21,10 +23,7 @@ describe('AuthController', () => {
       providers: [
         ConfigService,
         AuthService,
-        {
-          provide: getRepositoryToken(User),
-          useClass: EntityRepository,
-        },
+        EmailService,
         {
           provide: EntityManager,
           useValue: {
@@ -32,6 +31,14 @@ describe('AuthController', () => {
             // you can mock other functions inside
             // the entity manager object, my case only needed query method
           },
+        },
+        {
+          provide: getRepositoryToken(User),
+          useClass: EntityRepository,
+        },
+        {
+          provide: getRepositoryToken(PasswordReset),
+          useClass: EntityRepository,
         },
       ],
     }).compile();

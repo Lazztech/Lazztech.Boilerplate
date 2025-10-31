@@ -4,6 +4,9 @@ import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { JwtModule } from '@nestjs/jwt';
+import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { ConfigService } from '@nestjs/config';
+import { EmailService } from '../email/email.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -17,8 +20,14 @@ describe('AuthService', () => {
       ],
       providers: [
         AuthService,
+        ConfigService,
+        EmailService,
         {
           provide: getRepositoryToken(User),
+          useClass: EntityRepository,
+        },
+        {
+          provide: getRepositoryToken(PasswordReset),
           useClass: EntityRepository,
         },
         {
