@@ -1,10 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationService } from './notification.service';
-import { ConfigService } from '@nestjs/config';
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
+import { ConfigService } from '@nestjs/config';
+import { Test, TestingModule } from '@nestjs/testing';
 import { User } from '../dal/entity/user.entity';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { UserDevice } from '../dal/entity/userDevice.entity';
+import { NotificationService } from './notification.service';
 
 describe('NotificationService', () => {
   let service: NotificationService;
@@ -38,11 +38,19 @@ describe('NotificationService', () => {
         NotificationService,
         {
           provide: getRepositoryToken(User),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: getRepositoryToken(UserDevice),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,

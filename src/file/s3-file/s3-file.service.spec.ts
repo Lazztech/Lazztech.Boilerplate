@@ -1,11 +1,10 @@
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/core';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 import { S3Module, S3ModuleOptions } from 'nestjs-s3';
 import { File } from '../../dal/entity/file.entity';
 import { S3FileService } from './s3-file.service';
-import { EntityManager } from '@mikro-orm/core';
 
 describe('S3FileService', () => {
   let service: S3FileService;
@@ -28,7 +27,11 @@ describe('S3FileService', () => {
         ConfigService,
         {
           provide: getRepositoryToken(File),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,

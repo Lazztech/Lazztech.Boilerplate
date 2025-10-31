@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationController } from './notification.controller';
-import { User } from '../dal/entity/user.entity';
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { NotificationService } from './notification.service';
+import { Test, TestingModule } from '@nestjs/testing';
+import { User } from '../dal/entity/user.entity';
 import { UserDevice } from '../dal/entity/userDevice.entity';
+import { NotificationController } from './notification.controller';
+import { NotificationService } from './notification.service';
 
 describe('NotificationController', () => {
   let controller: NotificationController;
@@ -41,11 +41,19 @@ describe('NotificationController', () => {
         JwtService,
         {
           provide: getRepositoryToken(User),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: getRepositoryToken(UserDevice),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,

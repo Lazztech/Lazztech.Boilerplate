@@ -1,13 +1,13 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
-import { ConfigService } from '@nestjs/config';
-import { AuthService } from './auth.service';
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { User } from '../dal/entity/user.entity';
+import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { User } from '../dal/entity/user.entity';
 import { EmailService } from '../email/email.service';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -34,11 +34,19 @@ describe('AuthController', () => {
         },
         {
           provide: getRepositoryToken(User),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: getRepositoryToken(PasswordReset),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
       ],
     }).compile();

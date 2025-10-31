@@ -1,12 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { User } from '../dal/entity/user.entity';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
-import { JwtModule } from '@nestjs/jwt';
-import { PasswordReset } from '../dal/entity/passwordReset.entity';
 import { ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { PasswordReset } from '../dal/entity/passwordReset.entity';
+import { User } from '../dal/entity/user.entity';
 import { EmailService } from '../email/email.service';
+import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -24,11 +24,19 @@ describe('AuthService', () => {
         EmailService,
         {
           provide: getRepositoryToken(User),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: getRepositoryToken(PasswordReset),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,

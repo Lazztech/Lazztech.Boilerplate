@@ -1,8 +1,8 @@
+import { EntityManager } from '@mikro-orm/core';
+import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { FileUrlService } from '../file/file-url/file-url.service';
 import { OpenGraphService } from './open-graph.service';
-import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
 
 describe('OpenGraphService', () => {
   let service: OpenGraphService;
@@ -14,7 +14,11 @@ describe('OpenGraphService', () => {
         FileUrlService,
         {
           provide: getRepositoryToken(File),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,

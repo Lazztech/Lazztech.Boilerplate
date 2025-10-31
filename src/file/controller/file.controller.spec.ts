@@ -1,13 +1,13 @@
-import { ConfigService } from '@nestjs/config';
-import { Test, TestingModule } from '@nestjs/testing';
-import { FILE_SERVICE } from '../file-service.token';
-import { FileController } from './file.controller';
-import { LocalFileService } from '../local-file/local-file.service';
+import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
-import { File } from '../../dal/entity/file.entity';
-import { EntityManager, EntityRepository } from '@mikro-orm/core';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Test, TestingModule } from '@nestjs/testing';
+import { File } from '../../dal/entity/file.entity';
 import { User } from '../../dal/entity/user.entity';
+import { FILE_SERVICE } from '../file-service.token';
+import { LocalFileService } from '../local-file/local-file.service';
+import { FileController } from './file.controller';
 
 describe('FileController', () => {
   let controller: FileController;
@@ -24,11 +24,19 @@ describe('FileController', () => {
         ConfigService,
         {
           provide: getRepositoryToken(File),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: getRepositoryToken(User),
-          useClass: EntityRepository,
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            persistAndFlush: jest.fn(),
+          },
         },
         {
           provide: EntityManager,
