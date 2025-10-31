@@ -64,10 +64,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async postLogin(
-    @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
     try {
       const jwt = await this.authService.signIn(
         loginDto.email,

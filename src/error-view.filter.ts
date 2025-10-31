@@ -19,6 +19,11 @@ export class ErrorViewFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
+    if (response.headersSent) {
+      this.logger.warn('Response already sent, skipping error filter');
+      return;
+    }
+
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
