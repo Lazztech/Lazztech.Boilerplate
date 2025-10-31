@@ -398,6 +398,7 @@ $ ./scripts/preCommit.sh
 | SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com         |
 | PUBLIC_VAPID_KEY                 | Used for web push notifications                              | ⚠️ change for production                   |
 | PRIVATE_VAPID_KEY                | Used for web push notifications                              | ⚠️ change for production                   |
+| APP_ICON                         | Used for PWA icon, and watermark                             | Defaults to lazztech_icon.webp ✅          | lazztech_icon.webp         |
 | DATABASE_TYPE                    | Used for selecting sqlite or postgres                        | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'     |
 | DATABASE_HOST                    | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_PORT                    | Used for connecting to database                              | Optional depending on database type ✅     |

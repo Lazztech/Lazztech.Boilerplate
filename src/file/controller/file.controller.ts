@@ -28,6 +28,7 @@ import { Observable } from 'rxjs';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { EntityRepository } from '@mikro-orm/core';
 import { User as UserEntity } from '../../dal/entity/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('file')
 export class FileController {
@@ -38,6 +39,7 @@ export class FileController {
     private readonly fileService: FileServiceInterface,
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,
+    private readonly configService: ConfigService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -94,7 +96,12 @@ export class FileController {
     @Res() response: Response,
   ) {
     const watermark = await sharp(
-      join(process.cwd(), 'public', 'assets', 'lazztech_icon.webp'),
+      join(
+        process.cwd(),
+        'public',
+        'assets',
+        this.configService.getOrThrow('ICON_NAME'),
+      ),
     )
       .resize(150, 150)
       .extend({

@@ -30,6 +30,7 @@ import { OpenGraphModule } from './open-graph/open-graph.module';
         PUBLIC_VAPID_KEY: Joi.optional(),
         PRIVATE_VAPID_KEY: Joi.optional(),
         SITE_URL: Joi.string().default('https://mysite.com'),
+        ICON_NAME: Joi.string().default('lazztech_icon.webp'),
         DATABASE_TYPE: Joi.string()
           .valid('sqlite', 'postgres')
           .default('sqlite'),
