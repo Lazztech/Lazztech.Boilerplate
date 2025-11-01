@@ -415,9 +415,9 @@ $ ./scripts/preCommit.sh
 
 Each project contributor (“Contributor”) shall act as an independent contractor to Lazztech LLC (“Company”) and not as an employee, partner, or agent. Contributors are solely responsible for their own taxes, insurance, and legal compliance related to income earned through the Company.
 
-Projects shall be licensed under the GNU Affero General Public License v3 (AGPLv3) to account for base code contribution agreement and a mutually assured open source licensure, activated upon state changes and network use as a form of distribution, defined by the AGPLv3 license. Though additionally the source code of this project may be kept private or made public as determined by unanimous agreement of the project’s Active Contributors.
+Projects shall be licensed under the GNU Affero General Public License v3 (AGPLv3) to account for base code contribution agreement and a mutually assured open source commercial licensure, activated upon state changes and network use as a form of distribution, defined by the AGPLv3 license. Though additionally the source code of this project may be kept private or made public as determined by unanimous agreement of the project’s Active Contributors.
 
-From there, 20% of each project’s revenue shall be allocated to Lazztech LLC as a business treasury for growth and business expenses. In exchange, Lazztech will provide this boilerplate, onboarding and continued mentorship on its development, along with hosting of resulting projects. Then the remaining 80% of a given project’s revenue shall be split evenly to each Active Contributor of said project. This is to ensure fairness of equity, and alignment of incentive structure, to motivate for a cooperative lean contributor base, acting together in the best interests of a given projects Active Contributors.
+From there, 15% of each project’s revenue shall be allocated to Lazztech LLC. In exchange, Lazztech will provide this business agreement, and this boilerplate, along with hosting and deployment of resulting projects, up to a given fixed cost amount of $50 a month. The remaining 85% of a given project’s revenue shall be used to cover any additional hosting or project business expenses, as agreed upon by the projects Active Contributors, then split evenly to each Active Contributor of said project. This is to ensure fairness of equity, and alignment of incentive structure, to motivate for a cooperative lean contributor base, acting together in the best interests of a given projects Active Contributors.
 
 An Active Contributor is defined as any individual who has made at least one material contribution such as a code commit, pull request, documentation update, or other substantive input to a project that has been approved and merged within the previous ninety (90) calendar days, measured from the date of their last substantive contribution.
 
@@ -435,7 +435,7 @@ GNU AGPLv3
 
 ---
 
-Other licenses such as MIT may be offered at discretion of Lazztech LLC and contributors of this project.
+Other licenses such as MIT may be offered at discretion of Lazztech LLC and or Active Contributors of this project.
 
 ## Stay in touch
 
