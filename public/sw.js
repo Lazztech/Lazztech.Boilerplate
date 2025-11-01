@@ -2562,21 +2562,14 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
 
   // views/assets/src-sw.ts
   clientsClaim();
-  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"88b61b3e6cfcd9c89334cf50ee2361b0","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
+  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"67867a7f7697f629127b897299446d72","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"67f0c6927b568b4c2d310fbe10f10f70","url":"js/webPush.js"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
   var CACHE_STRATEGY = new NetworkFirst();
   var FALLBACK_HTML_URL = "/offline.html";
   warmStrategyCache({
     urls: ["/", FALLBACK_HTML_URL, "/modules/htmx.min.js", "/modules/sse.js"],
     strategy: CACHE_STRATEGY
   });
-  registerRoute(({ url, request, sameOrigin }) => {
-    const isHtmxRequest = request.headers.get("HX-Request") === "true";
-    const shouldRegisterRoute = sameOrigin || isHtmxRequest;
-    console.log(
-      `SW intercepted request, is (sameOrigin || isHtmxRequest): ${shouldRegisterRoute}, URL: ${url.pathname}, sameOrigin: ${sameOrigin}, HTMX: ${isHtmxRequest}`
-    );
-    return shouldRegisterRoute;
-  }, CACHE_STRATEGY);
+  registerRoute(() => true, CACHE_STRATEGY);
   setCatchHandler(async ({ event }) => {
     console.log(`setCatchHandler callback:`, event);
     return CACHE_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(

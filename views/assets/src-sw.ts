@@ -26,16 +26,7 @@ warmStrategyCache({
 });
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-routing
-registerRoute(({ url, request, sameOrigin }) => {
-  const isHtmxRequest = request.headers.get('HX-Request') === 'true';
-  // Match same-origin requests OR HTMX requests
-  const shouldRegisterRoute = sameOrigin || isHtmxRequest;
-  console.log(
-    `SW intercepted request, is (sameOrigin || isHtmxRequest): ${shouldRegisterRoute}, URL: ${url.pathname}, sameOrigin: ${sameOrigin}, HTMX: ${isHtmxRequest}`,
-  );
-
-  return shouldRegisterRoute;
-}, CACHE_STRATEGY);
+registerRoute(() => true, CACHE_STRATEGY);
 
 // https://developer.chrome.com/docs/workbox/managing-fallback-responses
 // This "catch" handler is triggered when any of the other routes fail to
