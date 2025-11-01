@@ -14,8 +14,6 @@ module.exports = {
         'network-dependency-tree-insight': 'warn',
         'unminified-javascript': 'warn',
         'unused-javascript': 'warn',
-        // compressions is expected upon deployment behind a reverse proxy
-        'uses-text-compression': 'warn',
         'render-blocking-resources': 'warn',
         'forced-reflow-insight': 'warn',
         'document-latency-insight': 'warn',

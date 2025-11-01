@@ -6,9 +6,12 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import { ValidationError } from '@nestjs/common';
 import { ErrorViewFilter } from './error-view.filter';
+import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.use(cookieParser());
+  app.use(compression());
 
   // Setup MVC https://docs.nestjs.com/techniques/mvc
   app.useStaticAssets(join(__dirname, '..', 'public'));
@@ -51,7 +54,6 @@ async function bootstrap() {
     },
   );
 
-  app.use(cookieParser());
   app.useGlobalFilters(new ErrorViewFilter());
   await app.listen(process.env.PORT ?? 3000);
 }
