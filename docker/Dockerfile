@@ -1,10 +1,8 @@
-FROM node:22
+# Build stage
+FROM node:22 AS builder
 
 # Create app directory
 WORKDIR /app
-
-# Set NODE_ENV to production
-ENV NODE_ENV=production
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -15,20 +13,33 @@ ENV NODE_ENV=production
 COPY package*.json ./
 RUN npm ci
 
-# Bundle app source
 COPY src ./src
 COPY views ./views
 COPY public ./public
 COPY tsconfig*.json ./
 COPY nest-cli.json .
 COPY tailwind.config.js .
-COPY .env .
 
-# Build app from source
 RUN npm run build
 
-# Remove the source
-RUN rm -rf ./src
+# Production stage
+FROM node:22-slim
 
-EXPOSE 8080
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/views ./views
+COPY --from=builder /app/public ./public
+
+COPY .env .
+
+# Set NODE_ENV to production
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
 CMD [ "npm", "run", "start:prod" ]
