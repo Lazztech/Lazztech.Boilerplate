@@ -34,7 +34,7 @@ import path from 'path';
               },
               logger: (message) => console.log(message),
               allowGlobalContext: true,
-              debug: configService.get('NODE_ENV') == 'development',
+              debug: configService.get('NODE_ENV') !== 'production',
             } as MikroOrmModuleOptions<IDatabaseDriver<Connection>>;
           case 'postgres':
             return {
@@ -65,7 +65,7 @@ import path from 'path';
               },
               logger: (message) => console.log(message),
               allowGlobalContext: true,
-              debug: configService.get('NODE_ENV') == 'development',
+              debug: configService.get('NODE_ENV') !== 'production',
             } as MikroOrmModuleOptions<IDatabaseDriver<Connection>>;
           default:
             throw new Error(

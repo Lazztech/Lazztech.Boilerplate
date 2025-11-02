@@ -11,7 +11,9 @@ import compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.use(cookieParser());
-  app.use(compression());
+  if (process.env.NODE_ENV !== 'production') {
+    app.use(compression());
+  }
 
   // Setup MVC https://docs.nestjs.com/techniques/mvc
   app.useStaticAssets(join(__dirname, '..', 'public'));
