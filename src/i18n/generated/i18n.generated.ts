@@ -22,6 +22,9 @@ export type I18nTranslations = {
         "CHANGE_PASSWORD": string;
         "CURRENT_PASSWORD": string;
         "NEW_PASSWORD": string;
+        "FORGOT_PASSWORD": string;
+        "RESET_PASSWORD": string;
+        "RESET_CODE": string;
         "CHANGE": string;
         "DELETE_ACCOUNT": string;
         "ERROR": string;

@@ -15,7 +15,7 @@ import { Payload } from './dto/payload.dto';
 import { EmailService } from '../email/email.service';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
 import { randomInt } from 'crypto';
-import { ResetPassword } from './dto/resetPassword.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
 
 @Injectable()
 export class AuthService {
@@ -80,16 +80,16 @@ export class AuthService {
     await this.em.removeAndFlush(user);
   }
 
-  public async resetPassword(details: ResetPassword) {
+  public async resetPassword(details: ResetPasswordDto) {
     this.logger.debug(this.resetPassword.name);
     const user = await this.userRepository.findOneOrFail({
-      email: details.usersEmail,
+      email: details.email,
     });
 
     const passwordReset = await user.passwordReset.load();
 
-    if (passwordReset?.pin === details.resetPin) {
-      const hashedPassword = await bcrypt.hash(details.newPassword, 12);
+    if (passwordReset?.pin === details.resetCode) {
+      const hashedPassword = await bcrypt.hash(details.password, 12);
       user.password = hashedPassword;
       await this.em.persistAndFlush(user);
     }

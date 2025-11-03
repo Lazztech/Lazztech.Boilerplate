@@ -4,13 +4,14 @@ import {
   Delete,
   Get,
   HttpStatus,
+  Logger,
   Post,
+  Query,
   Redirect,
   Render,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import { transformAndValidate } from 'class-transformer-validator';
 import { type Response } from 'express';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -20,19 +21,24 @@ import { User } from './user.decorator';
 import { Payload } from './dto/payload.dto';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { plainToInstance } from 'class-transformer';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { EmailDto } from './dto/email.dto';
 
 @Controller('auth')
 export class AuthController {
+  private readonly logger = new Logger(AuthController.name);
+
   constructor(private authService: AuthService) {}
 
   @Post('register')
   async postRegister(
+    @I18n() i18n: I18nContext,
     @Body() body: RegisterDto,
     @Res() response: Response,
   ): Promise<any> {
-    try {
-      await transformAndValidate(RegisterDto, body);
-    } catch (validationErrors: unknown) {
+    const instance = plainToInstance(RegisterDto, body);
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
       return response.render('auth/register', {
         layout: 'layout',
         input: body,
@@ -52,11 +58,11 @@ export class AuthController {
     @Body() body: RegisterDto,
   ) {
     const instance = plainToInstance(RegisterDto, body);
-    const errors = await i18n.validate(instance);
-    if (errors.length) {
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
       return {
         input: body,
-        validationErrors: errors,
+        validationErrors,
       };
     }
 
@@ -73,6 +79,7 @@ export class AuthController {
       response.cookie('access_token', jwt);
       return response.redirect('/auth/profile');
     } catch (error) {
+      this.logger.warn(error);
       return response.render('auth/login', {
         layout: 'layout',
         error,
@@ -89,6 +96,72 @@ export class AuthController {
   @Get('login')
   @Render('auth/login')
   getLogin(): any {}
+
+  @Get('reset')
+  @Render('auth/reset')
+  getReset(): any {}
+
+  @Post('reset')
+  async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
+    try {
+      await this.authService.sendPasswordResetEmail(emailDto.email);
+      return response.redirect('/auth/reset-code');
+    } catch (error) {
+      this.logger.warn(error);
+      return response.render('auth/reset', {
+        layout: 'layout',
+        error,
+      });
+    }
+  }
+
+  @Get('reset-code')
+  @Render('auth/reset-code')
+  getResetCode(@Query('email') emailQueryParam: string): any {
+    return {
+      input: {
+        email: emailQueryParam,
+      },
+    };
+  }
+
+  @Render('auth/reset-code')
+  @Post('validate/reset-code')
+  async getResetCodeValidate(
+    @I18n() i18n: I18nContext,
+    @Body() body: ResetPasswordDto,
+  ) {
+    const instance = plainToInstance(ResetPasswordDto, body);
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
+      return {
+        input: body,
+        validationErrors,
+      };
+    }
+
+    return { input: body };
+  }
+
+  @Post('reset-code')
+  async postResetCode(
+    @I18n() i18n: I18nContext,
+    @Body() body: ResetPasswordDto,
+    @Res() response: Response,
+  ) {
+    const instance = plainToInstance(ResetPasswordDto, body);
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
+      return response.render('auth/reset-code', {
+        layout: 'layout',
+        input: body,
+        validationErrors,
+      });
+    }
+
+    await this.authService.resetPassword(body);
+    return response.redirect('/auth/login');
+  }
 
   @Get('register')
   @Render('auth/register')

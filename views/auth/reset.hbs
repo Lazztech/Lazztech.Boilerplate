@@ -24,7 +24,7 @@
   {{/if}}
 
   <form
-    hx-post="/auth/login"
+    hx-post="/auth/reset"
     hx-indicator="#loading"
     hx-trigger="submit"
     hx-target="body"
@@ -32,7 +32,7 @@
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
     >
-      <legend class="fieldset-legend">{{t 'lang.LOGIN'}}</legend>
+      <legend class="fieldset-legend">{{t 'lang.RESET_PASSWORD'}}</legend>
 
       <label class="label">{{t 'lang.EMAIL'}}</label>
       <label class="input">
@@ -44,20 +44,8 @@
         />
       </label>
 
-      <label class="label">{{t 'lang.PASSWORD'}}</label>
-      <label class="input">
-        <input
-          name="password"
-          type="password"
-          required
-          placeholder="{{t 'lang.PASSWORD'}}"
-        />
-      </label>
-      <a class="ml-auto link link-info" href="/auth/reset"
-        >{{t 'lang.FORGOT_PASSWORD'}}</a
-      >
       <button type="submit" class="btn btn-neutral mt-4">
-        {{t 'lang.LOGIN'}}
+        {{t 'lang.SEND'}}
       </button>
     </fieldset>
   </form>
