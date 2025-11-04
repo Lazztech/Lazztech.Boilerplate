@@ -51,7 +51,7 @@ export class AuthController {
 
   @Render('auth/register')
   @Post('validate/register')
-  async getRegisterValidate(
+  async postRegisterValidate(
     @I18n() i18n: I18nContext,
     @Body() body: RegisterDto,
   ) {
@@ -100,13 +100,19 @@ export class AuthController {
 
   @Get('reset')
   @Render('auth/reset')
-  getReset(): any {}
+  getReset(@Query('email') emailQueryParam: string): any {
+    return {
+      input: {
+        email: emailQueryParam,
+      },
+    };
+  }
 
   @Post('reset')
   async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
     try {
       await this.authService.sendPasswordResetEmail(emailDto.email);
-      return response.redirect('/auth/reset-code');
+      return response.redirect(`/auth/reset-code?email=${emailDto.email}`);
     } catch (error) {
       this.logger.warn(error);
       return response.render('auth/reset', {
@@ -128,10 +134,11 @@ export class AuthController {
 
   @Render('auth/reset-code')
   @Post('validate/reset-code')
-  async getResetCodeValidate(
+  async postResetCodeValidate(
     @I18n() i18n: I18nContext,
     @Body() body: ResetPasswordDto,
   ) {
+    console.log(body);
     const instance = plainToInstance(ResetPasswordDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {

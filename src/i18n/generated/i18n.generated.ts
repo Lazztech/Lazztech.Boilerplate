@@ -15,6 +15,7 @@ export type I18nTranslations = {
         "LOGIN": string;
         "SEND": string;
         "EMAIL": string;
+        "CONFIRM_EMAIL": string;
         "PASSWORD": string;
         "CONFIRM_PASSWORD": string;
         "UPDATE_EMAIL": string;
@@ -25,6 +26,7 @@ export type I18nTranslations = {
         "FORGOT_PASSWORD": string;
         "RESET_PASSWORD": string;
         "RESET_CODE": string;
+        "SEND_RESET_CODE": string;
         "CHANGE": string;
         "DELETE_ACCOUNT": string;
         "DELETE_ACCOUNT_CONFIRMATION": string;

@@ -29,52 +29,7 @@
         <button type="submit" id="submit-email" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.UPDATE'}}</button>
         </fieldset>
     </form>
-
-    <form hx-post="/auth/register" hx-indicator="#loading" hx-trigger="submit" hx-target="body">
-    <fieldset
-      class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
-      hx-post="/auth/validate/register"
-      hx-indicator="#loading"
-      hx-trigger="change, blur delay:500ms"
-      hx-include="input"
-      hx-target="body"
-    >
-      <legend class="fieldset-legend">{{t 'lang.CHANGE_PASSWORD'}}</legend>
-
-      <label class="label">{{t 'lang.CURRENT_PASSWORD'}}</label>
-      <label class="input {{#if (filterErrors validationErrors "password")}}input-error{{/if}}">
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value="{{input.password}}"
-          required
-          placeholder="{{t 'lang.PASSWORD'}}"
-          autocomplete="new-password"
-        />
-      </label>
-      {{#each (filterErrors validationErrors "password")}}
-      <p class="text-error">{{this}}</p>
-      {{/each}}
-
-      <label class="label">{{t 'lang.NEW_PASSWORD'}}</label>
-      <label class="input {{#if (filterErrors validationErrors "confirmPassword")}}input-error{{/if}}">
-        <input
-          id="confirmPassword"
-          name="confirmPassword"
-          type="password"
-          value="{{input.confirmPassword}}"
-          required
-          placeholder="{{t 'lang.PASSWORD'}}"
-        />
-      </label>
-      {{#each (filterErrors validationErrors "confirmPassword")}}
-      <p class="text-error">{{this}}</p>
-      {{/each}}
-
-      <button type="submit" id="submit-password" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.CHANGE'}}</button>
-    </fieldset>
-  </form>
+  <a class="link link-info" href="/auth/reset?email={{user.email}}">{{t 'lang.CHANGE_PASSWORD'}}</a>
   <a class="link link-info" href="/auth/delete-account">{{t 'lang.DELETE_ACCOUNT'}}</a>
 </main>
 {{>dock}}

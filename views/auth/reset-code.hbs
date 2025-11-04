@@ -1,7 +1,7 @@
 {{>navbar}}
 
 <main class="flex flex-col justify-center items-center h-full">
-  <form hx-post="/auth/register" hx-indicator="#loading" hx-trigger="submit" hx-target="body">
+  <form hx-post="/auth/reset-code" hx-indicator="#loading" hx-trigger="submit" hx-target="body">
     <fieldset
       class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
       hx-post="/auth/validate/reset-code"
@@ -10,7 +10,7 @@
       hx-include="input"
       hx-target="body"
     >
-      <legend class="fieldset-legend">{{t 'lang.RESET_CODE'}}</legend>
+      <legend class="fieldset-legend">{{t 'lang.CHANGE_PASSWORD'}}</legend>
 
       <label class="label">{{t 'lang.EMAIL'}}</label>
       <label class="input {{#if (filterErrors validationErrors "email")}}input-error{{/if}}">
@@ -19,7 +19,7 @@
           name="email"
           type="email"
           value="{{input.email}}"
-          placeholder="{{t 'lang.EMAIL'}}"
+          placeholder="{{t 'lang.CONFIRM_EMAIL'}}"
           required
         />
       </label>
@@ -30,8 +30,9 @@
       <label class="label">{{t 'lang.RESET_CODE'}}</label>
       <label class="input {{#if (filterErrors validationErrors "resetCode")}}input-error{{/if}}">
         <input
-          id="reset-code"
-          value="{{input.reset-code}}"
+          id="resetCode"
+          name="resetCode"
+          value="{{input.resetCode}}"
           placeholder="{{t 'lang.RESET_CODE'}}"
           required
         />
