@@ -1,3 +1,5 @@
+import { EntityRepository } from '@mikro-orm/core';
+import { InjectRepository } from '@mikro-orm/nestjs';
 import {
   Controller,
   Get,
@@ -11,24 +13,19 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { type Response } from 'express';
-import { join } from 'path';
-import sharp from 'sharp';
-import { AuthGuard } from '../../auth/auth.guard';
-import { Payload } from '../../auth/dto/payload.dto';
-import { User } from '../../auth/user.decorator';
-import { FILE_SERVICE } from '../file-service.token';
-import { type FileServiceInterface } from '../interfaces/file-service.interface';
 import {
   MultipartFiles,
   MultipartFileStream,
   MultipartInterceptor,
 } from '@proventuslabs/nestjs-multipart-form';
+import { type Response } from 'express';
 import { Observable } from 'rxjs';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository } from '@mikro-orm/core';
+import { AuthGuard } from '../../auth/auth.guard';
+import { Payload } from '../../auth/dto/payload.dto';
+import { User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
-import { ConfigService } from '@nestjs/config';
+import { FileService } from '../file-service.abstract';
+import { FILE_SERVICE } from '../file-service.token';
 
 @Controller('file')
 export class FileController {
@@ -36,10 +33,9 @@ export class FileController {
 
   constructor(
     @Inject(FILE_SERVICE)
-    private readonly fileService: FileServiceInterface,
+    private readonly fileService: FileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,
-    private readonly configService: ConfigService,
   ) {}
 
   @UseGuards(AuthGuard)
@@ -80,12 +76,10 @@ export class FileController {
     @Res() response: Response,
   ) {
     const readable = await this.fileService.get(fileName);
-    readable
-      ?.on('error', (err) => {
-        this.logger.error(err);
-        response.status(500).send(err);
-      })
-      .pipe(response);
+    readable?.pipe(response).on('error', (err) => {
+      this.logger.error(err);
+      response.status(500).send(err);
+    });
   }
 
   @Get('watermark/:shareableId')
@@ -95,47 +89,11 @@ export class FileController {
     @Param('shareableId') shareableId: string,
     @Res() response: Response,
   ) {
-    const watermark = await sharp(
-      join(
-        process.cwd(),
-        'public',
-        'assets',
-        this.configService.getOrThrow('ICON_NAME'),
-      ),
-    )
-      .resize(150, 150)
-      .extend({
-        top: 0,
-        bottom: 20,
-        left: 20,
-        right: 0,
-        background: { r: 0, g: 0, b: 0, alpha: 0 },
-      })
-      .composite([
-        {
-          input: Buffer.from([0, 0, 0, 200]),
-          raw: {
-            width: 1,
-            height: 1,
-            channels: 4,
-          },
-          tile: true,
-          blend: 'dest-in',
-        },
-      ])
-      .toBuffer();
     const fileStream = await this.fileService.getByShareableId(shareableId);
-    fileStream
-      ?.pipe(
-        sharp()
-          .jpeg()
-          .resize(1080, 1080, { fit: sharp.fit.inside })
-          .composite([{ input: watermark, gravity: 'southwest' }]),
-      )
-      .pipe(response)
-      .on('error', (err) => {
-        this.logger.error(err);
-        response.status(500).send(err);
-      });
+    const readable = await this.fileService.watermarkImage(fileStream);
+    readable?.pipe(response).on('error', (err) => {
+      this.logger.error(err);
+      response.status(500).send(err);
+    });
   }
 }

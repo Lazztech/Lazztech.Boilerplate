@@ -1,6 +1,6 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
 import { randomUUID } from 'crypto';
@@ -8,13 +8,12 @@ import { InjectS3, type S3 } from 'nestjs-s3';
 import { lastValueFrom, mergeMap, Observable, tap } from 'rxjs';
 import sharp from 'sharp';
 import Stream, { Readable } from 'stream';
-import { File } from '../../dal/entity/file.entity';
-import { FileServiceInterface } from '../interfaces/file-service.interface';
 import { pipeline } from 'stream/promises';
+import { File } from '../../dal/entity/file.entity';
+import { FileService } from '../file-service.abstract';
 
 @Injectable()
-export class S3FileService implements FileServiceInterface {
-  private logger = new Logger(S3FileService.name);
+export class S3FileService extends FileService {
   private bucketName: string;
 
   constructor(
@@ -24,6 +23,7 @@ export class S3FileService implements FileServiceInterface {
     private readonly fileRepository: EntityRepository<File>,
     private readonly em: EntityManager,
   ) {
+    super(configService);
     this.bucketName = configService.get('OBJECT_STORAGE_BUCKET_NAME') as string;
   }
 

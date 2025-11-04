@@ -4,7 +4,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -17,19 +16,19 @@ import * as path from 'path';
 import { lastValueFrom, mergeMap, Observable, tap } from 'rxjs';
 import sharp from 'sharp';
 import { File } from '../../dal/entity/file.entity';
-import { FileServiceInterface } from '../interfaces/file-service.interface';
+import { FileService } from '../file-service.abstract';
 
 @Injectable()
-export class LocalFileService implements FileServiceInterface {
-  private logger = new Logger(LocalFileService.name);
+export class LocalFileService extends FileService {
   private directory: string;
 
   constructor(
-    private readonly configService: ConfigService,
+    readonly configService: ConfigService,
     @InjectRepository(File)
     private readonly fileRepository: EntityRepository<File>,
     private readonly em: EntityManager,
   ) {
+    super(configService);
     this.logger.debug('constructor');
     this.directory = configService.get(
       'FILE_STORAGE_DIR',
