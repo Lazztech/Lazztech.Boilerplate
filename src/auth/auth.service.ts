@@ -101,9 +101,9 @@ export class AuthService {
     const pin = randomInt(100000, 999999).toString();
     await this.emailService.sendEmailFromPrimaryAddress({
       to: user.email!,
-      subject: `Password reset for ${user.firstName} ${user.lastName}`,
-      text: `Hello, ${user.firstName}, please paste in the follow to reset your password: ${pin}`,
-      html: `<b>Hello, <strong>${user.firstName}</strong>, Please paste in the follow to reset your password: ${pin}</p>`,
+      subject: `Password reset for ${user.email}`,
+      text: `Hello, ${user.email}, please paste in the follow to reset your password: ${pin}`,
+      html: `<b>Hello, <strong>${user.email}</strong>, Please paste in the follow to reset your password: ${pin}</p>`,
     });
 
     const passwordReset = this.passwordResetRepository.create({ pin, user });
