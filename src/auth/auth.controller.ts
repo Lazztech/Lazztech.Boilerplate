@@ -1,9 +1,7 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  HttpStatus,
   Logger,
   Post,
   Query,
@@ -12,17 +10,17 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { type Response } from 'express';
+import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { User } from './user.decorator';
-import { Payload } from './dto/payload.dto';
-import { I18n, I18nContext } from 'nestjs-i18n';
-import { plainToInstance } from 'class-transformer';
-import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { EmailDto } from './dto/email.dto';
+import { LoginDto } from './dto/login.dto';
+import { Payload } from './dto/payload.dto';
+import { RegisterDto } from './dto/register.dto';
+import { ResetPasswordDto } from './dto/resetPassword.dto';
+import { User } from './user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -89,7 +87,10 @@ export class AuthController {
 
   @Redirect('/')
   @Get('logout')
-  getLogout(@Res({ passthrough: true }) response: Response) {
+  getLogout(
+    // https://docs.nestjs.com/techniques/cookies#use-with-express-default
+    @Res({ passthrough: true }) response: Response,
+  ) {
     response.clearCookie('access_token');
   }
 
@@ -173,13 +174,28 @@ export class AuthController {
   getProfile(): any {}
 
   @UseGuards(AuthGuard)
-  @Redirect('/', HttpStatus.SEE_OTHER) // https://hypermedia.systems/htmx-patterns/#_a_response_code_gotcha
-  @Delete()
-  async delete(
+  @Get('delete-account')
+  @Render('auth/delete-account')
+  getDeleteAccount(): any {}
+
+  @UseGuards(AuthGuard)
+  @Post('delete-account')
+  async postDeleteAccount(
     @User() payload: Payload,
-    @Res({ passthrough: true }) response: Response, // https://docs.nestjs.com/techniques/cookies#use-with-express-default
+    @Body() loginDto: LoginDto,
+    @Res() response: Response,
   ) {
-    response.clearCookie('access_token');
-    await this.authService.deleteUser(payload.userId);
+    try {
+      await this.authService.signIn(loginDto.email, loginDto.password);
+      await this.authService.deleteUser(payload.userId);
+      response.clearCookie('access_token');
+      return response.redirect('/');
+    } catch (error) {
+      this.logger.warn(error);
+      return response.render('auth/delete-account', {
+        layout: 'layout',
+        error,
+      });
+    }
   }
 }

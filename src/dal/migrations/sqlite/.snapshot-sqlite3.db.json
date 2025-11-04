@@ -313,6 +313,7 @@
             "id"
           ],
           "referencedTableName": "user",
+          "deleteRule": "cascade",
           "updateRule": "cascade"
         }
       },

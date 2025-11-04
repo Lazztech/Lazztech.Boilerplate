@@ -75,13 +75,6 @@
       <button type="submit" id="submit-password" class="btn btn-warning mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.CHANGE'}}</button>
     </fieldset>
   </form>
-  <button
-    hx-delete="/auth"
-    hx-target="body"
-    hx-confirm="Are you sure you want to delete your account?"
-    class="btn btn-error"
-  >
-    {{t 'lang.DELETE_ACCOUNT'}}
-  </button>
+  <a class="link link-info" href="/auth/delete-account">{{t 'lang.DELETE_ACCOUNT'}}</a>
 </main>
 {{>dock}}

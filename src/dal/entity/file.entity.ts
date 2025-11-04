@@ -26,6 +26,7 @@ export class File extends ShareableId {
 
   @ManyToOne({
     entity: () => User,
+    deleteRule: 'cascade',
     ref: true,
   })
   public createdBy!: Ref<User>;

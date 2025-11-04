@@ -20,6 +20,7 @@
   "RESET_CODE": "Reset Code",
   "CHANGE": "Change",
   "DELETE_ACCOUNT": "Delete Account",
+  "DELETE_ACCOUNT_CONFIRMATION": "Are you sure you want to delete your account?",
   "ERROR": "Error",
   "PATH": "Path",
   "TIME": "Time",

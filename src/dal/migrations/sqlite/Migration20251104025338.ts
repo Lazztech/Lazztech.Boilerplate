@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20251029232843 extends Migration {
+export class Migration20251104025338 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table \`password_reset\` (\`id\` integer not null primary key autoincrement, \`pin\` text not null);`);
@@ -9,7 +9,7 @@ export class Migration20251029232843 extends Migration {
     this.addSql(`create unique index \`user_email_unique\` on \`user\` (\`email\`);`);
     this.addSql(`create unique index \`user_password_reset_id_unique\` on \`user\` (\`password_reset_id\`);`);
 
-    this.addSql(`create table \`file\` (\`id\` integer not null primary key autoincrement, \`shareable_id\` text not null, \`flagged\` integer null, \`banned\` integer null, \`file_name\` text not null, \`mimetype\` text null, \`created_on\` text not null, \`created_by_id\` integer not null, constraint \`file_created_by_id_foreign\` foreign key(\`created_by_id\`) references \`user\`(\`id\`) on update cascade);`);
+    this.addSql(`create table \`file\` (\`id\` integer not null primary key autoincrement, \`shareable_id\` text not null, \`flagged\` integer null, \`banned\` integer null, \`file_name\` text not null, \`mimetype\` text null, \`created_on\` text not null, \`created_by_id\` integer not null, constraint \`file_created_by_id_foreign\` foreign key(\`created_by_id\`) references \`user\`(\`id\`) on delete cascade on update cascade);`);
     this.addSql(`create unique index \`file_file_name_unique\` on \`file\` (\`file_name\`);`);
     this.addSql(`create index \`file_created_by_id_index\` on \`file\` (\`created_by_id\`);`);
 

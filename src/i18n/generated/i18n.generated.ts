@@ -27,6 +27,7 @@ export type I18nTranslations = {
         "RESET_CODE": string;
         "CHANGE": string;
         "DELETE_ACCOUNT": string;
+        "DELETE_ACCOUNT_CONFIRMATION": string;
         "ERROR": string;
         "PATH": string;
         "TIME": string;
