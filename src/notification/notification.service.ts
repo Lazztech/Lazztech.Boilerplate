@@ -76,10 +76,8 @@ export class NotificationService {
           .sendNotification(
             subscription,
             JSON.stringify({
-              notification: {
-                ...notification,
-                icon: `${this.configService.get('SITE_URL')}/assets/${this.configService.getOrThrow('ICON_NAME')}`,
-              },
+              ...notification,
+              icon: `${this.configService.get('SITE_URL')}/assets/${this.configService.getOrThrow('ICON_NAME')}`,
             }),
           )
           .then((log) => {
