@@ -2577,4 +2577,39 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
       () => Response.error()
     );
   });
+  self.addEventListener("push", function(event) {
+    if (!event.data) {
+      console.log("This push event has no data.");
+      return;
+    }
+    if (!self.registration) {
+      console.log("Service worker does not control the page");
+      return;
+    }
+    if (!self.registration || !self.registration.pushManager) {
+      console.log("Push is not supported");
+      return;
+    }
+    const eventText = event.data.text();
+    let options = {};
+    let title = "";
+    if (eventText.substr(0, 1) === "{") {
+      const eventData = JSON.parse(eventText);
+      title = eventData.title;
+      if (eventData.options) {
+        options = Object.assign(options, eventData.options);
+      }
+      if (eventData.expires && Date.now() > eventData.expires) {
+        console.log("Push notification has expired");
+        return;
+      }
+    } else {
+      title = eventText;
+    }
+    const promiseChain = self.registration.showNotification(
+      title,
+      options
+    );
+    event.waitUntil(promiseChain);
+  });
 })();

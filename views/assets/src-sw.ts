@@ -43,3 +43,57 @@ setCatchHandler(async ({ event }) => {
     () => Response.error(),
   );
 });
+
+// Web Push Notification Handling
+// https://blog.lekoala.be/the-only-snippet-you-will-need-to-deal-with-push-notifications-in-a-service-worker
+// @link https://flaviocopes.com/push-api/
+// @link https://web.dev/push-notifications-handling-messages/
+(self as any).addEventListener('push', function (event) {
+  if (!event.data) {
+    console.log('This push event has no data.');
+    return;
+  }
+  if (!(self as any).registration) {
+    console.log('Service worker does not control the page');
+    return;
+  }
+  if (!(self as any).registration || !(self as any).registration.pushManager) {
+    console.log('Push is not supported');
+    return;
+  }
+
+  const eventText = event.data.text();
+  // Specify default options
+  let options = {};
+  let title = '';
+
+  // Support both plain text notification and json
+  if (eventText.substr(0, 1) === '{') {
+    const eventData = JSON.parse(eventText);
+    title = eventData.title;
+
+    // Set specific options
+    // @link https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification#parameters
+    if (eventData.options) {
+      options = Object.assign(options, eventData.options);
+    }
+
+    // Check expiration if specified
+    if (eventData.expires && Date.now() > eventData.expires) {
+      console.log('Push notification has expired');
+      return;
+    }
+  } else {
+    title = eventText;
+  }
+
+  // Warning: this can fail silently if notifications are disabled at system level
+  // The promise itself resolve to undefined and is not helpful to see if it has been displayed properly
+  const promiseChain = (self as any).registration.showNotification(
+    title,
+    options,
+  );
+
+  // With this, the browser will keep the service worker running until the promise you passed in has settled.
+  event.waitUntil(promiseChain);
+});
