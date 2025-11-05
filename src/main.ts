@@ -10,6 +10,10 @@ import compression from 'compression';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // https://docs.nestjs.com/security/rate-limiting#proxies
+  app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
+
   app.use(cookieParser());
 
   // https://docs.nestjs.com/techniques/compression

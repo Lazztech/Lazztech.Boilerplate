@@ -21,6 +21,8 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { OpenGraphModule } from './open-graph/open-graph.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './dal/entity/user.entity';
+import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -112,16 +114,32 @@ import { User } from './dal/entity/user.entity';
       typesOutputPath: path.join(__dirname, 'i18n/generated/i18n.generated.ts'),
       viewEngine: 'hbs',
     }),
+    MikroOrmModule.forFeature([User]),
+    // https://docs.nestjs.com/security/rate-limiting
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: seconds(60),
+          limit: 100,
+        },
+      ],
+    }),
     DalModule,
     AuthModule,
     FileModule,
     EmailModule,
     NotificationModule,
     OpenGraphModule,
-    MikroOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // https://docs.nestjs.com/security/rate-limiting#rate-limiting
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements OnModuleInit, NestModule {
   public static logger = new Logger(AppModule.name);

@@ -22,6 +22,7 @@ import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
+import { minutes, seconds, Throttle } from '@nestjs/throttler';
 
 @Controller('auth')
 export class AuthController {
@@ -68,6 +69,7 @@ export class AuthController {
     return { input: body };
   }
 
+  @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
   async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
     try {
@@ -133,6 +135,7 @@ export class AuthController {
     };
   }
 
+  @Throttle({ default: { limit: 5, ttl: minutes(10) } })
   @Render('auth/reset-code')
   @Post('validate/reset-code')
   async postResetCodeValidate(

@@ -37,6 +37,7 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/platform-express": "^11.0.1",
+    "@nestjs/throttler": "^6.4.0",
     "@proventuslabs/nestjs-multipart-form": "^1.0.0-alpha.1",
     "@tailwindcss/cli": "^4.1.14",
     "bcryptjs": "^3.0.2",
