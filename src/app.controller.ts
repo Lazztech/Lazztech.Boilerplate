@@ -23,7 +23,6 @@ export class AppController {
   getHello(): any {
     return {
       message: this.appService.getHello(),
-      isRootPath: true,
     };
   }
 

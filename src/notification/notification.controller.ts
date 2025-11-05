@@ -12,6 +12,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { Payload } from '../auth/dto/payload.dto';
 import { User } from '../auth/user.decorator';
 import { NotificationService } from './notification.service';
+import { PushNotificationDto } from './dto/pushNotification.dto';
 
 @Controller('notification')
 export class NotificationController {
@@ -36,6 +37,18 @@ export class NotificationController {
       payload.userId,
       body,
       userAgent,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('test')
+  async postTest(@User() payload: Payload) {
+    await this.notificationService.sendWebPushNotification(
+      {
+        title: 'Test Web Push',
+        body: 'body',
+      } as PushNotificationDto,
+      payload.userId,
     );
   }
 }

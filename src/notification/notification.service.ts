@@ -57,27 +57,39 @@ export class NotificationService {
     }
   }
 
-  sendWebPushNotification(
+  async sendWebPushNotification(
     notification: PushNotificationDto,
-    to: webpush.PushSubscription,
+    userId: any,
   ) {
-    this.logger.debug(this.sendWebPushNotification.name);
-    webpush
-      .sendNotification(
-        to,
-        JSON.stringify({
-          notification: {
-            ...notification,
-            icon: `${this.configService.get('SITE_URL')}/assets/${this.configService.getOrThrow('ICON_NAME')}`,
-          },
-        }),
-      )
-      .then((log) => {
-        this.logger.debug('Push notification sent.');
-        this.logger.debug(log);
-      })
-      .catch((error) => {
-        this.logger.error(error);
-      });
+    const user = await this.userRepository.findOneOrFail(
+      { id: userId },
+      {
+        populate: ['userDevices'],
+      },
+    );
+    const webPushSubscriptions = (await user.userDevices.loadItems())
+      .map((x) => x.webPushSubscription)
+      .filter((val) => val);
+    for (const subscription of webPushSubscriptions) {
+      if (subscription) {
+        webpush
+          .sendNotification(
+            subscription,
+            JSON.stringify({
+              notification: {
+                ...notification,
+                icon: `${this.configService.get('SITE_URL')}/assets/${this.configService.getOrThrow('ICON_NAME')}`,
+              },
+            }),
+          )
+          .then((log) => {
+            this.logger.debug('Push notification sent.');
+            this.logger.debug(log);
+          })
+          .catch((error) => {
+            this.logger.warn(error);
+          });
+      }
+    }
   }
 }

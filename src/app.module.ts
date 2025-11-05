@@ -111,7 +111,11 @@ import { APP_GUARD } from '@nestjs/core';
         path: path.join(__dirname, '/i18n/'),
         watch: true,
       },
-      typesOutputPath: path.join(__dirname, 'i18n/generated/i18n.generated.ts'),
+      // only try to build types output types in src directory if the NODE_ENV is not 'production'
+      typesOutputPath:
+        process.env.NODE_ENV !== 'production'
+          ? path.join(__dirname, '../src/generated/i18n.generated.ts')
+          : undefined,
       viewEngine: 'hbs',
     }),
     MikroOrmModule.forFeature([User]),
