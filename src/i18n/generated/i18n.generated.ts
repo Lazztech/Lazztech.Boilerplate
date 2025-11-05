@@ -15,6 +15,7 @@ export type I18nTranslations = {
         "LOGIN": string;
         "SEND": string;
         "EMAIL": string;
+        "NEW_EMAIL": string;
         "CONFIRM_EMAIL": string;
         "PASSWORD": string;
         "CONFIRM_PASSWORD": string;
@@ -41,6 +42,7 @@ export type I18nTranslations = {
             "MIN_PASSWORD_LENGTH": string;
             "PASSWORD_MUST_CONTAIN": string;
             "PASSWORDS_MUST_MATCH": string;
+            "EMAIL_MUST_MATCH": string;
         };
     };
 };

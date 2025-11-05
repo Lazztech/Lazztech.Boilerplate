@@ -8,6 +8,7 @@
   "LOGIN": "Login",
   "SEND": "Send",
   "EMAIL": "Email",
+  "NEW_EMAIL": "New Email",
   "CONFIRM_EMAIL": "Confirm Email",
   "PASSWORD": "Password",
   "CONFIRM_PASSWORD": "Confirm Password",
@@ -33,6 +34,7 @@
     "IS_EMAIL": "Please provide a valid email address",
     "MIN_PASSWORD_LENGTH": "Password must be at least 8 characters long",
     "PASSWORD_MUST_CONTAIN": "Password must contain at least one uppercase letter, one lowercase letter, and one number",
-    "PASSWORDS_MUST_MATCH": "Passwords must match"
+    "PASSWORDS_MUST_MATCH": "Passwords must match",
+    "EMAIL_MUST_MATCH": "Emails must match"
   }
 }

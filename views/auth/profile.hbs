@@ -1,35 +1,10 @@
 {{>navbar}}
-<main class="flex flex-col justify-center items-center h-full gap-3">  
-    <form hx-post="/auth/register" hx-trigger="submit" hx-target="body">
-        <fieldset
-        class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4"
-        hx-post="/auth/validate/register"
-        hx-indicator="#loading"
-        hx-trigger="change, blur delay:500ms"
-        hx-include="input"
-        hx-target="body"
-        >
-        <legend class="fieldset-legend">{{t 'lang.UPDATE_EMAIL'}}</legend>
-
-        <label class="label">{{t 'lang.EMAIL'}}</label>
-        <label class="input {{#if (filterErrors validationErrors "email")}}input-error{{/if}}">
-            <input
-            id="email"
-            name="email"
-            type="email"
-            value="{{user.email}}"
-            placeholder="{{t 'lang.EMAIL'}}"
-            required
-            />
-        </label>
-        {{#each (filterErrors validationErrors "email")}}
-        <p class="text-error">{{this}}</p>
-        {{/each}}
-
-        <button type="submit" id="submit-email" class="btn btn-neutral mt-4 {{#if validationErrors}}btn-disabled{{/if}}">{{t 'lang.UPDATE'}}</button>
-        </fieldset>
-    </form>
-  <a class="link link-info" href="/auth/reset?email={{user.email}}">{{t 'lang.CHANGE_PASSWORD'}}</a>
-  <a class="link link-info" href="/auth/delete-account">{{t 'lang.DELETE_ACCOUNT'}}</a>
+<main class="flex flex-col justify-center items-center h-full gap-3">
+  <h1 class="text-2xl">{{user.email}}</h1>
+  <a class="link" href="/auth/update-email">{{t 'lang.UPDATE_EMAIL'}}</a>
+  <a class="link" href="/auth/reset?email={{user.email}}"
+    >{{t 'lang.CHANGE_PASSWORD'}}</a
+  >
+  <a class="link" href="/auth/delete-account">{{t 'lang.DELETE_ACCOUNT'}}</a>
 </main>
 {{>dock}}

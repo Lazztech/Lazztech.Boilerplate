@@ -19,6 +19,8 @@ import { EmailModule } from './email/email.module';
 import { ViewContextMiddleware } from './middleware/view-context.middleware';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { OpenGraphModule } from './open-graph/open-graph.module';
+import { MikroOrmModule } from '@mikro-orm/nestjs';
+import { User } from './dal/entity/user.entity';
 
 @Module({
   imports: [
@@ -116,6 +118,7 @@ import { OpenGraphModule } from './open-graph/open-graph.module';
     EmailModule,
     NotificationModule,
     OpenGraphModule,
+    MikroOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
   providers: [AppService],

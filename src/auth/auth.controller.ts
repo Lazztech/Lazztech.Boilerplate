@@ -21,6 +21,7 @@ import { Payload } from './dto/payload.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
+import { UpdateEmailDto } from './dto/updateEmail.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -204,5 +205,50 @@ export class AuthController {
         error,
       });
     }
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('update-email')
+  @Render('auth/update-email')
+  getUpdateEmail() {}
+
+  @Render('auth/update-email')
+  @Post('validate/update-email')
+  async postValidateUpdateEmail(
+    @I18n() i18n: I18nContext,
+    @Body() body: UpdateEmailDto,
+  ) {
+    const instance = plainToInstance(UpdateEmailDto, body);
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
+      return {
+        input: body,
+        validationErrors,
+      };
+    }
+
+    return { input: body };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('update-email')
+  async postUpdateEmail(
+    @User() payload: Payload,
+    @I18n() i18n: I18nContext,
+    @Body() body: UpdateEmailDto,
+    @Res() response: Response,
+  ) {
+    const instance = plainToInstance(UpdateEmailDto, body);
+    const validationErrors = await i18n.validate(instance);
+    if (validationErrors.length) {
+      return response.render('auth/update-email', {
+        layout: 'layout',
+        input: body,
+        validationErrors,
+      });
+    }
+
+    await this.authService.changeEmail(payload.userId, body.confirmEmail);
+    return response.redirect('/auth/profile');
   }
 }

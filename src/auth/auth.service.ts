@@ -10,7 +10,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../dal/entity/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { ChangePassword } from './dto/changePassword.dto';
+import { ChangePasswordDto } from './dto/changePassword.dto';
 import { Payload } from './dto/payload.dto';
 import { EmailService } from '../email/email.service';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
@@ -64,7 +64,7 @@ export class AuthService {
     } as Payload);
   }
 
-  public async changePassword(userId: any, details: ChangePassword) {
+  public async changePassword(userId: any, details: ChangePasswordDto) {
     this.logger.debug(this.changePassword.name);
     const user = await this.userRepository.findOneOrFail({ id: userId });
 
@@ -73,6 +73,12 @@ export class AuthService {
       user.password = newHashedPassword;
       return await this.em.persistAndFlush(user);
     }
+  }
+
+  public async changeEmail(userId: any, newEmail: string) {
+    const user = await this.userRepository.findOneOrFail({ id: userId });
+    user.email = newEmail;
+    await this.em.persistAndFlush(user);
   }
 
   async deleteUser(userId: any) {
