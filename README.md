@@ -1,6 +1,6 @@
 # Lazztech.Boilerplate
 
-This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, accross various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
+This repository serves as a jumping off point for rapid 3 tier web application development. It incorporates over a decade of software engineering, and extensive consulting experience, across various languages and frontend/backend web frameworks to propel project success. This boilerplate provides an established, opinionated, and proven platform to rapidly develop for many of the most common type of greenfield development efforts.
 
 This boilerplate is architected with inspiration from, though not dogmatically following, the values spoken to in the speech [Building the Hundred-Year Web Service with htmx - Alexander Petros](https://www.youtube.com/watch?v=lASLZ9TgXyc)
 
@@ -106,7 +106,7 @@ https://developer.chrome.com/docs/lighthouse/overview
   - Code Formatting
   - Logging
 - CLI for generating controllers, services, tests, etc: https://docs.nestjs.com/cli/overview
-- Preconfigured npm scripts
+- Pre-configured npm scripts
 
 **From there support for the following is added:**
 
@@ -131,7 +131,7 @@ See the [diff between what this project adds to the default NestJS project](http
 - nest-i18n internationalization: https://nestjs-i18n.com/
 - Open-Graph link previews: https://ogp.me/
 - Dockerfile and Docker Compose script
-- Github Actions Continous Integration Pipeline
+- Github Actions Continuos Integration Pipeline
 - Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
 - VSCode Recommended Extensions
 
@@ -186,7 +186,18 @@ erDiagram
 5. Set the `APP_NAME` and `APP_ICON` variables in the `.env` file
 6. Maintain your own i18n internationalization translations of `src/i18n/en/lang.json` in `src/i18n/[]`
 
+**Deployment:**
+
 The recommended path is to deploy to a vps of your choice via the provided `docker/Dockerfile` with something like [coolify](https://coolify.io/), with sqlite and local file storage, which are the defaults. If vertical scaling becomes a limiting factor, then you can migrate to postgresql and s3 object storage, which allow for scaling the app out horizontally. Details on configuring which database type and file storage type are below in the **Configuration** section.
+
+Use a strong cryptographically random value for the `ACCESS_TOKEN_SECRET`.
+
+Also Be sure to generate a new set of `PUBLIC_VAPID_KEY` and `PRIVATE_VAPID_KEY` configuration values for secure web-push functionality.
+
+```bash
+# generate public and private vapid keys
+$ npx web-push generate-vapid-keys
+```
 
 ## Development Dependencies
 
@@ -390,7 +401,7 @@ $ npx web-push generate-vapid-keys
 ## Scripts
 
 ```bash
-# Helper script to run the primary pipeline steps locally before commiting
+# Helper script to run the primary pipeline steps locally before committing
 $ ./scripts/preCommit.sh
 ```
 
