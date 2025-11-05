@@ -135,53 +135,58 @@ See the [diff between what this project adds to the default NestJS project](http
 - Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
 - VSCode Recommended Extensions
 
-## Boilerplate Entities Relation Diagram
-
 The following shows the included database entities that are used by the ORM to produce the following database table relations.
 
 ```mermaid
 erDiagram
-    ShareableId {
+    User ||--o| PasswordReset : "passwordReset"
+    User ||--o{ UserDevice : "userDevices"
+    User ||--o{ File : "fileUploads"
+
+    User {
+        number id PK
+        string firstName
+        string lastName
+        string email UK
+        string password
         string shareableId
         boolean flagged
         boolean banned
     }
 
-    User {
-        int id PK
-        string firstName
-        string lastName
-        string email UK
-        string password
-        int passwordResetId FK
-    }
-
     PasswordReset {
-        int id PK
+        number id PK
         string pin
     }
 
     UserDevice {
-        int id PK
+        number id PK
+        string userAgent
+        string pushEndpoint UK
         json webPushSubscription
-        int userId FK
     }
 
     File {
-        int id PK
+        number id PK
         string fileName UK
         string mimetype
         string createdOn
-        int createdByUserId FK
+        string shareableId
+        boolean flagged
+        boolean banned
     }
-
-    ShareableId ||--o{ User : extends
-    ShareableId ||--o{ File : extends
-
-    User ||--o| PasswordReset : "has one"
-    User ||--o{ UserDevice : "has many"
-    User ||--o{ File : "uploads many"
 ```
+
+## How to use this boilerplate
+
+1. Download the source as a zip, paste the contents into a new repository, commit and push
+2. Add any project icons to `public/assets/`
+3. Adjust the `public/manifest.json` `short_name`, `name`, `description`, and `icons`, values (See [khmyznikov/pwa-install](https://github.com/khmyznikov/pwa-install) documentation for details on other options such as app screenshots)
+4. Set the `.png` icon in the `views/layout.hbs` <link rel="apple-touch-icon" href="assets/lazztech_icon.png" /> element if you've added a png icon of a different name to `public/assets/`
+5. Set the `APP_NAME` and `APP_ICON` variables in the `.env` file
+6. Maintain your own i18n internationalization translations of `src/i18n/en/lang.json` in `src/i18n/[]`
+
+The recommended path is to deploy to a vps of your choice via the provided `docker/Dockerfile` with something like [coolify](https://coolify.io/), with sqlite and local file storage, which are the defaults. If vertical scaling becomes a limiting factor, then you can migrate to postgresql and s3 object storage, which allow for scaling the app out horizontally. Details on configuring which database type and file storage type are below in the **Configuration** section.
 
 ## Development Dependencies
 
@@ -391,22 +396,27 @@ $ ./scripts/preCommit.sh
 
 ## Configuration
 
-| Parameter                        | Function                                                     | Optional                                   | Example                    |
-| -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------- |
-| APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate       |
-| ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                  |
-| SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com         |
+| Parameter                        | Function                                                     | Optional                                   | Example                                |
+| -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- |
+| APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate                   |
+| ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                              |
+| SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com                     |
 | PUBLIC_VAPID_KEY                 | Used for web push notifications                              | ⚠️ change for production                   |
 | PRIVATE_VAPID_KEY                | Used for web push notifications                              | ⚠️ change for production                   |
-| APP_ICON                         | Used for PWA icon, and watermark                             | Defaults to lazztech_icon.webp ✅          | lazztech_icon.webp         |
-| DATABASE_TYPE                    | Used for selecting sqlite or postgres                        | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'     |
+| APP_ICON                         | Used for PWA icon, and watermark                             | Defaults to lazztech_icon.webp ✅          | lazztech_icon.webp                     |
+| EMAIL_TRANSPORT                  | Used for emailing users                                      | ✅                                         | 'gmail' or 'mailgun' defaults to gmail |
+| EMAIL_API_KEY                    | Used for emailing users                                      | required for mailgun                       |
+| EMAIL_DOMAIN                     | Used for emailing users                                      | required for mailgun                       |
+| EMAIL_FROM_ADDRESS               | Used for emailing users                                      | ❌                                         |
+| EMAIL_PASSWORD                   | Used for emailing users                                      | ✅ when transport is mailgun               |
+| DATABASE_TYPE                    | Used for selecting sqlite or postgres                        | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'                 |
 | DATABASE_HOST                    | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_PORT                    | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_USER                    | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_PASS                    | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_SCHEMA                  | Used for connecting to database                              | Optional depending on database type ✅     |
 | DATABASE_SSL                     | To configure whether to use SSL for database                 | Optional depending on database type ✅     |
-| FILE_STORAGE_TYPE                | For selecting local or S3 compatible storage configuration   | Defaults to local ✅                       | Select 'local' or 'object' |
+| FILE_STORAGE_TYPE                | For selecting local or S3 compatible storage configuration   | Defaults to local ✅                       | Select 'local' or 'object'             |
 | OBJECT_STORAGE_ACCESS_KEY_ID     | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |

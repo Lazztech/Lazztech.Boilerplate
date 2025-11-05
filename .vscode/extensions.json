@@ -10,6 +10,7 @@
         "ms-azuretools.vscode-docker",
         "cweijan.vscode-database-client2",
         "ms-azuretools.vscode-containers",
-        "bierner.markdown-mermaid"
+        "bierner.markdown-mermaid",
+        "streetsidesoftware.code-spell-checker"
     ]
 }
