@@ -46,7 +46,7 @@ async function bootstrap() {
     return arg1 == arg2 ? options.fn(this) : options.inverse(this);
   });
 
-  /** Serve htmx from node_modules
+  /** Serve htmx and other libraries from node_modules
    * https://htmx.org/docs/#installing
    * https://blog.wesleyac.com/posts/why-not-javascript-cdn */
   app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx.org/dist'), {
@@ -57,6 +57,12 @@ async function bootstrap() {
   });
   app.useStaticAssets(
     join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
+    {
+      prefix: '/modules/',
+    },
+  );
+  app.useStaticAssets(
+    join(__dirname, '..', 'node_modules/workbox-window/build'),
     {
       prefix: '/modules/',
     },

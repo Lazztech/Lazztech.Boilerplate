@@ -2562,7 +2562,7 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
 
   // views/assets/src-sw.ts
   clientsClaim();
-  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"8a2c668d9452090f5bfecb02aaac48df","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"67f0c6927b568b4c2d310fbe10f10f70","url":"js/webPush.js"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
+  precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"14df73c7b4ae811c0ed85208a35a5e66","url":"bundle.css"},{"revision":"94b6c004ad842941f17b240925753230","url":"favicon.ico"},{"revision":"67f0c6927b568b4c2d310fbe10f10f70","url":"js/webPush.js"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
   var CACHE_STRATEGY = new NetworkFirst();
   var FALLBACK_HTML_URL = "/offline.html";
   warmStrategyCache({
@@ -2576,6 +2576,11 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
       // If we don't have a fallback, return an error response.
       () => Response.error()
     );
+  });
+  addEventListener("message", (event) => {
+    if (event.data && event.data.type === "SKIP_WAITING") {
+      self.skipWaiting();
+    }
   });
   self.addEventListener("push", function(event) {
     if (!event.data) {

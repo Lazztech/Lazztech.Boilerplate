@@ -44,6 +44,15 @@ setCatchHandler(async ({ event }) => {
   );
 });
 
+// UPDATE PROMPT HANDLING
+// Listen for the "skip waiting" message from the client
+// https://developer.chrome.com/docs/workbox/handling-service-worker-updates#the_code_to_put_in_your_service_worker
+addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
+
 // Web Push Notification Handling
 // https://blog.lekoala.be/the-only-snippet-you-will-need-to-deal-with-push-notifications-in-a-service-worker
 // @link https://flaviocopes.com/push-api/

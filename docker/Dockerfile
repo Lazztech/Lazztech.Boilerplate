@@ -19,6 +19,7 @@ COPY public ./public
 COPY tsconfig*.json ./
 COPY nest-cli.json .
 COPY tailwind.config.js .
+COPY workbox-config.js .
 
 RUN npm run build
 

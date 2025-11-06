@@ -61,10 +61,54 @@ https://nestjs-i18n.com/quick-start --}}
     https://handlebarsjs.com/guide/expressions.html#literal-segments
     https://htmx.org/essays/web-security-basics-with-htmx/ }} {{{body}}} {{! The
     service worker is used in conjunction with the manifest.json to enable PWA
-    (Progressive Web App) functionality. }}
-    <script>
+    (Progressive Web App) functionality. This script tag uses JavaScript
+    modules, so the proper `type` attribute value is required.
+    https://developer.chrome.com/docs/workbox/handling-service-worker-updates }}
+    <script type="module">
+      // This code sample uses features introduced in Workbox v6.
+      import { Workbox } from '/modules/workbox-window.prod.mjs';
+
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js').then(() => {
+        const wb = new Workbox('/sw.js');
+
+        // Add an event listener to detect when the registered
+        // service worker has installed but is waiting to activate.
+        wb.addEventListener('waiting', async (event) => {
+          // Assuming the user accepted the update, set up a listener
+          // that will reload the page as soon as the previously waiting
+          // service worker has taken control.
+          wb.addEventListener('controlling', () => {
+            // At this point, reloading will ensure that the current
+            // tab is loaded under the control of the new service worker.
+            // Depending on your web app, you may want to auto-save or
+            // persist transient state before triggering the reload.
+            window.location.reload();
+          });
+
+          // When `event.wasWaitingBeforeRegister` is true, a previously
+          // updated service worker is still waiting.
+          // You may want to customize the UI prompt accordingly.
+
+          // This code assumes your app has a promptForUpdate() method,
+          // which returns true if the user wants to update.
+          // Implementing this is app-specific; some examples are:
+          // https://open-ui.org/components/alert.research or
+          // https://open-ui.org/components/toast.research
+          const updateAccepted = confirm(
+            // Use i18n-nestjs hbs helper to get internationalized message
+            '{{t 'lang.SW_UPDATE_PROMPT'}}',
+          );
+
+          if (updateAccepted) {
+            // Sends SKIP_WAITING message to service worker
+            wb.messageSkipWaiting();
+          }
+        });
+
+        // Register the service worker
+        wb.register().then(() => {
+          console.log('Service Worker registered');
+
           // Check for access_token cookie first
           if (
             document.cookie

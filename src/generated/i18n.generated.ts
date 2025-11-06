@@ -38,6 +38,7 @@ export type I18nTranslations = {
         "FORCE_PWA": string;
         "TEST_WEB_PUSH": string;
         "YOUR_MESSAGE": string;
+        "SW_UPDATE_PROMPT": string;
         "validation": {
             "IS_EMAIL": string;
             "MIN_PASSWORD_LENGTH": string;
