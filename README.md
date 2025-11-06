@@ -181,10 +181,11 @@ erDiagram
 
 1. Download the source as a zip, paste the contents into a new repository, commit and push
 2. Add any project icons to `public/assets/`
-3. Adjust the `public/manifest.json` `short_name`, `name`, `description`, and `icons`, values (See [khmyznikov/pwa-install](https://github.com/khmyznikov/pwa-install) documentation for details on other options such as app screenshots)
-4. Set the `.png` icon in the `views/layout.hbs` <link rel="apple-touch-icon" href="assets/lazztech_icon.png" /> element if you've added a png icon of a different name to `public/assets/`
-5. Set the `APP_NAME` and `APP_ICON` variables in the `.env` file
-6. Maintain your own i18n internationalization translations of `src/i18n/en/lang.json` in `src/i18n/[]`
+3. Replace the `public/favicon.ico`
+4. Adjust the `public/manifest.json` `short_name`, `name`, `description`, and `icons`, values (See [khmyznikov/pwa-install](https://github.com/khmyznikov/pwa-install) documentation for details on other options such as app screenshots)
+5. Set the `.png` icon in the `views/layout.hbs` <link rel="apple-touch-icon" href="assets/lazztech_icon.png" /> element if you've added a png icon of a different name to `public/assets/`
+6. Set the `APP_NAME` and `APP_ICON` variables in the `.env` file
+7. Maintain your own i18n internationalization translations of `src/i18n/en/lang.json` in `src/i18n/[]`
 
 **Deployment:**
 
