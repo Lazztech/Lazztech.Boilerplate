@@ -5,8 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { File } from '../../dal/entity/file.entity';
 import { User } from '../../dal/entity/user.entity';
-import { FILE_SERVICE } from '../file-service.token';
-import { LocalFileService } from '../local-file/local-file.service';
+import { FileService } from '../file-service.abstract';
 import { FileController } from './file.controller';
 
 describe('FileController', () => {
@@ -18,8 +17,15 @@ describe('FileController', () => {
       providers: [
         JwtService,
         {
-          provide: FILE_SERVICE,
-          useClass: LocalFileService,
+          provide: FileService,
+          useValue: {
+            storeImageFromFileUpload: jest.fn(),
+            delete: jest.fn(),
+            deleteById: jest.fn(),
+            get: jest.fn(),
+            getByShareableId: jest.fn(),
+            getWatermark: jest.fn(),
+          },
         },
         ConfigService,
         {
