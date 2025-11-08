@@ -189,7 +189,9 @@ erDiagram
 
 **Deployment:**
 
-The recommended path is to deploy to a vps of your choice via the provided `docker/Dockerfile` with something like [coolify](https://coolify.io/), with sqlite and local file storage, which are the defaults. If vertical scaling becomes a limiting factor, then you can migrate to postgresql and s3 object storage, which allow for scaling the app out horizontally. Details on configuring which database type and file storage type are below in the **Configuration** section.
+The recommended path is to deploy to a vps of your choice via the provided `docker/Dockerfile` with something like [coolify](https://coolify.io/), with sqlite and local file storage, which are the defaults. If vertical scaling becomes a limiting factor, then you can use the s3 file storage and a tool like Litestream/LiteFS that allows for sqlite WAL (Write Ahead Logging) streaming backups and restoration via an s3 destination. If the project still then exceeds the capacity of sqlite then migrate to postgresql, but most likely YAGNI (You Aint Gonna Need It). For more about sqlite in production check out this talk [DjangoCon Europe 2023 | Use SQLite in production](https://youtu.be/yTicYJDT1zE).
+
+Refer to details on configuring which database type and file storage type are below in the **Configuration** section.
 
 Use a strong cryptographically random value for the `ACCESS_TOKEN_SECRET`.
 
