@@ -405,7 +405,7 @@ $ npx web-push generate-vapid-keys
 
 ```bash
 # Helper script to run the primary pipeline steps locally before committing
-$ ./scripts/preCommit.sh
+$ npm run precommit
 ```
 
 ## Configuration
