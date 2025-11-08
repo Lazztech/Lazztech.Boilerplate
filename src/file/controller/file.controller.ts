@@ -25,14 +25,12 @@ import { Payload } from '../../auth/dto/payload.dto';
 import { User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
-import { FILE_SERVICE } from '../file-service.token';
-
 @Controller('file')
 export class FileController {
   private logger = new Logger(FileController.name);
 
   constructor(
-    @Inject(FILE_SERVICE)
+    @Inject()
     private readonly fileService: FileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,

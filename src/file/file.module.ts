@@ -1,6 +1,5 @@
 import { FactoryProvider, Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FILE_SERVICE } from './file-service.token';
 import { FileController } from './controller/file.controller';
 import { LocalFileService } from './local-file/local-file.service';
 import { S3FileService } from './s3-file/s3-file.service';
@@ -12,6 +11,7 @@ import { S3Module, S3ModuleOptions } from 'nestjs-s3';
 import { AuthModule } from '../auth/auth.module';
 import { MultipartModule } from '@proventuslabs/nestjs-multipart-form';
 import { User } from '../dal/entity/user.entity';
+import { FileService } from './file-service.abstract';
 
 @Module({
   imports: [
@@ -52,7 +52,7 @@ import { User } from '../dal/entity/user.entity';
   controllers: [FileController],
   providers: [
     {
-      provide: FILE_SERVICE,
+      provide: FileService,
       useFactory: (
         configService: ConfigService,
         localFileService: LocalFileService,
@@ -86,7 +86,7 @@ import { User } from '../dal/entity/user.entity';
     LocalFileService,
     FileUrlService,
   ],
-  exports: [FILE_SERVICE, FileUrlService],
+  exports: [FileService, FileUrlService],
 })
 export class FileModule {
   public static logger = new Logger(FileModule.name);
