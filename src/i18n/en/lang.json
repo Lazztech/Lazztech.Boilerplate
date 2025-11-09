@@ -32,6 +32,11 @@
   "TEST_WEB_PUSH": "Test Web Push Notification",
   "YOUR_MESSAGE": "Your Message",
   "SW_UPDATE_PROMPT": "New content available! Click OK to update.",
+  "COPY_TEXT": "Copy Text",
+  "SHARE": "Share",
+  "UPLOAD": "Upload",
+  "COPIED": "Copied!",
+  "SHARING_NOT_SUPPORTED": "Sharing is not supported on this browser",
   "validation": {
     "IS_EMAIL": "Please provide a valid email address",
     "MIN_PASSWORD_LENGTH": "Password must be at least 8 characters long",

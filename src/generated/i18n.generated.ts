@@ -39,6 +39,11 @@ export type I18nTranslations = {
         "TEST_WEB_PUSH": string;
         "YOUR_MESSAGE": string;
         "SW_UPDATE_PROMPT": string;
+        "COPY_TEXT": string;
+        "SHARE": string;
+        "UPLOAD": string;
+        "COPIED": string;
+        "SHARING_NOT_SUPPORTED": string;
         "validation": {
             "IS_EMAIL": string;
             "MIN_PASSWORD_LENGTH": string;

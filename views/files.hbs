@@ -12,15 +12,15 @@
         <div class="card-actions justify-end">
           <button
             class="btn btn-primary"
-            onclick="navigator.clipboard.writeText('{{../siteUrl}}/share?shareableId={{this.shareableId}}&type=file'); alert('Copied!')"
+            onclick="navigator.clipboard.writeText('{{../siteUrl}}/share?shareableId={{this.shareableId}}&type=file'); alert('{{t 'lang.COPIED'}}')"
           >
-            Copy Text
+            {{t 'lang.COPY_TEXT'}}
           </button>
           <button
             class="btn btn-primary"
             onclick="shareFile('{{this.fileName}}', '/share?shareableId={{this.shareableId}}&type=file')"
           >
-            Share
+            {{t 'lang.SHARE'}}
           </button>
         </div>
       </div>
@@ -47,7 +47,7 @@
         class="file-input"
         accept="image/jpeg,image/png,image/gif,image/webp"
       />
-      <button class="btn btn-neutral">Upload</button>
+      <button class="btn btn-neutral">{{t 'lang.UPLOAD'}}</button>
       <span
         id="loading"
         class="htmx-indicator loading loading-ring loading-sm"
@@ -59,7 +59,7 @@
 <script>
   async function shareFile(title, url) {
     if (!navigator.share) {
-      alert('Sharing is not supported on this browser');
+      alert('{{t 'lang.SHARING_NOT_SUPPORTED'}}');
       return;
     }
 
