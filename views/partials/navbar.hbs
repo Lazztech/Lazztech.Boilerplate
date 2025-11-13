@@ -27,8 +27,13 @@ https://daisyui.com/components/drawer/#navbar-menu-for-desktop--sidebar-drawer-f
           </svg>
         </label>
       </div>
-      <div class="mx-2 flex flex-row gap-2 px-2">
-        {{appName}}
+      <div class="mx-2 flex flex-row gap-2 pt-1">
+        <img
+          src="/assets/lazztech_title.svg"
+          alt="Lazztech"
+          class="h-6 dark:invert"
+        />
+        <span class="text-lg">| {{appName}}</span>
         <div class="relative size-6">
           <div id="offline-indicator" class="absolute inset-0">
             <span
@@ -38,7 +43,7 @@ https://daisyui.com/components/drawer/#navbar-menu-for-desktop--sidebar-drawer-f
           </div>
         </div>
       </div>
-      <div class="hidden flex-none ml-auto lg:block">
+      <div class="hidden flex-none ml-auto lg:block pt-1">
         <ul class="menu menu-horizontal">
           <!-- Navbar menu content here -->
           {{#if user}}
