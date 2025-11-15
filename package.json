@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "nest build && npm run generate:tailwind && npm run generate:sw",
     "generate:sw": "esbuild --outfile=views/assets/src-sw.js --bundle views/assets/src-sw.ts && npx workbox injectManifest",
