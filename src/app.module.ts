@@ -23,9 +23,23 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './dal/entity/user.entity';
 import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
+    LoggerModule.forRoot({
+      pinoHttp: {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
+            colorize: true,
+            levelFirst: false,
+            translateTime: 'yyyy-mm-dd HH:MM:ss',
+          },
+        },
+      },
+    }),
     ConfigModule.forRoot({
       envFilePath: ['.env.local', '.env'],
       validationSchema: Joi.object({

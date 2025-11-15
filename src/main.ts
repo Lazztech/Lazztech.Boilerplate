@@ -7,9 +7,13 @@ import { AppModule } from './app.module';
 import { ValidationError } from '@nestjs/common';
 import { ErrorViewFilter } from './error-view.filter';
 import compression from 'compression';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
 
   // https://docs.nestjs.com/security/rate-limiting#proxies
   app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
