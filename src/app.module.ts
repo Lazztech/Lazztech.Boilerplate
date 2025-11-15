@@ -6,7 +6,7 @@ import {
   NestModule,
   OnModuleInit,
 } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import * as path from 'path';
 import { AppController } from './app.controller';
@@ -27,17 +27,43 @@ import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
-    LoggerModule.forRoot({
-      pinoHttp: {
-        transport: {
-          target: 'pino-pretty',
-          options: {
-            singleLine: true,
-            colorize: true,
-            levelFirst: false,
-            translateTime: 'yyyy-mm-dd HH:MM:ss',
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const options = {
+          singleLine: true,
+          colorize: true,
+          levelFirst: false,
+          translateTime: 'yyyy-mm-dd HH:MM:ss',
+          destination: 1,
+        };
+        return {
+          pinoHttp: {
+            transport: {
+              targets: [
+                {
+                  target: 'pino-pretty',
+                  level: 'info',
+                  options,
+                },
+                {
+                  target: 'pino-pretty',
+                  level: 'info',
+                  options: {
+                    ...options,
+                    // app.log file in data path
+                    destination: path.join(
+                      configService.getOrThrow('DATA_PATH'),
+                      'app.log',
+                    ),
+                    mkdir: true,
+                  },
+                },
+              ],
+            },
           },
-        },
+        };
       },
     }),
     ConfigModule.forRoot({
