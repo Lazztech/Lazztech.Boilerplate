@@ -31,7 +31,7 @@ import { APP_GUARD } from '@nestjs/core';
       validationSchema: Joi.object({
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
-          .default('development'),
+          .default('production'),
         PORT: Joi.number().default(3000),
         APP_NAME: Joi.string().default('Boilerplate'),
         ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
@@ -120,7 +120,7 @@ import { APP_GUARD } from '@nestjs/core';
       resolvers: [AcceptLanguageResolver],
       loaderOptions: {
         path: path.join(__dirname, '/i18n/'),
-        watch: true,
+        watch: process.env.NODE_ENV !== 'production',
       },
       // only try to build types output types in src directory if the NODE_ENV is not 'production'
       typesOutputPath:
