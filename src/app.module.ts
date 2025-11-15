@@ -29,19 +29,30 @@ import { APP_GUARD } from '@nestjs/core';
     ConfigModule.forRoot({
       envFilePath: ['.env.local', '.env'],
       validationSchema: Joi.object({
-        APP_NAME: Joi.string().required(),
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .default('development'),
+        PORT: Joi.number().default(3000),
+        APP_NAME: Joi.string().default('Boilerplate'),
         ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
-        PUBLIC_VAPID_KEY: Joi.optional(),
-        PRIVATE_VAPID_KEY: Joi.optional(),
+        PUBLIC_VAPID_KEY: Joi.optional().default(
+          'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',
+        ),
+        PRIVATE_VAPID_KEY: Joi.optional().default(
+          'UUxI4O8-FbRouAevSmBQ6o18hgE4nSG3qwvJTfKc-ls',
+        ),
         SITE_URL: Joi.string().default('https://mysite.com'),
         ICON_NAME: Joi.string().default('lazztech_icon.webp'),
+        DATA_PATH: Joi.string().default(path.join(process.cwd(), 'data')),
         DATABASE_TYPE: Joi.string()
           .valid('sqlite', 'postgres')
           .default('sqlite'),
         DATABASE_SCHEMA: Joi.string()
           .when('DATABASE_TYPE', {
             is: 'sqlite',
-            then: Joi.string().default(path.join('data', 'sqlite3.db')),
+            then: Joi.string().default((parent) =>
+              path.join(parent.DATA_PATH, 'sqlite3.db'),
+            ),
           })
           .when('DATABASE_TYPE', {
             is: 'postgres',

@@ -2,17 +2,29 @@ import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
+import fs from 'fs';
 import { File } from '../../dal/entity/file.entity';
 import { LocalFileService } from './local-file.service';
+
+jest.mock('fs');
 
 describe('LocalFileService', () => {
   let service: LocalFileService;
 
   beforeEach(async () => {
+    jest.clearAllMocks();
+    (fs.existsSync as jest.Mock).mockReturnValue(true);
+    (fs.mkdirSync as jest.Mock).mockImplementation(() => {});
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        ConfigService,
         LocalFileService,
+        {
+          provide: ConfigService,
+          useValue: {
+            getOrThrow: jest.fn(() => ''),
+          },
+        },
         {
           provide: getRepositoryToken(File),
           useValue: {

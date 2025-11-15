@@ -19,12 +19,8 @@ import path from 'path';
               name: 'sqlite',
               driver: BetterSqliteDriver,
               baseDir: process.cwd(),
-              dbName: configService.get(
-                'DATABASE_SCHEMA',
-                path.join('data', 'sqlite3.db'),
-              ),
-              entities: ['./dist/dal/entity'],
-              entitiesTs: ['./src/dal/entity'],
+              dbName: configService.getOrThrow('DATABASE_SCHEMA'),
+              autoLoadEntities: true,
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
@@ -45,8 +41,7 @@ import path from 'path';
               port: configService.get<number>('DATABASE_PORT', 5432),
               user: configService.get('DATABASE_USER', 'postgres'),
               password: configService.get('DATABASE_PASS', 'postgres'),
-              entities: ['./dist/dal/entity'],
-              entitiesTs: ['./src/dal/entity'],
+              autoLoadEntities: true,
               extensions: [Migrator],
               migrations: {
                 pattern: /^.*\.(js|ts)$/, // ends with .js or .ts
@@ -75,6 +70,8 @@ import path from 'path';
       },
       // "feat: add driver option to get around issues with useFactory and inject #204"
       // https://github.com/mikro-orm/nestjs/pull/204
+      // Note: driver must be set statically here, before ConfigService is available
+      // This reads directly from process.env as it's evaluated at module load time
       driver:
         process.env.DATABASE_TYPE == 'sqlite'
           ? BetterSqliteDriver
@@ -94,12 +91,7 @@ export class DalModule implements OnModuleInit {
     switch (this.configService.get('DATABASE_TYPE', 'sqlite')) {
       case 'sqlite':
         this.logger.log(
-          `Using sqlite db: ${path.join(
-            process.cwd(),
-            this.configService.get(
-              'DATABASE_SCHEMA',
-              path.join('data', 'sqlite3.db'),
-            ),
+          `Using sqlite db: ${this.configService.getOrThrow('DATABASE_SCHEMA')}),
           )}`,
         );
         await this.orm.em.getConnection().execute('PRAGMA journal_mode = WAL;');

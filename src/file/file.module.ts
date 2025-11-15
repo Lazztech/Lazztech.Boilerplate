@@ -1,18 +1,16 @@
+import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { FactoryProvider, Logger, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { FileController } from './controller/file.controller';
-import { LocalFileService } from './local-file/local-file.service';
-import { S3FileService } from './s3-file/s3-file.service';
-import { FileUrlService } from './file-url/file-url.service';
-import * as path from 'path';
-import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { File } from '../dal/entity/file.entity';
+import { MultipartModule } from '@proventuslabs/nestjs-multipart-form';
 import { S3Module, S3ModuleOptions } from 'nestjs-s3';
 import { AuthModule } from '../auth/auth.module';
-import { MultipartModule } from '@proventuslabs/nestjs-multipart-form';
+import { File } from '../dal/entity/file.entity';
 import { User } from '../dal/entity/user.entity';
+import { FileController } from './controller/file.controller';
 import { FileService } from './file-service.abstract';
-
+import { FileUrlService } from './file-url/file-url.service';
+import { LocalFileService } from './local-file/local-file.service';
+import { S3FileService } from './s3-file/s3-file.service';
 @Module({
   imports: [
     AuthModule,
@@ -62,8 +60,7 @@ import { FileService } from './file-service.abstract';
           case 'local':
             FileModule.logger.log(
               `Using local file storage: ${process.cwd()}/${configService.get(
-                'FILE_STORAGE_DIR',
-                path.join('data', 'uploads'),
+                'DATA_PATH',
               )}`,
             );
             return localFileService;
