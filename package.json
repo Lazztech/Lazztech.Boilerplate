@@ -26,8 +26,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "precommit": "npm run format && npm run lint && npm run test:cov && npm run test:e2e && npm run build && npm run lighthouse"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:smoke": "playwright test test/smoke.spec.ts --project=chromium",
+    "precommit": "npm run format && npm run lint && npm run test:cov && npm run test:e2e:smoke && npm run build && npm run lighthouse"
   },
   "dependencies": {
     "@khmyznikov/pwa-install": "^0.5.8",
@@ -75,6 +79,7 @@
     "@nestjs/cli": "^11.0.0",
     "@nestjs/schematics": "^11.0.0",
     "@nestjs/testing": "^11.0.1",
+    "@playwright/test": "^1.57.0",
     "@types/compression": "^1.8.1",
     "@types/cookie-parser": "^1.4.9",
     "@types/express": "^5.0.0",

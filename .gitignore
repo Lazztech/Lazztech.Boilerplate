@@ -59,3 +59,11 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 data/**
 public/bundle.css
 views/assets/src-sw.js
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/

@@ -7,6 +7,7 @@
     "**/*spec.ts", 
     "public", 
     "**/mikro-orm.*.cli-config.*",
-    "views"
+    "views",
+    "**/playwright.config.ts",
   ]
 }

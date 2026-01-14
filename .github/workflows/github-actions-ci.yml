@@ -34,9 +34,12 @@ jobs:
         run: |
           npm run test:cov
 
-      - name: npm test:e2e local
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: npm test:e2e:smoke local
         run: |
-          npm run test:e2e
+          npm run test:e2e:smoke
         env:
           CI: true
           APP_NAME: Lazztech.Boilerplate
@@ -70,9 +73,9 @@ jobs:
 
           aws --endpoint-url http://127.0.0.1:9000/ s3 mb s3://test-lazztech-boilerplate
 
-      - name: npm test:e2e remote
+      - name: npm test:e2e:smoke remote
         run: |
-          npm run test:e2e
+          npm run test:e2e:smoke
         env:
           CI: true
           APP_NAME: Lazztech.Boilerplate
