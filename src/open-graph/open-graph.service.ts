@@ -33,7 +33,7 @@ export class OpenGraphService {
           populate: ['createdBy'],
         },
       );
-      const createdBy = await file?.createdBy.load();
+      const createdBy = await file?.createdBy?.load();
       return {
         ogUrl: `${req.protocol}://${req.get('host')}/file/${shareableId}`,
         ogTitle: file?.fileName,
