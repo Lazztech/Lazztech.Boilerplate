@@ -118,6 +118,7 @@ See the [diff between what this project adds to the default NestJS project](http
 - Environment variable configuration validation: https://docs.nestjs.com/techniques/configuration#schema-validation
 - MVC Server Side Rendering: https://docs.nestjs.com/techniques/mvc
   - HTMX for dynamic UI interactions
+  - Hyperscript for clientside UI interactions
   - Tailwind and DasyUI for styling
   - Manifest.json and JS Service Worker for Progressive Web App support
     - Support for Web Push Notifications: https://developer.mozilla.org/en-US/docs/Web/API/Push_API

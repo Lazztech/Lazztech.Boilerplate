@@ -56,6 +56,7 @@
     "hbs": "^4.2.0",
     "htmx-ext-sse": "^2.2.2",
     "htmx.org": "^2.0.7",
+    "hyperscript.org": "^0.9.14",
     "joi": "^18.0.1",
     "lodash": "^4.17.21",
     "nestjs-i18n": "^10.5.1",

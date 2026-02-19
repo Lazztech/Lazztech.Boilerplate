@@ -60,6 +60,12 @@ async function bootstrap() {
     prefix: '/modules/',
   });
   app.useStaticAssets(
+    join(__dirname, '..', 'node_modules/hyperscript.org/dist'),
+    {
+      prefix: '/modules/',
+    },
+  );
+  app.useStaticAssets(
     join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
     {
       prefix: '/modules/',
