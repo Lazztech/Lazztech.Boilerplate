@@ -1,5 +1,5 @@
 ---
-mode: agent
+agent: agent
 ---
 
 1. Please do not modify or add any documentation files without approval.
