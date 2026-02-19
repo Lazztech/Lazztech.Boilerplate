@@ -23,6 +23,7 @@ export class ViewContextMiddleware implements NestMiddleware {
     res.locals.siteUrl = req.get('host');
     res.locals.baseUrl = req.baseUrl;
     res.locals.authEnabled = this.configService.get<boolean>('AUTH_ENABLED');
+    res.locals.pwaEnabled = this.configService.get<boolean>('PWA_ENABLED');
     // Assign locale for i18n language selection
     res.locals.locale = I18nContext.current()?.lang;
     try {
