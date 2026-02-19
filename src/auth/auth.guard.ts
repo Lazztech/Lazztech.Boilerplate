@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -16,6 +17,10 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    if (!this.configService.get<boolean>('AUTH_ENABLED')) {
+      throw new NotFoundException();
+    }
+
     const request = context.switchToHttp().getRequest();
     const token = request.cookies?.['access_token'] as string;
     if (!token) {

@@ -416,6 +416,7 @@ $ npm run precommit
 | Parameter                        | Function                                                     | Optional                                   | Example                                |
 | -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- |
 | APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate                   |
+| AUTH_ENABLED                     | Enables or disables auth/login functionality                 | Defaults to false ✅                       | true or false                          |
 | ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                              |
 | SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com                     |
 | PUBLIC_VAPID_KEY                 | Used for web push notifications                              | ⚠️ change for production                   |
