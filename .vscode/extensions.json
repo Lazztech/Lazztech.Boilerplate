@@ -11,6 +11,8 @@
         "cweijan.vscode-database-client2",
         "ms-azuretools.vscode-containers",
         "bierner.markdown-mermaid",
-        "streetsidesoftware.code-spell-checker"
+        "streetsidesoftware.code-spell-checker",
+        "ms-playwright.playwright",
+        "orta.vscode-jest"
     ]
 }
