@@ -21,7 +21,13 @@ const FALLBACK_HTML_URL = '/offline.html';
 
 // Warm the runtime cache with a list of asset URLs
 warmStrategyCache({
-  urls: ['/', FALLBACK_HTML_URL, '/modules/htmx.min.js', '/modules/sse.js'],
+  urls: [
+    FALLBACK_HTML_URL,
+    '/modules/htmx.min.js',
+    '/modules/_hyperscript.min.js',
+    '/modules/sse.js',
+    '/modules/pwa-install.bundle.js',
+  ],
   strategy: CACHE_STRATEGY,
 });
 
@@ -31,26 +37,30 @@ registerRoute(() => true, CACHE_STRATEGY);
 // https://developer.chrome.com/docs/workbox/managing-fallback-responses
 // This "catch" handler is triggered when any of the other routes fail to
 // generate a response.
-setCatchHandler(async ({ event }) => {
+setCatchHandler(async ({ event, request }) => {
   // The warmStrategyCache recipe is used to add the fallback assets ahead of
   // time to the runtime cache, and are served in the event of an error below.
   // Use `event`, `request`, and `url` to figure out how to respond, or
   // use request.destination to match requests for specific resource types.
   console.log(`setCatchHandler callback:`, event);
 
-  return CACHE_STRATEGY.handle({ event, request: FALLBACK_HTML_URL }).catch(
-    // If we don't have a fallback, return an error response.
-    () => Response.error(),
-  );
+  // For navigation requests, serve the offline page
+  if (request.destination === 'document') {
+    return CACHE_STRATEGY.handle({
+      event,
+      request: new Request(FALLBACK_HTML_URL),
+    }).catch(() => Response.error());
+  }
+
+  // For other requests, just return an error
+  return Response.error();
 });
 
-// UPDATE PROMPT HANDLING
-// Listen for the "skip waiting" message from the client
-// https://developer.chrome.com/docs/workbox/handling-service-worker-updates#the_code_to_put_in_your_service_worker
-addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
+// AGGRESSIVE UPDATE HANDLING
+// Skip waiting immediately on install to force update
+addEventListener('install', (event) => {
+  console.log('Service worker installing - skipping waiting');
+  self.skipWaiting();
 });
 
 // Web Push Notification Handling
