@@ -21,9 +21,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // https://docs.nestjs.com/techniques/compression
-  if (process.env.NODE_ENV !== 'production') {
-    app.use(compression());
-  }
+  app.use(compression());
 
   // Setup MVC https://docs.nestjs.com/techniques/mvc
   app.useStaticAssets(join(__dirname, '..', 'public'));
