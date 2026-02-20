@@ -2,7 +2,7 @@ import { clientsClaim } from 'workbox-core';
 import { precacheAndRoute } from 'workbox-precaching';
 import { warmStrategyCache } from 'workbox-recipes';
 import { registerRoute, setCatchHandler } from 'workbox-routing';
-import { NetworkFirst } from 'workbox-strategies';
+import { NetworkFirst, NetworkOnly } from 'workbox-strategies';
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-core#clients_claim
 // This clientsClaim() should be at the top level
@@ -30,6 +30,9 @@ warmStrategyCache({
   ],
   strategy: CACHE_STRATEGY,
 });
+
+// SSE is a streaming connection - bypass the service worker cache entirely
+registerRoute(({ url }) => url.pathname === '/sse', new NetworkOnly());
 
 // https://developer.chrome.com/docs/workbox/modules/workbox-routing
 registerRoute(() => true, CACHE_STRATEGY);

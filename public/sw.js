@@ -2560,6 +2560,75 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     defaultRouter2.setCatchHandler(handler);
   }
 
+  // node_modules/workbox-strategies/NetworkOnly.js
+  var NetworkOnly = class extends Strategy {
+    /**
+     * @param {Object} [options]
+     * @param {Array<Object>} [options.plugins] [Plugins]{@link https://developers.google.com/web/tools/workbox/guides/using-plugins}
+     * to use in conjunction with this caching strategy.
+     * @param {Object} [options.fetchOptions] Values passed along to the
+     * [`init`](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters)
+     * of [non-navigation](https://github.com/GoogleChrome/workbox/issues/1796)
+     * `fetch()` requests made by this strategy.
+     * @param {number} [options.networkTimeoutSeconds] If set, any network requests
+     * that fail to respond within the timeout will result in a network error.
+     */
+    constructor(options = {}) {
+      super(options);
+      this._networkTimeoutSeconds = options.networkTimeoutSeconds || 0;
+    }
+    /**
+     * @private
+     * @param {Request|string} request A request to run this strategy for.
+     * @param {workbox-strategies.StrategyHandler} handler The event that
+     *     triggered the request.
+     * @return {Promise<Response>}
+     */
+    async _handle(request, handler) {
+      if (true) {
+        finalAssertExports.isInstance(request, Request, {
+          moduleName: "workbox-strategies",
+          className: this.constructor.name,
+          funcName: "_handle",
+          paramName: "request"
+        });
+      }
+      let error = void 0;
+      let response;
+      try {
+        const promises = [
+          handler.fetch(request)
+        ];
+        if (this._networkTimeoutSeconds) {
+          const timeoutPromise = timeout(this._networkTimeoutSeconds * 1e3);
+          promises.push(timeoutPromise);
+        }
+        response = await Promise.race(promises);
+        if (!response) {
+          throw new Error(`Timed out the network response after ${this._networkTimeoutSeconds} seconds.`);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          error = err;
+        }
+      }
+      if (true) {
+        logger.groupCollapsed(messages2.strategyStart(this.constructor.name, request));
+        if (response) {
+          logger.log(`Got response from network.`);
+        } else {
+          logger.log(`Unable to get a response from the network.`);
+        }
+        messages2.printFinalResponse(response);
+        logger.groupEnd();
+      }
+      if (!response) {
+        throw new WorkboxError("no-response", { url: request.url, error });
+      }
+      return response;
+    }
+  };
+
   // views/assets/src-sw.ts
   clientsClaim();
   precacheAndRoute([{"revision":"e4cb185b2e80d1080505613a40f431fc","url":"assets/lazztech_icon.png"},{"revision":"f0598a10b39d3b5a995d9ef85ede09c4","url":"assets/lazztech_icon.webp"},{"revision":"86602505f17cdf472cc14734cd18886d","url":"bundle.css"},{"revision":"0609c12e87f501b8192828ad3f74c84f","url":"favicon.ico"},{"revision":"67f0c6927b568b4c2d310fbe10f10f70","url":"js/webPush.js"},{"revision":"b5a7ddc8b239ae0e8d52ade4aa9e9c75","url":"manifest.json"},{"revision":"ca121b5d03245bf82db00d14cee04e22","url":"robots.txt"}]);
@@ -2575,6 +2644,7 @@ This is generally NOT safe. Learn more at https://bit.ly/wb-precache`;
     ],
     strategy: CACHE_STRATEGY
   });
+  registerRoute(({ url }) => url.pathname === "/sse", new NetworkOnly());
   registerRoute(() => true, CACHE_STRATEGY);
   setCatchHandler(async ({ event, request }) => {
     console.log(`setCatchHandler callback:`, event);
