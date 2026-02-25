@@ -190,6 +190,20 @@ erDiagram
 6. Set the `APP_NAME` and `APP_ICON` variables in the `.env` file
 7. Maintain your own i18n internationalization translations of `src/i18n/en/lang.json` in `src/i18n/[]`
 
+## Updating your projects bootstrapped from this boilerplate
+
+To update projects bootstrapped from this [Lazztech.Boilerplate](https://github.com/Lazztech/Lazztech.Boilerplate). Pull in upstream template changes as a single clean commit (without importing the template's history):
+
+```bash
+git remote add template https://github.com/Lazztech/Lazztech.Boilerplate
+git fetch --all
+git merge --squash template/main --allow-unrelated-histories
+
+# Review staged changes, unstage anything you don't want
+
+git commit -m "Merge remote-tracking branch 'template/main'"
+```
+
 **Deployment:**
 
 The recommended path is to deploy to a vps of your choice via the provided `docker/Dockerfile` with something like [coolify](https://coolify.io/), with sqlite and local file storage, which are the defaults. If vertical scaling becomes a limiting factor, then you can use the s3 file storage and a tool like Litestream/LiteFS that allows for sqlite WAL (Write Ahead Logging) streaming backups and restoration via an s3 destination. If the project still then exceeds the capacity of sqlite then migrate to postgresql, but most likely YAGNI (You Aint Gonna Need It). For more about sqlite in production check out this talk [DjangoCon Europe 2023 | Use SQLite in production](https://youtu.be/yTicYJDT1zE).
