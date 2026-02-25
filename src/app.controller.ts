@@ -26,6 +26,14 @@ export class AppController {
     };
   }
 
+  @Get('chat')
+  @Render('chat')
+  getChat(): any {
+    return {
+      message: this.appService.getHello(),
+    };
+  }
+
   @Get('offline.html')
   @Render('offline')
   getOffline() {}
