@@ -21,7 +21,7 @@ import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { OpenGraphModule } from './open-graph/open-graph.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './dal/entity/user.entity';
-import { seconds, ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 
@@ -173,14 +173,7 @@ import { LoggerModule } from 'nestjs-pino';
     }),
     MikroOrmModule.forFeature([User]),
     // https://docs.nestjs.com/security/rate-limiting
-    ThrottlerModule.forRoot({
-      throttlers: [
-        {
-          ttl: seconds(60),
-          limit: 100,
-        },
-      ],
-    }),
+    ThrottlerModule.forRoot(),
     DalModule,
     AuthModule,
     FileModule,
