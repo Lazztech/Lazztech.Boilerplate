@@ -212,6 +212,12 @@ Refer to details on configuring which database type and file storage type are be
 
 Use a strong cryptographically random value for the `ACCESS_TOKEN_SECRET`.
 
+Generate JWT secret:
+
+```bash
+openssl rand -base64 60
+```
+
 Also Be sure to generate a new set of `PUBLIC_VAPID_KEY` and `PRIVATE_VAPID_KEY` configuration values for secure web-push functionality.
 
 ```bash
