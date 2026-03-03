@@ -33,6 +33,7 @@ export class S3FileService extends FileService {
   ): Promise<File> {
     const fileName = randomUUID() + '.webp';
     const transformer = sharp()
+      .autoOrient()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
     const uploadStream = this.uploadStream(fileName);

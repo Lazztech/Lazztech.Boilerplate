@@ -40,6 +40,7 @@ export class LocalFileService extends FileService {
   ): Promise<File> {
     const fileName = randomUUID() + '.webp';
     const transformer = sharp()
+      .autoOrient()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
     const writeStream = fs.createWriteStream(
