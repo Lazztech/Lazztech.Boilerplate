@@ -195,11 +195,14 @@ erDiagram
 To update projects bootstrapped from this [Lazztech.Boilerplate](https://github.com/Lazztech/Lazztech.Boilerplate). Pull in upstream template changes as a single clean commit (without importing the template's history):
 
 ```bash
+# Add this template as a remote (only done once initially)
 git remote add template https://github.com/Lazztech/Lazztech.Boilerplate
-git fetch --all
-git merge --squash template/main --allow-unrelated-histories
 
-# Review staged changes, unstage anything you don't want
+# Fetch changes and begin merging in updates
+git fetch --all
+git merge --no-commit template/main --allow-unrelated-histories
+
+# Resolve any merge conflicts, stage changes, undo anything you don't want
 
 git commit -m "Merge remote-tracking branch 'template/main'"
 ```
