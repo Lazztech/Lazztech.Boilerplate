@@ -28,20 +28,22 @@ import { S3FileService } from './s3-file/s3-file.service';
       useFactory: (configService: ConfigService) => {
         return {
           config: {
-            accessKeyId: configService.get(
-              'OBJECT_STORAGE_ACCESS_KEY_ID',
-              'minio',
-            ),
-            secretAccessKey: configService.get(
-              'OBJECT_STORAGE_SECRET_ACCESS_KEY',
-              'password',
-            ),
+            credentials: {
+              accessKeyId: configService.get(
+                'OBJECT_STORAGE_ACCESS_KEY_ID',
+                'minio',
+              ),
+              secretAccessKey: configService.get(
+                'OBJECT_STORAGE_SECRET_ACCESS_KEY',
+                'password',
+              ),
+            },
             endpoint: configService.get(
               'OBJECT_STORAGE_ENDPOINT',
               'http://127.0.0.1:9000',
             ),
-            s3ForcePathStyle: true,
-            signatureVersion: 'v4',
+            region: configService.get('OBJECT_STORAGE_REGION', 'us-east-1'),
+            forcePathStyle: true,
           },
         } as S3ModuleOptions;
       },

@@ -151,6 +151,11 @@ import { LoggerModule } from 'nestjs-pino';
           then: Joi.string().required(),
           otherwise: Joi.optional(),
         }),
+        OBJECT_STORAGE_REGION: Joi.string().when('FILE_STORAGE_TYPE', {
+          is: 'object',
+          then: Joi.string().default('us-east-1'),
+          otherwise: Joi.optional(),
+        }),
       }),
       validationOptions: {
         abortEarly: true,

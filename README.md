@@ -462,6 +462,8 @@ $ npm run precommit
 | OBJECT_STORAGE_ACCESS_KEY_ID     | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
 | OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_REGION            | S3 region                                                    | us-east-1                                  | us-west-1                              |
+| OBJECT_STORAGE_BUCKET_NAME       | S3 bucket name                                               | Optional depending on file storage type ✅ |                                        |
 
 ## Lazztech LLC Cooperative Business Agreement
 
