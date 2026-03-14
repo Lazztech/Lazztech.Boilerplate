@@ -4,6 +4,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
 import { randomUUID } from 'crypto';
+import { Upload } from '@aws-sdk/lib-storage';
 import { InjectS3, type S3 } from 'nestjs-s3';
 import { lastValueFrom, mergeMap, Observable, tap } from 'rxjs';
 import sharp from 'sharp';
@@ -36,29 +37,47 @@ export class S3FileService extends FileService {
       .autoOrient()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
-    const uploadStream = this.uploadStream(fileName);
+    const passThrough = new Stream.PassThrough();
+
+    const s3Upload = new Upload({
+      client: this.s3,
+      params: {
+        Bucket: this.bucketName,
+        Key: fileName,
+        Body: passThrough,
+        ContentType: 'image/webp',
+      },
+    });
 
     try {
-      // https://rxjs.dev/api/index/function/lastValueFrom
-      await lastValueFrom(
-        upload$.pipe(
-          // https://rxjs.dev/api/operators/tap
-          tap((fileStream: MultipartFileStream) => {
-            if (!fileStream.mimetype?.startsWith('image/')) {
-              throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
-            }
-          }),
-          // transform and write using node stream pipeline which returns a Promise
-          // https://rxjs.dev/api/operators/mergeMap
-          mergeMap((fileStream: MultipartFileStream) =>
-            // https://stackoverflow.com/questions/58875655/whats-the-difference-between-pipe-and-pipeline-on-streams
-            pipeline(fileStream, transformer, uploadStream.writeStream),
+      // Run the S3 upload and the inbound pipeline concurrently.
+      // pipeline() ends the destination stream when done, which signals Upload
+      // that the body is complete. Both must be awaited together so Upload sees
+      // the end-of-stream before done() resolves.
+      await Promise.all([
+        s3Upload.done(),
+        lastValueFrom(
+          upload$.pipe(
+            // https://rxjs.dev/api/operators/tap
+            tap((fileStream: MultipartFileStream) => {
+              if (!fileStream.mimetype?.startsWith('image/')) {
+                throw new HttpException(
+                  'Wrong filetype',
+                  HttpStatus.BAD_REQUEST,
+                );
+              }
+            }),
+            // transform and write using node stream pipeline which returns a Promise
+            // https://rxjs.dev/api/operators/mergeMap
+            mergeMap((fileStream: MultipartFileStream) =>
+              // https://stackoverflow.com/questions/58875655/whats-the-difference-between-pipe-and-pipeline-on-streams
+              pipeline(fileStream, transformer, passThrough),
+            ),
           ),
         ),
-      );
-      uploadStream.writeStream.destroy();
+      ]);
     } catch (error) {
-      uploadStream.writeStream.destroy();
+      passThrough.destroy();
       throw error;
     }
 
@@ -69,18 +88,6 @@ export class S3FileService extends FileService {
     });
     await this.em.persistAndFlush(file);
     return file;
-  }
-
-  private uploadStream(key: string) {
-    const pass = new Stream.PassThrough();
-    return {
-      writeStream: pass,
-      promise: this.s3.putObject({
-        Bucket: this.bucketName,
-        Key: key,
-        Body: pass,
-      }),
-    };
   }
 
   public async delete(url: string): Promise<void> {
