@@ -19,6 +19,20 @@ and response bandwidth/latency. */
   z-index: 1000;
 }
 
+.ptr--ptr {
+  position: fixed !important;
+  top: 4rem !important; /* pin below the fixed navbar */
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: var(--color-base-300) !important;
+}
+
+.ptr--text,
+.ptr--icon {
+  color: var(--color-base-content) !important;
+}
+
 /* Prevent iOS from collapsing the viewport on scroll */
 body {
   min-height: 100vh;
