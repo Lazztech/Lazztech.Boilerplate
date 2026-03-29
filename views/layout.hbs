@@ -71,6 +71,7 @@ https://nestjs-i18n.com/quick-start --}}
     <script type="module">
       // This code sample uses features introduced in Workbox v6.
       import { Workbox } from '/modules/workbox-window.prod.mjs';
+      import PullToRefresh from '/modules/pulltorefresh/index.esm.js';
 
       if ('serviceWorker' in navigator) {
         const wb = new Workbox('/sw.js');
@@ -126,8 +127,19 @@ https://nestjs-i18n.com/quick-start --}}
           }
         });
       }
+
+      // https://stackoverflow.com/questions/75972895/ios-pwa-how-to-re-enable-pull-to-refresh
+      const iosStandalone = window.navigator.standalone === true;
+      if (iosStandalone) {
+        // If iosStandalone; pull to refresh is needed
+        PullToRefresh.init({
+          mainElement: 'main',
+          onRefresh() {
+            location.reload();
+          },
+        });
+      }
     </script>
-    {{/if}} {{#if pwaEnabled}}
     <pwa-install id="pwa-install" manifest-url="/manifest.json"></pwa-install>
     <script type="text/javascript">
       var pwaInstall = document.getElementById('pwa-install');

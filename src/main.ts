@@ -75,6 +75,12 @@ async function bootstrap() {
       prefix: '/modules/',
     },
   );
+  app.useStaticAssets(
+    join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
+    {
+      prefix: '/modules/pulltorefresh',
+    },
+  );
 
   app.useGlobalFilters(new ErrorViewFilter());
   await app.listen(process.env.PORT ?? 3000);
