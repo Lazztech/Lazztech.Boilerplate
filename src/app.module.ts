@@ -24,7 +24,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
-import { auth } from "./utils/auth"; // Your Better Auth instance
+import { auth } from "./auth/auth"; // Your Better Auth instance
 
 @Module({
   imports: [
