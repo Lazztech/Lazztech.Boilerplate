@@ -10,7 +10,6 @@ import {
   Post,
   Render,
   Res,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import {

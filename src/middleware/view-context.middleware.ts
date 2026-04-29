@@ -9,9 +9,7 @@ import { fromNodeHeaders } from 'better-auth/node';
 export class ViewContextMiddleware implements NestMiddleware {
   private logger = new Logger(ViewContextMiddleware.name);
 
-  constructor(
-    private configService: ConfigService,
-  ) {}
+  constructor(private configService: ConfigService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     res.locals.appName = this.configService.get<string>('APP_NAME');

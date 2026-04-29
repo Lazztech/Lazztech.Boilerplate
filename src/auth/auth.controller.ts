@@ -8,7 +8,6 @@ import {
   Redirect,
   Render,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { type Response } from 'express';

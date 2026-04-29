@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Headers,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { type PushSubscription } from 'web-push';
 import { Payload } from '../auth/dto/payload.dto';
