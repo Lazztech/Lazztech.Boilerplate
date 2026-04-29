@@ -9,8 +9,10 @@ import {
 } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { AppService } from './app.service';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
 @Controller()
+@AllowAnonymous() // Allow anonymous access (no authentication required)
 export class AppController {
   private logger = new Logger(AppController.name);
 

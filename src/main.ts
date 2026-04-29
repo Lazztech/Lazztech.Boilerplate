@@ -12,6 +12,7 @@ import { Logger } from 'nestjs-pino';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
+    bodyParser: false, // Required for Better Auth
   });
   app.useLogger(app.get(Logger));
 

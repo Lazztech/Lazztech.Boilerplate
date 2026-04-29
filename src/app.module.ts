@@ -11,7 +11,6 @@ import Joi from 'joi';
 import * as path from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthModule } from './auth/auth.module';
 import { DalModule } from './dal/dal.module';
 import { NotificationModule } from './notification/notification.module';
 import { FileModule } from './file/file.module';
@@ -24,6 +23,8 @@ import { User } from './dal/entity/user.entity';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { auth } from "./utils/auth"; // Your Better Auth instance
 
 @Module({
   imports: [
@@ -180,7 +181,7 @@ import { LoggerModule } from 'nestjs-pino';
     // https://docs.nestjs.com/security/rate-limiting
     ThrottlerModule.forRoot(),
     DalModule,
-    AuthModule,
+    AuthModule.forRoot({ auth }),
     FileModule,
     EmailModule,
     NotificationModule,
