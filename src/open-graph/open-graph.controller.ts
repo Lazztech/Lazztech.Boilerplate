@@ -1,7 +1,9 @@
 import { Controller, Get, Query, Render, Req } from '@nestjs/common';
 import { type Request } from 'express';
 import { OpenGraphService } from './open-graph.service';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
+@AllowAnonymous()
 @Controller('share')
 export class OpenGraphController {
   constructor(private readonly openGraphService: OpenGraphService) {}

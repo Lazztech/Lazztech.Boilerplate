@@ -20,11 +20,11 @@ import {
 } from '@proventuslabs/nestjs-multipart-form';
 import { type Response } from 'express';
 import { Observable } from 'rxjs';
-import { AuthGuard } from '../../auth/auth.guard';
 import { Payload } from '../../auth/dto/payload.dto';
 import { User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 @Controller('file')
 export class FileController {
   private logger = new Logger(FileController.name);
@@ -36,7 +36,6 @@ export class FileController {
     private readonly userRepository: EntityRepository<UserEntity>,
   ) {}
 
-  @UseGuards(AuthGuard)
   @Get('files')
   @Render('files')
   async getFiles(@User() payload: Payload) {
@@ -49,7 +48,6 @@ export class FileController {
     };
   }
 
-  @UseGuards(AuthGuard)
   @Post('upload')
   @UseInterceptors(MultipartInterceptor())
   @Render('files')
@@ -67,6 +65,7 @@ export class FileController {
     };
   }
 
+  @AllowAnonymous()
   @Get(':fileName')
   @Header('Cache-Control', 'public, max-age=86400') // public for CDN, max-age= 24hrs in seconds
   async getFile(
@@ -80,6 +79,7 @@ export class FileController {
     });
   }
 
+  @AllowAnonymous()
   @Get('watermark/:shareableId')
   @Header('Cache-Control', 'public, max-age=86400') // public for CDN, max-age= 24hrs in seconds
   @Header('content-type', 'image/jpeg')

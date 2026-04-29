@@ -13,7 +13,6 @@ import {
 import { plainToInstance } from 'class-transformer';
 import { type Response } from 'express';
 import { I18n, I18nContext } from 'nestjs-i18n';
-import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { EmailDto } from './dto/email.dto';
 import { LoginDto } from './dto/login.dto';
@@ -23,6 +22,7 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
 @Controller('auth')
 export class AuthController {
@@ -30,6 +30,7 @@ export class AuthController {
 
   constructor(private authService: AuthService) {}
 
+  @AllowAnonymous()
   @Post('register')
   async postRegister(
     @I18n() i18n: I18nContext,
@@ -51,6 +52,7 @@ export class AuthController {
     return response.redirect('/auth/profile');
   }
 
+  @AllowAnonymous()
   @Render('auth/register')
   @Post('validate/register')
   async postRegisterValidate(
@@ -69,6 +71,7 @@ export class AuthController {
     return { input: body };
   }
 
+  @AllowAnonymous()
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
   async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
@@ -97,10 +100,12 @@ export class AuthController {
     response.clearCookie('access_token');
   }
 
+  @AllowAnonymous()
   @Get('login')
   @Render('auth/login')
   getLogin(): any {}
 
+  @AllowAnonymous()
   @Get('reset')
   @Render('auth/reset')
   getReset(@Query('email') emailQueryParam: string): any {
@@ -111,6 +116,7 @@ export class AuthController {
     };
   }
 
+  @AllowAnonymous()
   @Post('reset')
   async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
     try {
@@ -125,6 +131,7 @@ export class AuthController {
     }
   }
 
+  @AllowAnonymous()
   @Get('reset-code')
   @Render('auth/reset-code')
   getResetCode(@Query('email') emailQueryParam: string): any {
@@ -135,6 +142,7 @@ export class AuthController {
     };
   }
 
+  @AllowAnonymous()
   @Throttle({ default: { limit: 5, ttl: minutes(10) } })
   @Render('auth/reset-code')
   @Post('validate/reset-code')
@@ -155,6 +163,7 @@ export class AuthController {
     return { input: body };
   }
 
+  @AllowAnonymous()
   @Post('reset-code')
   async postResetCode(
     @I18n() i18n: I18nContext,
@@ -175,21 +184,19 @@ export class AuthController {
     return response.redirect('/auth/login');
   }
 
+  @AllowAnonymous()
   @Get('register')
   @Render('auth/register')
   getRegister(): any {}
 
-  @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
   getProfile(): any {}
 
-  @UseGuards(AuthGuard)
   @Get('delete-account')
   @Render('auth/delete-account')
   getDeleteAccount(): any {}
 
-  @UseGuards(AuthGuard)
   @Post('delete-account')
   async postDeleteAccount(
     @User() payload: Payload,
@@ -210,7 +217,6 @@ export class AuthController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @Get('update-email')
   @Render('auth/update-email')
   getUpdateEmail() {}
@@ -233,7 +239,6 @@ export class AuthController {
     return { input: body };
   }
 
-  @UseGuards(AuthGuard)
   @Post('update-email')
   async postUpdateEmail(
     @User() payload: Payload,

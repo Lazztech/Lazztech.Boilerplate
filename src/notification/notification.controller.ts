@@ -8,11 +8,11 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { type PushSubscription } from 'web-push';
-import { AuthGuard } from '../auth/auth.guard';
 import { Payload } from '../auth/dto/payload.dto';
 import { User } from '../auth/user.decorator';
 import { NotificationService } from './notification.service';
 import { PushNotificationDto } from './dto/pushNotification.dto';
+import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 
 @Controller('notification')
 export class NotificationController {
@@ -21,12 +21,12 @@ export class NotificationController {
     private configService: ConfigService,
   ) {}
 
+  @AllowAnonymous()
   @Get('vapid-public-key')
   getVapidPublicKey() {
     return this.configService.getOrThrow<string>('PUBLIC_VAPID_KEY');
   }
 
-  @UseGuards(AuthGuard)
   @Post('subscribe')
   async postSubscribe(
     @Headers('user-agent') userAgent: string,
@@ -40,7 +40,6 @@ export class NotificationController {
     );
   }
 
-  @UseGuards(AuthGuard)
   @Post('test')
   async postTest(@User() payload: Payload) {
     await this.notificationService.sendWebPushNotification(
