@@ -19,8 +19,7 @@ import {
 } from '@proventuslabs/nestjs-multipart-form';
 import { type Response } from 'express';
 import { Observable } from 'rxjs';
-import { Payload } from '../../auth/dto/payload.dto';
-import { User } from '../../auth/user.decorator';
+import { SessionUser, User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
@@ -37,9 +36,9 @@ export class FileController {
 
   @Get('files')
   @Render('files')
-  async getFiles(@User() payload: Payload) {
+  async getFiles(@User() payload: SessionUser) {
     const user = await this.userRepository.findOne(
-      { id: payload.userId },
+      { id: payload.id },
       { populate: ['fileUploads'] },
     );
     return {
@@ -51,12 +50,12 @@ export class FileController {
   @UseInterceptors(MultipartInterceptor())
   @Render('files')
   async uploadFile(
-    @User() payload: Payload,
+    @User() payload: SessionUser,
     @MultipartFiles('file') file$: Observable<MultipartFileStream>,
   ) {
-    await this.fileService.storeImageFromFileUpload(file$, payload.userId);
+    await this.fileService.storeImageFromFileUpload(file$, payload.id);
     const user = await this.userRepository.findOne(
-      { id: payload.userId },
+      { id: payload.id },
       { populate: ['fileUploads'] },
     );
     return {

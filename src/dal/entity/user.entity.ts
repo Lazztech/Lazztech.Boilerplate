@@ -1,23 +1,19 @@
 import {
-  Cascade,
   Collection,
   Entity,
   OneToMany,
-  OneToOne,
   PrimaryKey,
   Property,
-  type Ref,
   Unique,
 } from '@mikro-orm/core';
 import { File } from './file.entity';
-import { PasswordReset } from './passwordReset.entity';
 import { ShareableId } from './shareableId.entity';
 import { UserDevice } from './userDevice.entity';
 
 @Entity()
 export class User extends ShareableId {
-  @PrimaryKey()
-  public id!: number;
+  @PrimaryKey({ type: 'text' })
+  public id!: string;
 
   @Property({ nullable: true })
   public firstName?: string;
@@ -25,21 +21,27 @@ export class User extends ShareableId {
   @Property({ nullable: true })
   public lastName?: string;
 
+  @Property({ nullable: true })
+  public name?: string;
+
   @Unique()
   @Property({ nullable: true })
   public email?: string;
 
-  @Property()
-  public password!: string;
+  @Property({ nullable: true })
+  public password?: string;
 
-  @OneToOne({
-    entity: () => PasswordReset,
-    cascade: [Cascade.ALL],
-    nullable: true,
-    ref: true,
-    inversedBy: 'user',
-  })
-  public passwordReset!: Ref<PasswordReset>;
+  @Property({ columnType: 'integer', default: 0 })
+  public emailVerified: boolean = false;
+
+  @Property({ nullable: true, columnType: 'text' })
+  public createdAt?: Date;
+
+  @Property({ nullable: true, columnType: 'text' })
+  public updatedAt?: Date;
+
+  @Property({ nullable: true })
+  public image?: string;
 
   @OneToMany(() => UserDevice, (userDevice) => userDevice.user)
   public userDevices = new Collection<UserDevice>(this);

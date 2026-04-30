@@ -1,8 +1,7 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { type PushSubscription } from 'web-push';
-import { Payload } from '../auth/dto/payload.dto';
-import { User } from '../auth/user.decorator';
+import { SessionUser, User } from '../auth/user.decorator';
 import { NotificationService } from './notification.service';
 import { PushNotificationDto } from './dto/pushNotification.dto';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
@@ -23,24 +22,24 @@ export class NotificationController {
   @Post('subscribe')
   async postSubscribe(
     @Headers('user-agent') userAgent: string,
-    @User() payload: Payload,
+    @User() payload: SessionUser,
     @Body() body: PushSubscription,
   ) {
     await this.notificationService.addUserWebPushNotificationSubscription(
-      payload.userId,
+      payload.id,
       body,
       userAgent,
     );
   }
 
   @Post('test')
-  async postTest(@User() payload: Payload) {
+  async postTest(@User() payload: SessionUser) {
     await this.notificationService.sendWebPushNotification(
       {
         title: 'Test Web Push',
         body: 'body',
       } as PushNotificationDto,
-      payload.userId,
+      payload.id,
     );
   }
 }

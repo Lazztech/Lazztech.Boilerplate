@@ -7,18 +7,17 @@ import {
   Query,
   Redirect,
   Render,
+  Req,
   Res,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { type Response } from 'express';
+import { type Request, type Response } from 'express';
+import { fromNodeHeaders } from 'better-auth/node';
 import { I18n, I18nContext } from 'nestjs-i18n';
-import { AuthService } from './auth.service';
+import { auth } from './auth';
 import { EmailDto } from './dto/email.dto';
 import { LoginDto } from './dto/login.dto';
-import { Payload } from './dto/payload.dto';
 import { RegisterDto } from './dto/register.dto';
-import { ResetPasswordDto } from './dto/resetPassword.dto';
-import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
 import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
@@ -26,8 +25,6 @@ import { AllowAnonymous } from '@thallesp/nestjs-better-auth';
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
-
-  constructor(private authService: AuthService) {}
 
   @AllowAnonymous()
   @Post('register')
@@ -46,9 +43,27 @@ export class AuthController {
       });
     }
 
-    const jwt = await this.authService.register(body.email, body.password);
-    response.cookie('access_token', jwt);
-    return response.redirect('/auth/profile');
+    try {
+      const authResponse = await auth.api.signUpEmail({
+        body: {
+          email: body.email,
+          password: body.password,
+          name: body.email,
+        },
+        asResponse: true,
+      });
+      for (const cookie of authResponse.headers.getSetCookie()) {
+        response.append('Set-Cookie', cookie);
+      }
+      return response.redirect('/auth/profile');
+    } catch (error) {
+      this.logger.warn(error);
+      return response.render('auth/register', {
+        layout: 'layout',
+        input: body,
+        error,
+      });
+    }
   }
 
   @AllowAnonymous()
@@ -73,13 +88,21 @@ export class AuthController {
   @AllowAnonymous()
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
-  async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
+  async postLogin(
+    @Body() loginDto: LoginDto,
+    @Res() response: Response,
+  ) {
     try {
-      const jwt = await this.authService.signIn(
-        loginDto.email,
-        loginDto.password,
-      );
-      response.cookie('access_token', jwt);
+      const authResponse = await auth.api.signInEmail({
+        body: {
+          email: loginDto.email,
+          password: loginDto.password,
+        },
+        asResponse: true,
+      });
+      for (const cookie of authResponse.headers.getSetCookie()) {
+        response.append('Set-Cookie', cookie);
+      }
       return response.redirect('/auth/profile');
     } catch (error) {
       this.logger.warn(error);
@@ -90,13 +113,16 @@ export class AuthController {
     }
   }
 
-  @Redirect('/')
   @Get('logout')
-  getLogout(
-    // https://docs.nestjs.com/techniques/cookies#use-with-express-default
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    response.clearCookie('access_token');
+  async getLogout(@Req() request: Request, @Res() response: Response) {
+    const authResponse = await auth.api.signOut({
+      headers: fromNodeHeaders(request.headers),
+      asResponse: true,
+    });
+    for (const cookie of authResponse.headers.getSetCookie()) {
+      response.append('Set-Cookie', cookie);
+    }
+    return response.redirect('/');
   }
 
   @AllowAnonymous()
@@ -117,70 +143,58 @@ export class AuthController {
 
   @AllowAnonymous()
   @Post('reset')
-  async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
+  async postReset(
+    @Body() emailDto: EmailDto,
+    @Res() response: Response,
+  ) {
     try {
-      await this.authService.sendPasswordResetEmail(emailDto.email);
-      return response.redirect(`/auth/reset-code?email=${emailDto.email}`);
+      await auth.api.requestPasswordReset({
+        body: {
+          email: emailDto.email,
+          redirectTo: '/auth/new-password',
+        },
+      });
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/reset', {
-        layout: 'layout',
-        error,
-      });
     }
+    // Always show success to avoid email enumeration
+    return response.render('auth/reset', {
+      layout: 'layout',
+      success: true,
+      input: emailDto,
+    });
   }
 
   @AllowAnonymous()
-  @Get('reset-code')
-  @Render('auth/reset-code')
-  getResetCode(@Query('email') emailQueryParam: string): any {
-    return {
-      input: {
-        email: emailQueryParam,
-      },
-    };
+  @Get('new-password')
+  @Render('auth/new-password')
+  getNewPassword(@Query('token') token: string): any {
+    return { token };
   }
 
   @AllowAnonymous()
   @Throttle({ default: { limit: 5, ttl: minutes(10) } })
-  @Render('auth/reset-code')
-  @Post('validate/reset-code')
-  async postResetCodeValidate(
-    @I18n() i18n: I18nContext,
-    @Body() body: ResetPasswordDto,
-  ) {
-    console.log(body);
-    const instance = plainToInstance(ResetPasswordDto, body);
-    const validationErrors = await i18n.validate(instance);
-    if (validationErrors.length) {
-      return {
-        input: body,
-        validationErrors,
-      };
-    }
-
-    return { input: body };
-  }
-
-  @AllowAnonymous()
-  @Post('reset-code')
-  async postResetCode(
-    @I18n() i18n: I18nContext,
-    @Body() body: ResetPasswordDto,
+  @Post('new-password')
+  async postNewPassword(
+    @Body() body: { token: string; password: string; confirmPassword: string },
     @Res() response: Response,
   ) {
-    const instance = plainToInstance(ResetPasswordDto, body);
-    const validationErrors = await i18n.validate(instance);
-    if (validationErrors.length) {
-      return response.render('auth/reset-code', {
+    try {
+      await auth.api.resetPassword({
+        body: {
+          token: body.token,
+          newPassword: body.password,
+        },
+      });
+      return response.redirect('/auth/login');
+    } catch (error) {
+      this.logger.warn(error);
+      return response.render('auth/new-password', {
         layout: 'layout',
-        input: body,
-        validationErrors,
+        token: body.token,
+        error,
       });
     }
-
-    await this.authService.resetPassword(body);
-    return response.redirect('/auth/login');
   }
 
   @AllowAnonymous()
@@ -198,14 +212,25 @@ export class AuthController {
 
   @Post('delete-account')
   async postDeleteAccount(
-    @User() payload: Payload,
     @Body() loginDto: LoginDto,
+    @Req() request: Request,
     @Res() response: Response,
   ) {
     try {
-      await this.authService.signIn(loginDto.email, loginDto.password);
-      await this.authService.deleteUser(payload.userId);
-      response.clearCookie('access_token');
+      // Verify credentials before deleting
+      await auth.api.signInEmail({
+        body: {
+          email: loginDto.email,
+          password: loginDto.password,
+        },
+      });
+      const authResponse = await auth.api.deleteUser({
+        headers: fromNodeHeaders(request.headers),
+        asResponse: true,
+      });
+      for (const cookie of authResponse.headers.getSetCookie()) {
+        response.append('Set-Cookie', cookie);
+      }
       return response.redirect('/');
     } catch (error) {
       this.logger.warn(error);
@@ -240,9 +265,9 @@ export class AuthController {
 
   @Post('update-email')
   async postUpdateEmail(
-    @User() payload: Payload,
     @I18n() i18n: I18nContext,
     @Body() body: UpdateEmailDto,
+    @Req() request: Request,
     @Res() response: Response,
   ) {
     const instance = plainToInstance(UpdateEmailDto, body);
@@ -255,7 +280,19 @@ export class AuthController {
       });
     }
 
-    await this.authService.changeEmail(payload.userId, body.confirmEmail);
-    return response.redirect('/auth/profile');
+    try {
+      await auth.api.changeEmail({
+        body: { newEmail: body.confirmEmail },
+        headers: fromNodeHeaders(request.headers),
+      });
+      return response.redirect('/auth/profile');
+    } catch (error) {
+      this.logger.warn(error);
+      return response.render('auth/update-email', {
+        layout: 'layout',
+        input: body,
+        error,
+      });
+    }
   }
 }

@@ -24,6 +24,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { AuthModule as LocalAuthModule } from './auth/auth.module';
 import { auth } from './auth/auth'; // Your Better Auth instance
 
 @Module({
@@ -77,7 +78,8 @@ import { auth } from './auth/auth'; // Your Better Auth instance
         APP_NAME: Joi.string().default('Boilerplate'),
         AUTH_ENABLED: Joi.boolean().default(false),
         PWA_ENABLED: Joi.boolean().default(false),
-        ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
+        BETTER_AUTH_SECRET: Joi.string().default('ChangeMe!'),
+        BETTER_AUTH_URL: Joi.string().default('http://localhost:3000'),
         PUBLIC_VAPID_KEY: Joi.optional().default(
           'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',
         ),
@@ -182,6 +184,7 @@ import { auth } from './auth/auth'; // Your Better Auth instance
     ThrottlerModule.forRoot(),
     DalModule,
     AuthModule.forRoot({ auth }),
+    LocalAuthModule,
     FileModule,
     EmailModule,
     NotificationModule,
