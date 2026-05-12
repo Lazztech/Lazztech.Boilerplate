@@ -34,7 +34,7 @@ export class FileController {
     private readonly fileService: FileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,
-  ) { }
+  ) {}
 
   @UseGuards(AuthGuard)
   @Get('files')
