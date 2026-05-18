@@ -7,11 +7,12 @@ import {
   Query,
   Redirect,
   Render,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { type Response } from 'express';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -23,32 +24,39 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
+import { ViewContextService } from '../view-context/view-context.service';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private viewContextService: ViewContextService,
+  ) {}
 
   @Post('register')
   async postRegister(
     @I18n() i18n: I18nContext,
     @Body() body: RegisterDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
   ): Promise<any> {
     const instance = plainToInstance(RegisterDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/register', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/register', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...ctx,
       });
     }
 
     const jwt = await this.authService.register(body.email, body.password);
-    response.cookie('access_token', jwt);
-    return response.redirect('/auth/profile');
+    reply.setCookie('access_token', jwt, { path: '/' });
+    return reply.redirect('/auth/profile');
   }
 
   @Render('auth/register')
@@ -71,30 +79,33 @@ export class AuthController {
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
-  async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
+  async postLogin(
+    @Body() loginDto: LoginDto,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
+  ) {
     try {
       const jwt = await this.authService.signIn(
         loginDto.email,
         loginDto.password,
       );
-      response.cookie('access_token', jwt);
-      return response.redirect('/auth/profile');
+      reply.setCookie('access_token', jwt, { path: '/' });
+      return reply.redirect('/auth/profile');
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/login', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/login', {
         layout: 'layout',
         error,
+        ...ctx,
       });
     }
   }
 
   @Redirect('/')
   @Get('logout')
-  getLogout(
-    // https://docs.nestjs.com/techniques/cookies#use-with-express-default
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    response.clearCookie('access_token');
+  getLogout(@Res({ passthrough: true }) reply: FastifyReply) {
+    reply.clearCookie('access_token', { path: '/' });
   }
 
   @Get('login')
@@ -112,15 +123,21 @@ export class AuthController {
   }
 
   @Post('reset')
-  async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
+  async postReset(
+    @Body() emailDto: EmailDto,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
+  ) {
     try {
       await this.authService.sendPasswordResetEmail(emailDto.email);
-      return response.redirect(`/auth/reset-code?email=${emailDto.email}`);
+      return reply.redirect(`/auth/reset-code?email=${emailDto.email}`);
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/reset', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/reset', {
         layout: 'layout',
         error,
+        ...ctx,
       });
     }
   }
@@ -159,20 +176,23 @@ export class AuthController {
   async postResetCode(
     @I18n() i18n: I18nContext,
     @Body() body: ResetPasswordDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
   ) {
     const instance = plainToInstance(ResetPasswordDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/reset-code', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/reset-code', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...ctx,
       });
     }
 
     await this.authService.resetPassword(body);
-    return response.redirect('/auth/login');
+    return reply.redirect('/auth/login');
   }
 
   @Get('register')
@@ -194,18 +214,21 @@ export class AuthController {
   async postDeleteAccount(
     @User() payload: Payload,
     @Body() loginDto: LoginDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
   ) {
     try {
       await this.authService.signIn(loginDto.email, loginDto.password);
       await this.authService.deleteUser(payload.userId);
-      response.clearCookie('access_token');
-      return response.redirect('/');
+      reply.clearCookie('access_token', { path: '/' });
+      return reply.redirect('/');
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/delete-account', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/delete-account', {
         layout: 'layout',
         error,
+        ...ctx,
       });
     }
   }
@@ -239,19 +262,22 @@ export class AuthController {
     @User() payload: Payload,
     @I18n() i18n: I18nContext,
     @Body() body: UpdateEmailDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
+    @Req() req: FastifyRequest,
   ) {
     const instance = plainToInstance(UpdateEmailDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/update-email', {
+      const ctx = await this.viewContextService.buildContext(req);
+      return reply.view('auth/update-email', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...ctx,
       });
     }
 
     await this.authService.changeEmail(payload.userId, body.confirmEmail);
-    return response.redirect('/auth/profile');
+    return reply.redirect('/auth/profile');
   }
 }

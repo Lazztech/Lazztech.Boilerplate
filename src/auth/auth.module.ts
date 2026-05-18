@@ -7,19 +7,21 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from '../dal/entity/user.entity';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
 import { EmailModule } from '../email/email.module';
+import { ViewContextModule } from '../view-context/view-context.module';
 
 @Module({
   imports: [
     JwtModule.registerAsync({
+      global: true,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        global: true,
         secret: configService.get<string>('ACCESS_TOKEN_SECRET'),
         signOptions: { expiresIn: '7d' },
       }),
     }),
     MikroOrmModule.forFeature([PasswordReset, User]),
     EmailModule,
+    ViewContextModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

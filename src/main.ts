@@ -1,89 +1,102 @@
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import cookieParser from 'cookie-parser';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import fastifyCompress from '@fastify/compress';
+import fastifyCookie from '@fastify/cookie';
+import fastifyMultipart from '@fastify/multipart';
+import fastifyStatic from '@fastify/static';
+import fastifyView from '@fastify/view';
 import hbs from 'hbs';
+import type { HelperOptions } from 'handlebars';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import { ValidationError } from '@nestjs/common';
-import { ErrorViewFilter } from './error-view.filter';
-import compression from 'compression';
 import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    bufferLogs: true,
-  });
+  const adapter = new FastifyAdapter({ trustProxy: true });
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    adapter,
+    {
+      bufferLogs: true,
+    },
+  );
   app.useLogger(app.get(Logger));
 
-  // https://docs.nestjs.com/security/rate-limiting#proxies
-  app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
+  await app.register(fastifyCookie);
+  await app.register(fastifyCompress);
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 100 * 1024 * 1024, // 100MB
+      files: 5,
+    },
+  });
 
-  app.use(cookieParser());
+  await app.register(fastifyStatic, {
+    root: join(__dirname, '..', 'public'),
+    decorateReply: false,
+  });
 
-  // https://docs.nestjs.com/techniques/compression
-  app.use(compression());
+  await app.register(fastifyStatic, {
+    root: [
+      join(__dirname, '..', 'node_modules/htmx.org/dist'),
+      join(__dirname, '..', 'node_modules/htmx-ext-sse/'),
+      join(__dirname, '..', 'node_modules/hyperscript.org/dist'),
+      join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
+      join(__dirname, '..', 'node_modules/workbox-window/build'),
+    ],
+    prefix: '/modules/',
+    decorateReply: false,
+  });
 
-  // Setup MVC https://docs.nestjs.com/techniques/mvc
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
-  app.set('view cache', process.env.NODE_ENV === 'production');
-  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
+  await app.register(fastifyStatic, {
+    root: join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
+    prefix: '/modules/pulltorefresh',
+    decorateReply: false,
+  });
+
+  await app.register(fastifyView, {
+    engine: { handlebars: hbs },
+    root: join(__dirname, '..', 'views'),
+    viewExt: 'hbs',
+    layout: 'layout',
+    includeViewExtension: true,
+    options: {
+      partials: {
+        dock: 'partials/dock.hbs',
+        navbar: 'partials/navbar.hbs',
+      },
+    },
+  });
+
+  // Register handlebars helpers after engine setup
   hbs.registerHelper(
     'filterErrors',
-    function (errors: ValidationError[], property) {
-      // Check if errors exists and is an array
+    function (
+      errors: { property: string; constraints?: Record<string, string> }[],
+      property: string,
+    ) {
       if (!errors || !Array.isArray(errors)) {
         return;
       }
       return errors
-        ?.filter((error) => error.property === property)
+        .filter((error) => error.property === property)
         .flatMap((e) => Object.values(e.constraints || {}));
     },
   );
-  hbs.registerHelper('json', function (context) {
+  hbs.registerHelper('json', function (context: unknown) {
     return JSON.stringify(context);
   });
-  hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
-    return arg1 == arg2 ? options.fn(this) : options.inverse(this);
-  });
-
-  /** Serve htmx and other libraries from node_modules
-   * https://htmx.org/docs/#installing
-   * https://blog.wesleyac.com/posts/why-not-javascript-cdn */
-  app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx.org/dist'), {
-    prefix: '/modules/',
-  });
-  app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx-ext-sse/'), {
-    prefix: '/modules/',
-  });
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/hyperscript.org/dist'),
-    {
-      prefix: '/modules/',
-    },
-  );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
-    {
-      prefix: '/modules/',
-    },
-  );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/workbox-window/build'),
-    {
-      prefix: '/modules/',
-    },
-  );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
-    {
-      prefix: '/modules/pulltorefresh',
+  hbs.registerHelper(
+    'ifEquals',
+    function (arg1: unknown, arg2: unknown, options: HelperOptions) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
     },
   );
 
-  app.useGlobalFilters(new ErrorViewFilter());
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();

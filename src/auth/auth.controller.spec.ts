@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
 import { User } from '../dal/entity/user.entity';
 import { EmailService } from '../email/email.service';
+import { ViewContextService } from '../view-context/view-context.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
@@ -46,6 +47,12 @@ describe('AuthController', () => {
             findOne: jest.fn(),
             find: jest.fn(),
             persistAndFlush: jest.fn(),
+          },
+        },
+        {
+          provide: ViewContextService,
+          useValue: {
+            buildContext: jest.fn().mockResolvedValue({}),
           },
         },
       ],

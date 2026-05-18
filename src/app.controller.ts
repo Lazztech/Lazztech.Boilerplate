@@ -93,7 +93,7 @@ export class AppController {
     this.logger.debug(`done with ${this.postMessages.name}`);
   }
 
-  @Get('.well-known/*path')
+  @Get('.well-known/*')
   well_known() {
     return {}; // Just return empty object
   }
