@@ -40,7 +40,10 @@ export class LocalFileService extends FileService {
     if (!upload) {
       throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
     }
+    // https://github.com/fastify/fastify-multipart/issues/497
+    // Unconsumed multipart streams can hang the request; drain before throwing
     if (!upload.mimetype?.startsWith('image/')) {
+      upload.file.resume();
       throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
     }
 
