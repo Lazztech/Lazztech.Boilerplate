@@ -25,6 +25,7 @@ async function bootstrap() {
   );
   app.useLogger(app.get(Logger));
 
+  // Express-like res.locals equivalent? https://github.com/fastify/fastify/issues/303
   const viewContextService = app.get(ViewContextService);
   const fastify = app.getHttpAdapter().getInstance();
   fastify.decorateReply('locals', null);
