@@ -33,7 +33,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private viewContextService: ViewContextService,
-  ) { }
+  ) {}
 
   @Post('register')
   async postRegister(
@@ -110,7 +110,7 @@ export class AuthController {
 
   @Get('login')
   @Render('auth/login')
-  getLogin(): any { }
+  getLogin(): any {}
 
   @Get('reset')
   @Render('auth/reset')
@@ -197,17 +197,17 @@ export class AuthController {
 
   @Get('register')
   @Render('auth/register')
-  getRegister(): any { }
+  getRegister(): any {}
 
   @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
-  getProfile(): any { }
+  getProfile(): any {}
 
   @UseGuards(AuthGuard)
   @Get('delete-account')
   @Render('auth/delete-account')
-  getDeleteAccount(): any { }
+  getDeleteAccount(): any {}
 
   @UseGuards(AuthGuard)
   @Post('delete-account')
@@ -236,7 +236,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('update-email')
   @Render('auth/update-email')
-  getUpdateEmail() { }
+  getUpdateEmail() {}
 
   @Render('auth/update-email')
   @Post('validate/update-email')
