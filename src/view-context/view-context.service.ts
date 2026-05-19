@@ -21,7 +21,7 @@ export class ViewContextService {
   async buildContext(req: FastifyRequest) {
     const context: Record<string, any> = {
       appName: this.configService.get<string>('APP_NAME'),
-      siteUrl: req.hostname,
+      siteUrl: req.host,
       baseUrl: req.url,
       authEnabled: this.configService.get<boolean>('AUTH_ENABLED'),
       pwaEnabled: this.configService.get<boolean>('PWA_ENABLED'),

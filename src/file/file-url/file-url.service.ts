@@ -5,13 +5,13 @@ import { FastifyRequest } from 'fastify';
 export class FileUrlService {
   getFileUrl(fileName: string, req: FastifyRequest): string {
     if (fileName) {
-      return `${req.protocol}://${req.hostname}/file/${fileName}`;
+      return `${req.protocol}://${req.host}/file/${fileName}`;
     } else {
       return fileName;
     }
   }
 
   getWatermarkedFileUrl(shareableId: string, req: FastifyRequest): string {
-    return `${req.protocol}://${req.hostname}/file/watermark/${shareableId}`;
+    return `${req.protocol}://${req.host}/file/watermark/${shareableId}`;
   }
 }

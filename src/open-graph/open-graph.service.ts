@@ -35,7 +35,7 @@ export class OpenGraphService {
       );
       const createdBy = await file?.createdBy?.load();
       return {
-        ogUrl: `${req.protocol}://${req.hostname}/file/${shareableId}`,
+        ogUrl: `${req.protocol}://${req.host}/file/${shareableId}`,
         ogTitle: file?.fileName,
         ogDescription: `From ${createdBy?.email}`,
         ogImage: this.fileUrlService.getWatermarkedFileUrl(shareableId, req),
