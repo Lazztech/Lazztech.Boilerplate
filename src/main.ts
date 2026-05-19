@@ -13,7 +13,8 @@ import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
-  const adapter = new FastifyAdapter({ trustProxy: true });
+  // https://docs.nestjs.com/security/rate-limiting#proxies
+  const adapter = new FastifyAdapter({ trustProxy: true }); // Trust requests from the loopback address
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     adapter,
@@ -24,6 +25,7 @@ async function bootstrap() {
   app.useLogger(app.get(Logger));
 
   await app.register(fastifyCookie);
+  // https://docs.nestjs.com/techniques/compression
   await app.register(fastifyCompress);
   await app.register(fastifyMultipart, {
     limits: {
@@ -37,6 +39,9 @@ async function bootstrap() {
     decorateReply: false,
   });
 
+  /** Serve htmx and other libraries from node_modules
+   * https://htmx.org/docs/#installing
+   * https://blog.wesleyac.com/posts/why-not-javascript-cdn */
   app.useStaticAssets({
     root: [
       join(__dirname, '..', 'node_modules/htmx.org/dist'),
@@ -55,6 +60,7 @@ async function bootstrap() {
     decorateReply: false,
   });
 
+  // Setup MVC https://docs.nestjs.com/techniques/mvc
   app.setViewEngine({
     engine: { handlebars: hbs },
     templates: join(__dirname, '..', 'views'),
@@ -76,6 +82,7 @@ async function bootstrap() {
       errors: { property: string; constraints?: Record<string, string> }[],
       property: string,
     ) {
+      // Check if errors exists and is an array
       if (!errors || !Array.isArray(errors)) {
         return;
       }
