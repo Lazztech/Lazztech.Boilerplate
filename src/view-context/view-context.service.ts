@@ -22,7 +22,7 @@ export class ViewContextService {
     const context: Record<string, any> = {
       appName: this.configService.get<string>('APP_NAME'),
       siteUrl: req.host,
-      baseUrl: req.url,
+      baseUrl: req.url === '/' ? '' : req.url,
       authEnabled: this.configService.get<boolean>('AUTH_ENABLED'),
       pwaEnabled: this.configService.get<boolean>('PWA_ENABLED'),
       locale: I18nContext.current()?.lang,
