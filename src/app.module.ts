@@ -1,7 +1,7 @@
 import { MikroORM } from '@mikro-orm/core';
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import Joi from 'joi';
 import * as path from 'path';
 import { AppController } from './app.controller';
@@ -19,7 +19,6 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { LoggerModule } from 'nestjs-pino';
 import { ErrorViewFilter } from './error-view.filter';
 import { ViewContextModule } from './view-context/view-context.module';
-import { ViewContextInterceptor } from './view-context/view-context.interceptor';
 
 @Module({
   imports: [
@@ -190,10 +189,6 @@ import { ViewContextInterceptor } from './view-context/view-context.interceptor'
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ViewContextInterceptor,
     },
     {
       provide: APP_FILTER,

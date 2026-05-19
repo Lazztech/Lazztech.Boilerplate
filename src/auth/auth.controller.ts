@@ -7,12 +7,11 @@ import {
   Query,
   Redirect,
   Render,
-  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import type { FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyReply } from 'fastify';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -24,33 +23,26 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
-import { ViewContextService } from '../view-context/view-context.service';
-
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(
-    private authService: AuthService,
-    private viewContextService: ViewContextService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   @Post('register')
   async postRegister(
     @I18n() i18n: I18nContext,
     @Body() body: RegisterDto,
     @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
   ): Promise<any> {
     const instance = plainToInstance(RegisterDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/register', {
         layout: 'layout',
         input: body,
         validationErrors,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
 
@@ -79,11 +71,7 @@ export class AuthController {
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
-  async postLogin(
-    @Body() loginDto: LoginDto,
-    @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
-  ) {
+  async postLogin(@Body() loginDto: LoginDto, @Res() reply: FastifyReply) {
     try {
       const jwt = await this.authService.signIn(
         loginDto.email,
@@ -93,11 +81,10 @@ export class AuthController {
       reply.redirect('/auth/profile', 302);
     } catch (error) {
       this.logger.warn(error);
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/login', {
         layout: 'layout',
         error,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
@@ -123,21 +110,16 @@ export class AuthController {
   }
 
   @Post('reset')
-  async postReset(
-    @Body() emailDto: EmailDto,
-    @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
-  ) {
+  async postReset(@Body() emailDto: EmailDto, @Res() reply: FastifyReply) {
     try {
       await this.authService.sendPasswordResetEmail(emailDto.email);
       return reply.redirect(`/auth/reset-code?email=${emailDto.email}`, 302);
     } catch (error) {
       this.logger.warn(error);
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/reset', {
         layout: 'layout',
         error,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
@@ -177,17 +159,15 @@ export class AuthController {
     @I18n() i18n: I18nContext,
     @Body() body: ResetPasswordDto,
     @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
   ) {
     const instance = plainToInstance(ResetPasswordDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/reset-code', {
         layout: 'layout',
         input: body,
         validationErrors,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
 
@@ -215,7 +195,6 @@ export class AuthController {
     @User() payload: Payload,
     @Body() loginDto: LoginDto,
     @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
   ) {
     try {
       await this.authService.signIn(loginDto.email, loginDto.password);
@@ -224,11 +203,10 @@ export class AuthController {
       return reply.redirect('/', 302);
     } catch (error) {
       this.logger.warn(error);
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/delete-account', {
         layout: 'layout',
         error,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
@@ -263,17 +241,15 @@ export class AuthController {
     @I18n() i18n: I18nContext,
     @Body() body: UpdateEmailDto,
     @Res() reply: FastifyReply,
-    @Req() req: FastifyRequest,
   ) {
     const instance = plainToInstance(UpdateEmailDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      const ctx = await this.viewContextService.buildContext(req);
       return reply.view('auth/update-email', {
         layout: 'layout',
         input: body,
         validationErrors,
-        ...ctx,
+        ...((reply as any).locals ?? {}),
       });
     }
 

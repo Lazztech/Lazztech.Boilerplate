@@ -11,6 +11,7 @@ import type { HelperOptions } from 'handlebars';
 import { join } from 'path';
 import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
+import { ViewContextService } from './view-context/view-context.service';
 
 async function bootstrap() {
   // https://docs.nestjs.com/security/rate-limiting#proxies
@@ -23,6 +24,13 @@ async function bootstrap() {
     },
   );
   app.useLogger(app.get(Logger));
+
+  const viewContextService = app.get(ViewContextService);
+  const fastify = app.getHttpAdapter().getInstance();
+  fastify.decorateReply('locals', null);
+  fastify.addHook('preHandler', async (req, reply) => {
+    (reply as any).locals = await viewContextService.buildContext(req);
+  });
 
   await app.register(fastifyCookie);
   // https://docs.nestjs.com/techniques/compression

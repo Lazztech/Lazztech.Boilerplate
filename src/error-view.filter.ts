@@ -38,7 +38,9 @@ export class ErrorViewFilter implements ExceptionFilter {
         : 'Internal server error';
 
     try {
-      const context = await this.viewContextService.buildContext(request);
+      const context =
+        (response as any).locals ||
+        (await this.viewContextService.buildContext(request));
       await response.status(status).view('error', {
         layout: 'layout',
         statusCode: status,
