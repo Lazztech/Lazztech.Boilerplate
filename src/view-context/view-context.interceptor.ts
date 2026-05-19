@@ -7,7 +7,7 @@ import {
 import { RENDER_METADATA } from '@nestjs/common/constants';
 import { FastifyRequest } from 'fastify';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ViewContextService } from './view-context.service';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class ViewContextInterceptor implements NestInterceptor {
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
     return next.handle().pipe(
-      map(async (data) => {
+      switchMap(async (data) => {
         const ctx = await this.viewContextService.buildContext(req);
         return {
           ...ctx,

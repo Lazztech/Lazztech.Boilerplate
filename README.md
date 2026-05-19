@@ -116,17 +116,18 @@ See the [diff between what this project adds to the default NestJS project](http
 
 - Dotenv configuration: https://docs.nestjs.com/techniques/configuration
 - Environment variable configuration validation: https://docs.nestjs.com/techniques/configuration#schema-validation
-- MVC Server Side Rendering: https://docs.nestjs.com/techniques/mvc
+- MVC Server Side Rendering (Fastify): https://docs.nestjs.com/techniques/mvc
   - HTMX for dynamic UI interactions
   - Hyperscript for clientside UI interactions
-  - Tailwind and DasyUI for styling
+  - Tailwind and DaisyUI for styling
   - Manifest.json and JS Service Worker for Progressive Web App support
     - Support for Web Push Notifications: https://developer.mozilla.org/en-US/docs/Web/API/Push_API
 - MikroOrm: https://docs.nestjs.com/recipes/mikroorm
-  - Configuration based us of either Postgres or SQlite
+  - Configuration based use of either Postgres or SQLite
   - Migrations
 - A custom file service module
-  - Configuration based us of either local disk or s3 based file storage
+  - Configuration based use of either local disk or S3 based file storage
+  - Native Fastify streaming file upload via @fastify/multipart
 - Multi user support
   - User ORM entity
   - JWT Based Authentication: https://docs.nestjs.com/security/authentication

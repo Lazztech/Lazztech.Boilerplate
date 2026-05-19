@@ -19,7 +19,9 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false,
-    "types": ["node", "@fastify/view"]
+    "types": [
+      "node",
+      "@fastify/view"
+    ]
   }
 }
