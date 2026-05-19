@@ -33,7 +33,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private viewContextService: ViewContextService,
-  ) {}
+  ) { }
 
   @Post('register')
   async postRegister(
@@ -56,7 +56,7 @@ export class AuthController {
 
     const jwt = await this.authService.register(body.email, body.password);
     reply.setCookie('access_token', jwt, { path: '/' });
-    return reply.redirect('/auth/profile');
+    return reply.redirect('/auth/profile', 302);
   }
 
   @Render('auth/register')
@@ -90,7 +90,7 @@ export class AuthController {
         loginDto.password,
       );
       reply.setCookie('access_token', jwt, { path: '/' });
-      return reply.redirect('/auth/profile');
+      reply.redirect('/auth/profile', 302);
     } catch (error) {
       this.logger.warn(error);
       const ctx = await this.viewContextService.buildContext(req);
@@ -110,7 +110,7 @@ export class AuthController {
 
   @Get('login')
   @Render('auth/login')
-  getLogin(): any {}
+  getLogin(): any { }
 
   @Get('reset')
   @Render('auth/reset')
@@ -130,7 +130,7 @@ export class AuthController {
   ) {
     try {
       await this.authService.sendPasswordResetEmail(emailDto.email);
-      return reply.redirect(`/auth/reset-code?email=${emailDto.email}`);
+      return reply.redirect(`/auth/reset-code?email=${emailDto.email}`, 302);
     } catch (error) {
       this.logger.warn(error);
       const ctx = await this.viewContextService.buildContext(req);
@@ -192,22 +192,22 @@ export class AuthController {
     }
 
     await this.authService.resetPassword(body);
-    return reply.redirect('/auth/login');
+    return reply.redirect('/auth/login', 302);
   }
 
   @Get('register')
   @Render('auth/register')
-  getRegister(): any {}
+  getRegister(): any { }
 
   @UseGuards(AuthGuard)
   @Get('profile')
   @Render('auth/profile')
-  getProfile(): any {}
+  getProfile(): any { }
 
   @UseGuards(AuthGuard)
   @Get('delete-account')
   @Render('auth/delete-account')
-  getDeleteAccount(): any {}
+  getDeleteAccount(): any { }
 
   @UseGuards(AuthGuard)
   @Post('delete-account')
@@ -221,7 +221,7 @@ export class AuthController {
       await this.authService.signIn(loginDto.email, loginDto.password);
       await this.authService.deleteUser(payload.userId);
       reply.clearCookie('access_token', { path: '/' });
-      return reply.redirect('/');
+      return reply.redirect('/', 302);
     } catch (error) {
       this.logger.warn(error);
       const ctx = await this.viewContextService.buildContext(req);
@@ -236,7 +236,7 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get('update-email')
   @Render('auth/update-email')
-  getUpdateEmail() {}
+  getUpdateEmail() { }
 
   @Render('auth/update-email')
   @Post('validate/update-email')
@@ -278,6 +278,6 @@ export class AuthController {
     }
 
     await this.authService.changeEmail(payload.userId, body.confirmEmail);
-    return reply.redirect('/auth/profile');
+    return reply.redirect('/auth/profile', 302);
   }
 }
