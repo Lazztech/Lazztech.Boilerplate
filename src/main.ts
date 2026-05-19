@@ -6,8 +6,6 @@ import {
 import fastifyCompress from '@fastify/compress';
 import fastifyCookie from '@fastify/cookie';
 import fastifyMultipart from '@fastify/multipart';
-import fastifyStatic from '@fastify/static';
-import fastifyView from '@fastify/view';
 import hbs from 'hbs';
 import type { HelperOptions } from 'handlebars';
 import { join } from 'path';
@@ -34,12 +32,12 @@ async function bootstrap() {
     },
   });
 
-  await app.register(fastifyStatic, {
+  app.useStaticAssets({
     root: join(__dirname, '..', 'public'),
     decorateReply: false,
   });
 
-  await app.register(fastifyStatic, {
+  app.useStaticAssets({
     root: [
       join(__dirname, '..', 'node_modules/htmx.org/dist'),
       join(__dirname, '..', 'node_modules/htmx-ext-sse/'),
@@ -51,15 +49,15 @@ async function bootstrap() {
     decorateReply: false,
   });
 
-  await app.register(fastifyStatic, {
+  app.useStaticAssets({
     root: join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
     prefix: '/modules/pulltorefresh',
     decorateReply: false,
   });
 
-  await app.register(fastifyView, {
+  app.setViewEngine({
     engine: { handlebars: hbs },
-    root: join(__dirname, '..', 'views'),
+    templates: join(__dirname, '..', 'views'),
     viewExt: 'hbs',
     layout: 'layout',
     includeViewExtension: true,
