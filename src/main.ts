@@ -15,7 +15,7 @@ import { ViewContextService } from './view-context/view-context.service';
 
 async function bootstrap() {
   // https://docs.nestjs.com/security/rate-limiting#proxies
-  const adapter = new FastifyAdapter({ trustProxy: true }); // Trust requests from the loopback address
+  const adapter = new FastifyAdapter({ trustProxy: ['127.0.0.1', '::1'] }); // Trust requests from the loopback address
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     adapter,
