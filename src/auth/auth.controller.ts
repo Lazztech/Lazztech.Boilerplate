@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { type Response } from 'express';
+import type { FastifyReply } from 'fastify';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
@@ -23,7 +23,6 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
-
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -34,21 +33,22 @@ export class AuthController {
   async postRegister(
     @I18n() i18n: I18nContext,
     @Body() body: RegisterDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
   ): Promise<any> {
     const instance = plainToInstance(RegisterDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/register', {
+      return reply.view('auth/register', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...((reply as any).locals ?? {}),
       });
     }
 
     const jwt = await this.authService.register(body.email, body.password);
-    response.cookie('access_token', jwt);
-    return response.redirect('/auth/profile');
+    reply.setCookie('access_token', jwt, { path: '/' });
+    return reply.redirect('/auth/profile', 302);
   }
 
   @Render('auth/register')
@@ -71,30 +71,28 @@ export class AuthController {
 
   @Throttle({ default: { limit: 5, ttl: seconds(60) } })
   @Post('login')
-  async postLogin(@Body() loginDto: LoginDto, @Res() response: Response) {
+  async postLogin(@Body() loginDto: LoginDto, @Res() reply: FastifyReply) {
     try {
       const jwt = await this.authService.signIn(
         loginDto.email,
         loginDto.password,
       );
-      response.cookie('access_token', jwt);
-      return response.redirect('/auth/profile');
+      reply.setCookie('access_token', jwt, { path: '/' });
+      reply.redirect('/auth/profile', 302);
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/login', {
+      return reply.view('auth/login', {
         layout: 'layout',
         error,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
 
   @Redirect('/')
   @Get('logout')
-  getLogout(
-    // https://docs.nestjs.com/techniques/cookies#use-with-express-default
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    response.clearCookie('access_token');
+  getLogout(@Res({ passthrough: true }) reply: FastifyReply) {
+    reply.clearCookie('access_token', { path: '/' });
   }
 
   @Get('login')
@@ -112,15 +110,16 @@ export class AuthController {
   }
 
   @Post('reset')
-  async postReset(@Body() emailDto: EmailDto, @Res() response: Response) {
+  async postReset(@Body() emailDto: EmailDto, @Res() reply: FastifyReply) {
     try {
       await this.authService.sendPasswordResetEmail(emailDto.email);
-      return response.redirect(`/auth/reset-code?email=${emailDto.email}`);
+      return reply.redirect(`/auth/reset-code?email=${emailDto.email}`, 302);
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/reset', {
+      return reply.view('auth/reset', {
         layout: 'layout',
         error,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
@@ -159,20 +158,21 @@ export class AuthController {
   async postResetCode(
     @I18n() i18n: I18nContext,
     @Body() body: ResetPasswordDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
   ) {
     const instance = plainToInstance(ResetPasswordDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/reset-code', {
+      return reply.view('auth/reset-code', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...((reply as any).locals ?? {}),
       });
     }
 
     await this.authService.resetPassword(body);
-    return response.redirect('/auth/login');
+    return reply.redirect('/auth/login', 302);
   }
 
   @Get('register')
@@ -194,18 +194,19 @@ export class AuthController {
   async postDeleteAccount(
     @User() payload: Payload,
     @Body() loginDto: LoginDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
   ) {
     try {
       await this.authService.signIn(loginDto.email, loginDto.password);
       await this.authService.deleteUser(payload.userId);
-      response.clearCookie('access_token');
-      return response.redirect('/');
+      reply.clearCookie('access_token', { path: '/' });
+      return reply.redirect('/', 302);
     } catch (error) {
       this.logger.warn(error);
-      return response.render('auth/delete-account', {
+      return reply.view('auth/delete-account', {
         layout: 'layout',
         error,
+        ...((reply as any).locals ?? {}),
       });
     }
   }
@@ -239,19 +240,20 @@ export class AuthController {
     @User() payload: Payload,
     @I18n() i18n: I18nContext,
     @Body() body: UpdateEmailDto,
-    @Res() response: Response,
+    @Res() reply: FastifyReply,
   ) {
     const instance = plainToInstance(UpdateEmailDto, body);
     const validationErrors = await i18n.validate(instance);
     if (validationErrors.length) {
-      return response.render('auth/update-email', {
+      return reply.view('auth/update-email', {
         layout: 'layout',
         input: body,
         validationErrors,
+        ...((reply as any).locals ?? {}),
       });
     }
 
     await this.authService.changeEmail(payload.userId, body.confirmEmail);
-    return response.redirect('/auth/profile');
+    return reply.redirect('/auth/profile', 302);
   }
 }

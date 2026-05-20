@@ -1,13 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { type Response } from 'express';
+import { MultipartFile } from '@fastify/multipart';
 import { join } from 'path';
 import sharp from 'sharp';
 import { File } from 'src/dal/entity/file.entity';
 import Stream, { Readable } from 'stream';
 import { FileServiceInterface } from './file-service.interface';
-import { Observable } from 'rxjs';
-import { MultipartFileStream } from '@proventuslabs/nestjs-multipart-form';
 
 @Injectable()
 export abstract class FileService implements FileServiceInterface {
@@ -18,7 +16,7 @@ export abstract class FileService implements FileServiceInterface {
   constructor(readonly configService: ConfigService) {}
 
   abstract storeImageFromFileUpload(
-    upload$: Observable<MultipartFileStream>,
+    upload: MultipartFile | undefined,
     userId: any,
   ): Promise<File>;
   abstract delete(fileName: string): Promise<void>;

@@ -1,12 +1,7 @@
 import { MikroORM } from '@mikro-orm/core';
-import {
-  Logger,
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import Joi from 'joi';
 import * as path from 'path';
 import { AppController } from './app.controller';
@@ -16,14 +11,14 @@ import { DalModule } from './dal/dal.module';
 import { NotificationModule } from './notification/notification.module';
 import { FileModule } from './file/file.module';
 import { EmailModule } from './email/email.module';
-import { ViewContextMiddleware } from './middleware/view-context.middleware';
 import { AcceptLanguageResolver, I18nModule } from 'nestjs-i18n';
 import { OpenGraphModule } from './open-graph/open-graph.module';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { User } from './dal/entity/user.entity';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
+import { ErrorViewFilter } from './error-view.filter';
+import { ViewContextModule } from './view-context/view-context.module';
 
 @Module({
   imports: [
@@ -185,6 +180,7 @@ import { LoggerModule } from 'nestjs-pino';
     EmailModule,
     NotificationModule,
     OpenGraphModule,
+    ViewContextModule,
   ],
   controllers: [AppController],
   providers: [
@@ -194,9 +190,13 @@ import { LoggerModule } from 'nestjs-pino';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    {
+      provide: APP_FILTER,
+      useClass: ErrorViewFilter,
+    },
   ],
 })
-export class AppModule implements OnModuleInit, NestModule {
+export class AppModule implements OnModuleInit {
   public logger = new Logger(AppModule.name);
 
   constructor(
@@ -208,9 +208,5 @@ export class AppModule implements OnModuleInit, NestModule {
     this.logger.log(`NODE_ENV: ${this.configService.get('NODE_ENV')}`);
     this.logger.log(`DATA_PATH: ${this.configService.get('DATA_PATH')}`);
     await this.orm.getMigrator().up();
-  }
-
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ViewContextMiddleware).forRoutes('*');
   }
 }

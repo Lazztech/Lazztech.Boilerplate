@@ -1,89 +1,116 @@
 import { NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import cookieParser from 'cookie-parser';
+import {
+  FastifyAdapter,
+  NestFastifyApplication,
+} from '@nestjs/platform-fastify';
+import fastifyCompress from '@fastify/compress';
+import fastifyCookie from '@fastify/cookie';
+import fastifyMultipart from '@fastify/multipart';
 import hbs from 'hbs';
+import type { HelperOptions } from 'handlebars';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import { ValidationError } from '@nestjs/common';
-import { ErrorViewFilter } from './error-view.filter';
-import compression from 'compression';
 import { Logger } from 'nestjs-pino';
+import { ViewContextService } from './view-context/view-context.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    bufferLogs: true,
-  });
-  app.useLogger(app.get(Logger));
-
   // https://docs.nestjs.com/security/rate-limiting#proxies
-  app.set('trust proxy', 'loopback'); // Trust requests from the loopback address
-
-  app.use(cookieParser());
-
-  // https://docs.nestjs.com/techniques/compression
-  app.use(compression());
-
-  // Setup MVC https://docs.nestjs.com/techniques/mvc
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
-  app.setViewEngine('hbs');
-  app.set('view cache', process.env.NODE_ENV === 'production');
-  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
-  hbs.registerHelper(
-    'filterErrors',
-    function (errors: ValidationError[], property) {
-      // Check if errors exists and is an array
-      if (!errors || !Array.isArray(errors)) {
-        return;
-      }
-      return errors
-        ?.filter((error) => error.property === property)
-        .flatMap((e) => Object.values(e.constraints || {}));
+  const adapter = new FastifyAdapter({ trustProxy: ['127.0.0.1', '::1'] }); // Trust requests from the loopback address
+  const app = await NestFactory.create<NestFastifyApplication>(
+    AppModule,
+    adapter,
+    {
+      bufferLogs: true,
     },
   );
-  hbs.registerHelper('json', function (context) {
-    return JSON.stringify(context);
+  app.useLogger(app.get(Logger));
+
+  // Express-like res.locals equivalent? https://github.com/fastify/fastify/issues/303
+  const viewContextService = app.get(ViewContextService);
+  const fastify = app.getHttpAdapter().getInstance();
+  fastify.decorateReply('locals', null);
+  fastify.addHook('preHandler', async (req, reply) => {
+    (reply as any).locals = await viewContextService.buildContext(req);
   });
-  hbs.registerHelper('ifEquals', function (arg1, arg2, options) {
-    return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+
+  await app.register(fastifyCookie);
+  // https://docs.nestjs.com/techniques/compression
+  await app.register(fastifyCompress);
+  await app.register(fastifyMultipart, {
+    limits: {
+      fileSize: 100 * 1024 * 1024, // 100MB
+      files: 5,
+    },
+  });
+
+  app.useStaticAssets({
+    root: join(__dirname, '..', 'public'),
+    decorateReply: false,
   });
 
   /** Serve htmx and other libraries from node_modules
    * https://htmx.org/docs/#installing
    * https://blog.wesleyac.com/posts/why-not-javascript-cdn */
-  app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx.org/dist'), {
+  app.useStaticAssets({
+    root: [
+      join(__dirname, '..', 'node_modules/htmx.org/dist'),
+      join(__dirname, '..', 'node_modules/htmx-ext-sse/'),
+      join(__dirname, '..', 'node_modules/hyperscript.org/dist'),
+      join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
+      join(__dirname, '..', 'node_modules/workbox-window/build'),
+    ],
     prefix: '/modules/',
+    decorateReply: false,
   });
-  app.useStaticAssets(join(__dirname, '..', 'node_modules/htmx-ext-sse/'), {
-    prefix: '/modules/',
+
+  app.useStaticAssets({
+    root: join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
+    prefix: '/modules/pulltorefresh',
+    decorateReply: false,
   });
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/hyperscript.org/dist'),
-    {
-      prefix: '/modules/',
+
+  // Setup MVC https://docs.nestjs.com/techniques/mvc
+  app.setViewEngine({
+    engine: { handlebars: hbs },
+    templates: join(__dirname, '..', 'views'),
+    viewExt: 'hbs',
+    layout: 'layout',
+    includeViewExtension: true,
+    options: {
+      partials: {
+        dock: 'partials/dock.hbs',
+        navbar: 'partials/navbar.hbs',
+      },
+    },
+  });
+
+  // Register handlebars helpers after engine setup
+  hbs.registerHelper(
+    'filterErrors',
+    function (
+      errors: { property: string; constraints?: Record<string, string> }[],
+      property: string,
+    ) {
+      // Check if errors exists and is an array
+      if (!errors || !Array.isArray(errors)) {
+        return;
+      }
+      return errors
+        .filter((error) => error.property === property)
+        .flatMap((e) => Object.values(e.constraints || {}));
     },
   );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/@khmyznikov/pwa-install/dist'),
-    {
-      prefix: '/modules/',
-    },
-  );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/workbox-window/build'),
-    {
-      prefix: '/modules/',
-    },
-  );
-  app.useStaticAssets(
-    join(__dirname, '..', 'node_modules/pulltorefreshjs/dist'),
-    {
-      prefix: '/modules/pulltorefresh',
+  hbs.registerHelper('json', function (context: unknown) {
+    return JSON.stringify(context);
+  });
+  hbs.registerHelper(
+    'ifEquals',
+    function (arg1: unknown, arg2: unknown, options: HelperOptions) {
+      return arg1 == arg2 ? options.fn(this) : options.inverse(this);
     },
   );
 
-  app.useGlobalFilters(new ErrorViewFilter());
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
