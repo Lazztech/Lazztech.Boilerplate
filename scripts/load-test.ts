@@ -14,9 +14,13 @@ async function main() {
   execSync('npm run build', { stdio: 'inherit' });
 
   console.log('Starting server...');
-  const server = spawn('node', ['dist/src/main.js'], {
+  let stderr = '';
+  const server = spawn('node', ['dist/main.js'], {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env, NODE_ENV: 'production' },
+  });
+  server.stderr.on('data', (data: Buffer) => {
+    stderr += data.toString();
   });
 
   server.on('error', (err) => {
@@ -24,7 +28,7 @@ async function main() {
   });
 
   try {
-    await waitForServer('http://localhost:3000', server);
+    await waitForServer('http://localhost:3000', server, stderr);
 
     console.log('Running load test against GET / ...');
     const results = await autocannon({
@@ -58,13 +62,21 @@ async function main() {
   }
 }
 
-function waitForServer(url: string, server: any): Promise<void> {
+function waitForServer(
+  url: string,
+  server: any,
+  stderrBuffer: string,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const start = Date.now();
 
     const onExit = (code: number) => {
       clearInterval(interval);
-      reject(new Error(`Server exited unexpectedly with code ${code}`));
+      reject(
+        new Error(
+          `Server exited unexpectedly with code ${code}\nStderr:\n${stderrBuffer}`,
+        ),
+      );
     };
     server.once('exit', onExit);
 
