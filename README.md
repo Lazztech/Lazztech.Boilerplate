@@ -433,6 +433,11 @@ $ npx web-push generate-vapid-keys
 ```bash
 # Helper script to run the primary pipeline steps locally before committing
 $ npm run precommit
+
+# Load testing
+$ npm run test:load         # Run autocannon load test against GET /
+$ npm run test:load:baseline # Save current load test results as baseline
+$ npm run test:load:compare  # Run load test and compare against baseline
 ```
 
 ## Configuration
