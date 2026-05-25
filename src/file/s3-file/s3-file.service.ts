@@ -120,4 +120,17 @@ export class S3FileService extends FileService {
     });
     return result.Body as Readable;
   }
+
+  protected async store(fileName: string, stream: Readable): Promise<void> {
+    const upload = new Upload({
+      client: this.s3,
+      params: {
+        Bucket: this.bucketName,
+        Key: fileName,
+        Body: stream,
+        ContentType: 'image/webp',
+      },
+    });
+    await upload.done();
+  }
 }

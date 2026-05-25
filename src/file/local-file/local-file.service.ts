@@ -111,6 +111,13 @@ export class LocalFileService extends FileService {
     return this.fileRepository.getEntityManager().removeAndFlush(file);
   }
 
+  protected async store(fileName: string, stream: Readable): Promise<void> {
+    await pipeline(
+      stream,
+      fs.createWriteStream(path.join(this.directory, fileName)),
+    );
+  }
+
   setupDir() {
     if (!fs.existsSync(this.directory)) {
       this.logger.debug('creating uploads directory');

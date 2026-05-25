@@ -23,6 +23,7 @@ export abstract class FileService implements FileServiceInterface {
   abstract deleteById(fileId: any, userId: any): Promise<any>;
   abstract get(fileName: string): Promise<Readable | undefined>;
   abstract getByShareableId(shareableId: string): Promise<Readable | undefined>;
+  protected abstract store(fileName: string, stream: Readable): Promise<void>;
 
   async getWatermark() {
     return sharp(
