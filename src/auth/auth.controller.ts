@@ -14,6 +14,7 @@ import { plainToInstance } from 'class-transformer';
 import type { FastifyReply } from 'fastify';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { AuthGuard } from './auth.guard';
+import { DisableRegistrationGuard } from './disable-registration.guard';
 import { AuthService } from './auth.service';
 import { EmailDto } from './dto/email.dto';
 import { LoginDto } from './dto/login.dto';
@@ -23,12 +24,14 @@ import { ResetPasswordDto } from './dto/resetPassword.dto';
 import { User } from './user.decorator';
 import { UpdateEmailDto } from './dto/updateEmail.dto';
 import { minutes, seconds, Throttle } from '@nestjs/throttler';
+
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
   constructor(private authService: AuthService) {}
 
+  @UseGuards(DisableRegistrationGuard)
   @Post('register')
   async postRegister(
     @I18n() i18n: I18nContext,
@@ -47,10 +50,15 @@ export class AuthController {
     }
 
     const jwt = await this.authService.register(body.email, body.password);
-    reply.setCookie('access_token', jwt, { path: '/' });
+    reply.setCookie('access_token', jwt, {
+      path: '/',
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days
+      httpOnly: true, // Prevents client-side JS from reading it
+    });
     return reply.redirect('/auth/profile', 302);
   }
 
+  @UseGuards(DisableRegistrationGuard)
   @Render('auth/register')
   @Post('validate/register')
   async postRegisterValidate(
@@ -77,7 +85,11 @@ export class AuthController {
         loginDto.email,
         loginDto.password,
       );
-      reply.setCookie('access_token', jwt, { path: '/' });
+      reply.setCookie('access_token', jwt, {
+        path: '/',
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days
+        httpOnly: true, // Prevents client-side JS from reading it
+      });
       reply.redirect('/auth/profile', 302);
     } catch (error) {
       this.logger.warn(error);
@@ -91,7 +103,10 @@ export class AuthController {
 
   @Redirect('/')
   @Get('logout')
-  getLogout(@Res({ passthrough: true }) reply: FastifyReply) {
+  getLogout(
+    // https://docs.nestjs.com/techniques/cookies#use-with-express-default
+    @Res({ passthrough: true }) reply: FastifyReply,
+  ) {
     reply.clearCookie('access_token', { path: '/' });
   }
 
@@ -175,6 +190,7 @@ export class AuthController {
     return reply.redirect('/auth/login', 302);
   }
 
+  @UseGuards(DisableRegistrationGuard)
   @Get('register')
   @Render('auth/register')
   getRegister(): any {}

@@ -13,11 +13,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { FastifyRequest } from 'fastify';
-import { AuthGuard } from '../../auth/auth.guard';
 import { Payload } from '../../auth/dto/payload.dto';
 import { User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
+import { ConditionalAuthGuard } from 'src/auth/conditional-auth.guard';
 
 @Controller('file')
 export class FileController {
@@ -30,7 +30,7 @@ export class FileController {
     private readonly userRepository: EntityRepository<UserEntity>,
   ) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(ConditionalAuthGuard)
   @Get('files')
   @Render('files')
   async getFiles(@User() payload: Payload) {
@@ -43,7 +43,7 @@ export class FileController {
     };
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(ConditionalAuthGuard)
   @Post('upload')
   @Render('files')
   async uploadFile(@User() payload: Payload, @Req() req: FastifyRequest) {
