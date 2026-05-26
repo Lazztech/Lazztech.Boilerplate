@@ -30,7 +30,7 @@ async function bootstrap() {
   const fastify = app.getHttpAdapter().getInstance();
   fastify.decorateReply('locals', null);
   fastify.addHook('preHandler', async (req, reply) => {
-    (reply as any).locals = await viewContextService.buildContext(req);
+    reply.locals = await viewContextService.buildContext(req);
   });
 
   await app.register(fastifyCookie);
@@ -76,13 +76,10 @@ async function bootstrap() {
     viewExt: 'hbs',
     layout: 'layout',
     includeViewExtension: true,
-    options: {
-      partials: {
-        dock: 'partials/dock.hbs',
-        navbar: 'partials/navbar.hbs',
-      },
-    },
   });
+
+  // Register partials from views/partials
+  hbs.registerPartials(join(__dirname, '..', 'views', 'partials'));
 
   // Register handlebars helpers after engine setup
   hbs.registerHelper(
