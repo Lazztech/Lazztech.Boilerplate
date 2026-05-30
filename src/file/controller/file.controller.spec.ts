@@ -1,23 +1,19 @@
 import { EntityManager } from '@mikro-orm/core';
 import { getRepositoryToken } from '@mikro-orm/nestjs';
 import { ConfigService } from '@nestjs/config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { File } from '../../dal/entity/file.entity';
 import { User } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
 import { FileController } from './file.controller';
+import { AuthService } from '../../auth/auth.service';
 
 describe('FileController', () => {
   let controller: FileController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        JwtModule.register({
-          secret: 'dummyaccesstoken',
-        }),
-      ],
       controllers: [FileController],
       providers: [
         JwtService,
@@ -33,6 +29,10 @@ describe('FileController', () => {
           },
         },
         ConfigService,
+        {
+          provide: AuthService,
+          useValue: { verifyPwf: jest.fn() },
+        },
         {
           provide: getRepositoryToken(File),
           useValue: {
