@@ -10,10 +10,9 @@ import {
   Post,
   Render,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
-import type { FastifyReply, FastifyRequest } from 'fastify';
+import type { FastifyRequest } from 'fastify';
 import { AuthGuard } from '../../auth/auth.guard';
 import { Payload } from '../../auth/dto/payload.dto';
 import { User } from '../../auth/user.decorator';
@@ -72,25 +71,5 @@ export class FileController {
   async watermark(@Param('shareableId') shareableId: string) {
     const fileStream = await this.fileService.getByShareableId(shareableId);
     return this.fileService.watermarkImage(fileStream);
-  }
-
-  @Get('nobg/:fileName')
-  @Header('content-type', 'image/webp')
-  async nobg(@Param('fileName') fileName: string, @Res() reply: FastifyReply) {
-    const stream = await this.fileService.getNobgVariant(fileName);
-    if (!stream) {
-      return reply
-        .header('Cache-Control', 'no-store')
-        .redirect(`/file/${fileName}`, 302);
-    }
-    reply.header('Cache-Control', 'no-store');
-    // Log stream errors, but don't try to re-send if headers are already in flight
-    stream.on('error', (err) => {
-      this.logger.error(err);
-      if (!reply.sent) {
-        reply.code(500).send({ message: 'Internal server error' });
-      }
-    });
-    return reply.send(stream);
   }
 }
