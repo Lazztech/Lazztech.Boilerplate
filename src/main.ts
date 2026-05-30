@@ -30,7 +30,7 @@ async function bootstrap() {
   const fastify = app.getHttpAdapter().getInstance();
   fastify.decorateReply('locals', null);
   fastify.addHook('preHandler', async (req, reply) => {
-    reply.locals = await viewContextService.buildContext(req);
+    (reply as any).locals = await viewContextService.buildContext(req);
   });
 
   await app.register(fastifyCookie);
