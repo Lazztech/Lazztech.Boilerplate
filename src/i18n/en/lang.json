@@ -62,6 +62,8 @@
   "UPLOAD": "Upload",
   "COPIED": "Copied!",
   "SHARING_NOT_SUPPORTED": "Sharing is not supported on this browser",
+  "OFFLINE_TITLE": "Offline.",
+  "OFFLINE_DESC": "Some pages may be cached for offline viewing.",
   "validation": {
     "IS_EMAIL": "Please provide a valid email address",
     "MIN_PASSWORD_LENGTH": "Password must be at least 8 characters long",

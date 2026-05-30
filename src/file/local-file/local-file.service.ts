@@ -36,6 +36,7 @@ export class LocalFileService extends FileService {
   async storeImageFromFileUpload(
     upload: MultipartFile | undefined,
     userId: any,
+    fileName?: string,
   ): Promise<File> {
     if (!upload) {
       throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
@@ -47,13 +48,13 @@ export class LocalFileService extends FileService {
       throw new HttpException('Wrong filetype', HttpStatus.BAD_REQUEST);
     }
 
-    const fileName = randomUUID() + '.webp';
+    const storedFileName = fileName ?? randomUUID() + '.webp';
     const transformer = sharp()
       .autoOrient()
       .webp({ quality: 100 })
       .resize(1080, 1080, { fit: sharp.fit.inside });
     const writeStream = fs.createWriteStream(
-      path.join(this.directory, fileName),
+      path.join(this.directory, storedFileName),
     );
 
     try {
@@ -67,7 +68,7 @@ export class LocalFileService extends FileService {
     // repository.create => save pattern used to so that the @BeforeInsert decorated method
     // will fire generating a uuid for the shareableId
     const file = this.fileRepository.create({
-      fileName,
+      fileName: storedFileName,
       createdOn: new Date().toISOString(),
       createdBy: userId,
     });
@@ -109,6 +110,13 @@ export class LocalFileService extends FileService {
       .unlink(path.join(this.directory, file.fileName))
       .catch((err) => this.logger.warn(err));
     return this.fileRepository.getEntityManager().removeAndFlush(file);
+  }
+
+  protected async store(fileName: string, stream: Readable): Promise<void> {
+    await pipeline(
+      stream,
+      fs.createWriteStream(path.join(this.directory, fileName)),
+    );
   }
 
   setupDir() {

@@ -446,6 +446,7 @@ $ npm run test:load:compare  # Run load test and compare against baseline
 | -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- |
 | APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate                   |
 | AUTH_ENABLED                     | Enables or disables auth/login functionality                 | Defaults to false ✅                       | true or false                          |
+| DISABLE_REGISTRATION             | Disallows user sign ups when false                           | false                                      | true                                   |
 | PWA_ENABLED                      | Enables or disables service worker & PWA install prompt      | Defaults to false ✅                       | true or false                          |
 | ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                              |
 | SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com                     |

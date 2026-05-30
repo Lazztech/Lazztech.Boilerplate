@@ -18,6 +18,7 @@ import { Payload } from '../../auth/dto/payload.dto';
 import { User } from '../../auth/user.decorator';
 import { User as UserEntity } from '../../dal/entity/user.entity';
 import { FileService } from '../file-service.abstract';
+import { ConditionalAuthGuard } from '../../auth/conditional-auth.guard';
 
 @Controller('file')
 export class FileController {
@@ -30,7 +31,7 @@ export class FileController {
     private readonly userRepository: EntityRepository<UserEntity>,
   ) {}
 
-  @UseGuards(AuthGuard)
+  @UseGuards(ConditionalAuthGuard)
   @Get('files')
   @Render('files')
   async getFiles(@User() payload: Payload) {
@@ -59,7 +60,7 @@ export class FileController {
   }
 
   @Get(':fileName')
-  @Header('Cache-Control', 'public, max-age=86400') // public for CDN, max-age= 24hrs in seconds
+  @Header('Cache-Control', 'public, max-age=31536000, immutable') // public for CDN, max-age= 1 year for immutable content
   async getFile(@Param('fileName') fileName: string) {
     return this.fileService.get(fileName);
   }

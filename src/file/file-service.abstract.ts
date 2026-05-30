@@ -18,11 +18,13 @@ export abstract class FileService implements FileServiceInterface {
   abstract storeImageFromFileUpload(
     upload: MultipartFile | undefined,
     userId: any,
+    fileName?: string,
   ): Promise<File>;
   abstract delete(fileName: string): Promise<void>;
   abstract deleteById(fileId: any, userId: any): Promise<any>;
   abstract get(fileName: string): Promise<Readable | undefined>;
   abstract getByShareableId(shareableId: string): Promise<Readable | undefined>;
+  protected abstract store(fileName: string, stream: Readable): Promise<void>;
 
   async getWatermark() {
     return sharp(
