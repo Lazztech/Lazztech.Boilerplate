@@ -25,7 +25,7 @@ export class FileController {
   private logger = new Logger(FileController.name);
 
   constructor(
-    @Inject()
+    @Inject(FileService)
     private readonly fileService: FileService,
     @InjectRepository(UserEntity)
     private readonly userRepository: EntityRepository<UserEntity>,
