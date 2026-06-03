@@ -33,6 +33,8 @@ https://nestjs-i18n.com/quick-start --}}
     {{!-- https://htmx.org/reference/#config --}} {{!--
     https://htmx.org/attributes/hx-swap/#modifiers --}}
     <meta name="htmx-config" content='{"globalViewTransitions": "true"}' />
+    {{!-- https://htmx.org/quirks/#attribute-inheritance --}}
+    <meta name="htmx-config" content='{"disableInheritance":true}'>
 
     <title>{{appName}}</title>
     {{! Used inconjunction with service worker sw.js to enable PWA (Progressive
