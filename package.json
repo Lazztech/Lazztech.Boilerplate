@@ -101,6 +101,7 @@
     "@types/nodemailer-mailgun-transport": "^1.4.6",
     "@types/web-push": "^3.6.4",
     "autocannon": "^8.0.0",
+    "chokidar": "^5.0.0",
     "concurrently": "^9.2.1",
     "daisyui": "^5.1.27",
     "esbuild": "^0.25.11",
