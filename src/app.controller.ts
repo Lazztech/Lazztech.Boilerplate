@@ -5,10 +5,14 @@ import {
   Logger,
   Post,
   Render,
+  Req,
+  Res,
   Sse,
 } from '@nestjs/common';
 import { Subject } from 'rxjs';
 import { AppService } from './app.service';
+import { I18n, I18nContext } from 'nestjs-i18n';
+import { FastifyReply, FastifyRequest } from 'fastify';
 
 @Controller()
 export class AppController {
@@ -20,10 +24,8 @@ export class AppController {
 
   @Get()
   @Render('index')
-  getHello(): any {
-    return {
-      message: this.appService.getHello(),
-    };
+  index(@I18n() i18n: I18nContext) {
+    return { pageTitle: i18n.t('lang.PAGE_TITLE_HOME') };
   }
 
   @Get('chat')
@@ -96,5 +98,21 @@ export class AppController {
   @Get('.well-known/*')
   well_known() {
     return {}; // Just return empty object
+  }
+
+  @Get('sitemap.xml')
+  sitemap(@Req() req: FastifyRequest, @Res() reply: FastifyReply): void {
+    const baseUrl = `${req.protocol}://${req.host}`;
+    reply.header('Content-Type', 'application/xml; charset=utf-8');
+    reply.send(
+      `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>${baseUrl}/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>`,
+    );
   }
 }

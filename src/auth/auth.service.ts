@@ -16,7 +16,7 @@ import { EmailService } from '../email/email.service';
 import { PasswordReset } from '../dal/entity/passwordReset.entity';
 import { randomInt } from 'crypto';
 import { ResetPasswordDto } from './dto/resetPassword.dto';
-import * as Handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 

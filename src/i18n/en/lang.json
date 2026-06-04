@@ -1,5 +1,6 @@
 {
   "APP_DESCRIPTION": "A rapid web application development boilerplate built on NestJS, HTMX, Tailwind, DaisyUI, MikroORM, and more.",
+  "PAGE_TITLE_HOME": "Lazztech.Boilerplate - rapid web application development boilerplate",
   "TAGLINE": "Ship faster with a proven full-stack boilerplate",
   "HERO_DESCRIPTION": "A decade of engineering experience distilled into an opinionated, production-ready starting point for modern web apps. Built on NestJS, HTMX, Tailwind, DaisyUI, MikroORM, and more.",
   "GET_STARTED": "Get Started",
