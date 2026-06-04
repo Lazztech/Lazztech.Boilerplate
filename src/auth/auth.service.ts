@@ -36,7 +36,7 @@ export class AuthService {
   ) {
     this.passwordResetTemplate = Handlebars.compile(
       readFileSync(
-        join(__dirname, '..', 'views', 'email', 'password-reset.hbs'),
+        join(__dirname, '..', '..', 'views', 'email', 'password-reset.hbs'),
         'utf-8',
       ),
     );
