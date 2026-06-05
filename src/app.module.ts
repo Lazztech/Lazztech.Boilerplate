@@ -70,8 +70,8 @@ import { ViewContextModule } from './view-context/view-context.module';
         PORT: Joi.number().default(3000),
         APP_NAME: Joi.string().default('Boilerplate'),
         AUTH_ENABLED: Joi.boolean().default(false),
-        PWA_ENABLED: Joi.boolean().default(false),
         DISABLE_REGISTRATION: Joi.boolean().default(false),
+        PWA_ENABLED: Joi.boolean().default(false),
         ACCESS_TOKEN_SECRET: Joi.string().default('ChangeMe!'),
         PUBLIC_VAPID_KEY: Joi.optional().default(
           'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U',
@@ -208,6 +208,6 @@ export class AppModule implements OnModuleInit {
   async onModuleInit(): Promise<void> {
     this.logger.log(`NODE_ENV: ${this.configService.get('NODE_ENV')}`);
     this.logger.log(`DATA_PATH: ${this.configService.get('DATA_PATH')}`);
-    await this.orm.getMigrator().up();
+    await this.orm.migrator.up();
   }
 }
