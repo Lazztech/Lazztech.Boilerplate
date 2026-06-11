@@ -1,5 +1,5 @@
 # Build stage
-FROM node:24 AS builder
+FROM node:22 AS builder
 
 # Create app directory
 WORKDIR /app
@@ -24,7 +24,7 @@ COPY workbox-config.js .
 RUN npm run build
 
 # Production stage
-FROM node:24-slim
+FROM node:22-slim
 
 WORKDIR /app
 
