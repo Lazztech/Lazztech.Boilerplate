@@ -24,6 +24,7 @@ import { join } from 'path';
 export class AuthService {
   private logger = new Logger(AuthService.name);
   private readonly passwordResetTemplate: Handlebars.TemplateDelegate;
+  private readonly emailVerificationTemplate: Handlebars.TemplateDelegate;
 
   constructor(
     @InjectRepository(User)
@@ -34,12 +35,19 @@ export class AuthService {
     @InjectRepository(PasswordReset)
     private passwordResetRepository: EntityRepository<PasswordReset>,
   ) {
+    const viewsDir = join(__dirname, '..', '..', 'views', 'email');
     this.passwordResetTemplate = Handlebars.compile(
       readFileSync(
-        join(__dirname, '..', '..', 'views', 'email', 'password-reset.hbs'),
+        join(viewsDir, 'password-reset.hbs'),
         'utf-8',
       ),
     );
+    this.emailVerificationTemplate = Handlebars.compile(
+      readFileSync(
+        join(viewsDir, 'email-vetification.hbs'),
+        'utf-8',
+      )
+    )
   }
 
   async register(email: string, password: string): Promise<string> {
