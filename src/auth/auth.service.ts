@@ -133,11 +133,23 @@ export class AuthService {
     await this.emailService.sendEmailFromPrimaryAddress({
       to: user.email!,
       subject: `Password reset for ${user.email}`,
-      text: `Hello, ${user.email}, please paste in the follow to reset your password: ${pin}`,
+      text: `Hello, ${user.email}, please paste in the following to reset your password: ${pin}`,
       html: this.passwordResetTemplate({ email: user.email, pin }),
     });
 
     const passwordReset = this.passwordResetRepository.create({ pin, user });
     await this.em.persistAndFlush(passwordReset);
+  }
+
+  async sendEmailVerificationEmail(email: string): Promise<void> {
+    this.logger.debug(this.sendEmailVerificationEmail.name);
+    const user = await this.userRepository.findOneOrFail({ email });
+    const pin = randomInt(100000, 999999).toString();
+    await this.emailService.sendEmailFromPrimaryAddress({
+      to: user.email!,
+      subject: `Verify Account`,
+      text: `Hello, ${user.email}, please paste in the following to verify your account: ${pin}`,
+      html: this.emailVerificationTemplate({ email: user.email, pin }),
+    });
   }
 }
