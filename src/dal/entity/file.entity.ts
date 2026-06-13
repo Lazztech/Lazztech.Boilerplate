@@ -33,7 +33,9 @@ export class File extends ShareableId {
   })
   public createdBy?: Ref<User>;
 
-  public asynic getOpenGraphTagValues(req: FastifyRequest): Promise<OpenGraphTagValues> {
+  public async getOpenGraphTagValues(
+    req: FastifyRequest,
+  ): Promise<OpenGraphTagValues> {
     const createdBy = await this?.createdBy?.load();
     return {
       ogUrl: `${req.protocol}://${req.host}/file/${this.shareableId}`,

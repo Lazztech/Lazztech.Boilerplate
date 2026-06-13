@@ -51,6 +51,6 @@ export class User extends ShareableId {
   public getOpenGraphTagValues(
     req?: FastifyRequest,
   ): Promise<OpenGraphTagValues> {
-    throw Error('Not implemented');
+    throw Error(`Not implemented ${JSON.stringify(req)}`);
   }
 }
