@@ -1,6 +1,14 @@
 import { BeforeCreate, Property } from '@mikro-orm/core';
 import { randomUUID } from 'crypto';
 
+export interface OpenGraphTagValues {
+  ogUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  file?: any;
+}
+
 export abstract class ShareableId {
   @Property()
   shareableId?: string;
@@ -17,4 +25,6 @@ export abstract class ShareableId {
 
   @Property({ nullable: true })
   public banned?: boolean;
+
+  public abstract getOpenGraphTagValues(): Promise<OpenGraphTagValues>;
 }
