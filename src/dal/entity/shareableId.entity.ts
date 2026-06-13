@@ -1,5 +1,14 @@
 import { BeforeCreate, Property } from '@mikro-orm/core';
 import { randomUUID } from 'crypto';
+import type { FastifyRequest } from 'fastify';
+
+export interface OpenGraphTagValues {
+  ogUrl: string;
+  ogTitle: string;
+  ogDescription: string;
+  ogImage: string;
+  file?: any;
+}
 
 export abstract class ShareableId {
   @Property()
@@ -17,4 +26,8 @@ export abstract class ShareableId {
 
   @Property({ nullable: true })
   public banned?: boolean;
+
+  public abstract getOpenGraphTagValues(
+    req?: FastifyRequest,
+  ): Promise<OpenGraphTagValues>;
 }

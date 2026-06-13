@@ -6,8 +6,9 @@ import {
   type Ref,
   Unique,
 } from '@mikro-orm/core';
-import { ShareableId } from './shareableId.entity';
+import { OpenGraphTagValues, ShareableId } from './shareableId.entity';
 import { User } from './user.entity';
+import { FastifyRequest } from 'fastify';
 
 @Entity()
 export class File extends ShareableId {
@@ -31,4 +32,18 @@ export class File extends ShareableId {
     nullable: true,
   })
   public createdBy?: Ref<User>;
+
+  public async getOpenGraphTagValues(
+    req: FastifyRequest,
+  ): Promise<OpenGraphTagValues> {
+    const createdBy = await this?.createdBy?.load();
+    return {
+      ogUrl: `${req.protocol}://${req.host}/file/${this.shareableId}`,
+      ogTitle: this?.fileName,
+      ogDescription: `From ${createdBy?.email}`,
+      ogImage: this.fileUrlService.getWatermarkedFileUrl(this.shareableId, req),
+      file: this,
+      createdBy,
+    } as OpenGraphTagValues;
+  }
 }
