@@ -11,8 +11,9 @@ import {
 } from '@mikro-orm/core';
 import { File } from './file.entity';
 import { PasswordReset } from './passwordReset.entity';
-import { ShareableId } from './shareableId.entity';
+import { OpenGraphTagValues, ShareableId } from './shareableId.entity';
 import { UserDevice } from './userDevice.entity';
+import { FastifyRequest } from 'fastify';
 
 @Entity()
 export class User extends ShareableId {
@@ -46,4 +47,10 @@ export class User extends ShareableId {
 
   @OneToMany(() => File, (file) => file.createdBy)
   public fileUploads = new Collection<File>(this);
+
+  public getOpenGraphTagValues(
+    req?: FastifyRequest,
+  ): Promise<OpenGraphTagValues> {
+    throw Error('Not implemented');
+  }
 }
