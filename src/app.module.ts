@@ -82,6 +82,12 @@ import { ViewContextModule } from './view-context/view-context.module';
         SITE_URL: Joi.string().default('https://mysite.com'),
         ICON_NAME: Joi.string().default('lazztech_icon.webp'),
         DATA_PATH: Joi.string().default(path.join(process.cwd(), 'data')),
+        EMAIL_TRANSPORT: Joi.string().optional(),
+        EMAIL_API_KEY: Joi.string().optional(),
+        EMAIL_DOMAIN: Joi.string().optional(),
+        EMAIL_FROM_ADDRESS: Joi.string().optional(),
+        EMAIL_PASSWORD: Joi.string().optional(),
+        EMAIL_VERIFICATION: Joi.bool().default(false),
         DATABASE_TYPE: Joi.string()
           .valid('sqlite', 'postgres')
           .default('sqlite'),
@@ -203,7 +209,7 @@ export class AppModule implements OnModuleInit {
   constructor(
     private readonly orm: MikroORM,
     private readonly configService: ConfigService,
-  ) {}
+  ) { }
 
   async onModuleInit(): Promise<void> {
     this.logger.log(`NODE_ENV: ${this.configService.get('NODE_ENV')}`);

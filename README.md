@@ -6,7 +6,7 @@ This repository serves as a jumping off point for rapid 3 tier web application d
 
 This boilerplate is architected with inspiration from, though not dogmatically following, the values spoken to in the speech [Building the Hundred-Year Web Service with htmx - Alexander Petros](https://www.youtube.com/watch?v=lASLZ9TgXyc)
 
-- https://unplannedobsolescence.com/talks/building-the-hundred-year-web-service/
+- <https://unplannedobsolescence.com/talks/building-the-hundred-year-web-service/>
 
 ```mermaid
 graph TB
@@ -70,7 +70,7 @@ graph TB
 
 **Progressive Web App (PWA)**
 
-This boilerplate is setup with PWA support out of the box. This includes an [installation prompt that works across platforms](https://github.com/khmyznikov/pwa-install) to guide the user to install the PWA as a traditional "App" on their devices. This works across all major platforms, desktop, and mobile. This project's service worker uses https://workboxjs.org. See the video below for a primer on PWAs and service workers with workbox.
+This boilerplate is setup with PWA support out of the box. This includes an [installation prompt that works across platforms](https://github.com/khmyznikov/pwa-install) to guide the user to install the PWA as a traditional "App" on their devices. This works across all major platforms, desktop, and mobile. This project's service worker uses <https://workboxjs.org>. See the video below for a primer on PWAs and service workers with workbox.
 
 [Fireship: Progressive Web Apps in 100 Seconds // Build a PWA from Scratch](https://www.youtube.com/watch?v=sFsRylCQblw)
 
@@ -83,13 +83,13 @@ $ npm run generate:sw
 
 Also checkout the link below for some examples of what's possible with Progressive Web Apps modern web APIs.
 
-https://whatpwacando.today/
+<https://whatpwacando.today/>
 
 **Google Lighthouse**
 
 This all also results in a starting point for developing a web app with a perfect google lighthouse score.
 
-https://developer.chrome.com/docs/lighthouse/overview
+<https://developer.chrome.com/docs/lighthouse/overview>
 
 - Performance: 100%
 - Accessibility: 100%
@@ -107,22 +107,22 @@ https://developer.chrome.com/docs/lighthouse/overview
   - Linting
   - Code Formatting
   - Logging
-- CLI for generating controllers, services, tests, etc: https://docs.nestjs.com/cli/overview
+- CLI for generating controllers, services, tests, etc: <https://docs.nestjs.com/cli/overview>
 - Pre-configured npm scripts
 
 **From there support for the following is added:**
 
 See the [diff between what this project adds to the default NestJS project](https://github.com/Lazztech/Lazztech.Boilerplate/compare/dedf27d0c01a9aaaae95ad4186814a111341eb77...main#diff) boilerplate.
 
-- Dotenv configuration: https://docs.nestjs.com/techniques/configuration
-- Environment variable configuration validation: https://docs.nestjs.com/techniques/configuration#schema-validation
-- MVC Server Side Rendering (Fastify): https://docs.nestjs.com/techniques/mvc
+- Dotenv configuration: <https://docs.nestjs.com/techniques/configuration>
+- Environment variable configuration validation: <https://docs.nestjs.com/techniques/configuration#schema-validation>
+- MVC Server Side Rendering (Fastify): <https://docs.nestjs.com/techniques/mvc>
   - HTMX for dynamic UI interactions
   - Hyperscript for clientside UI interactions
   - Tailwind and DaisyUI for styling
   - Manifest.json and JS Service Worker for Progressive Web App support
-    - Support for Web Push Notifications: https://developer.mozilla.org/en-US/docs/Web/API/Push_API
-- MikroOrm: https://docs.nestjs.com/recipes/mikroorm
+    - Support for Web Push Notifications: <https://developer.mozilla.org/en-US/docs/Web/API/Push_API>
+- MikroOrm: <https://docs.nestjs.com/recipes/mikroorm>
   - Configuration based use of either Postgres or SQLite
   - Migrations
 - A custom file service module
@@ -130,13 +130,13 @@ See the [diff between what this project adds to the default NestJS project](http
   - Native Fastify streaming file upload via @fastify/multipart
 - Multi user support
   - User ORM entity
-  - JWT Based Authentication: https://docs.nestjs.com/security/authentication
+  - JWT Based Authentication: <https://docs.nestjs.com/security/authentication>
   - User password management and reset
-- nest-i18n internationalization: https://nestjs-i18n.com/
-- Open-Graph link previews: https://ogp.me/
+- nest-i18n internationalization: <https://nestjs-i18n.com/>
+- Open-Graph link previews: <https://ogp.me/>
 - Dockerfile and Docker Compose script
 - Github Actions Continuos Integration Pipeline
-- Automated lighthouse performance testing: https://googlechrome.github.io/lighthouse-ci/
+- Automated lighthouse performance testing: <https://googlechrome.github.io/lighthouse-ci/>
 - VSCode Recommended Extensions
 
 The following shows the included database entities that are used by the ORM to produce the following database table relations.
@@ -235,8 +235,8 @@ Development tools:
 
 - Docker
 - Node version manager
-  - https://github.com/nvm-sh/nvm
-  - Automatic NVM usage: https://github.com/nvm-sh/nvm?tab=readme-ov-file#deeper-shell-integration
+  - <https://github.com/nvm-sh/nvm>
+  - Automatic NVM usage: <https://github.com/nvm-sh/nvm?tab=readme-ov-file#deeper-shell-integration>
 
 ```bash
 # use nvm to install node from the .nvmrc file
@@ -292,7 +292,7 @@ $ docker run -p 3000:3000 lazztech-boilerplate
 A local instance of postgres running in a docker container for testing against a prod DB replica.
 Pgadmin is not required, but recommend for ease of use. Alternatively the database-client VSCode extension may be used.
 
-- https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-database-client2
+- <https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-database-client2>
 
 Create database dump and import to local database
 
@@ -442,35 +442,36 @@ $ npm run test:load:compare  # Run load test and compare against baseline
 
 ## Configuration
 
-| Parameter                        | Function                                                     | Optional                                   | Example                                |
-| -------------------------------- | ------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- |
-| APP_NAME                         | Used when sending emails to call out the name of the service | ❌                                         | Lazztech Boilerplate                   |
-| AUTH_ENABLED                     | Enables or disables auth/login functionality                 | Defaults to false ✅                       | true or false                          |
-| DISABLE_REGISTRATION             | Disallows user sign ups when false                           | false                                      | true                                   |
-| PWA_ENABLED                      | Enables or disables service worker & PWA install prompt      | Defaults to false ✅                       | true or false                          |
-| ACCESS_TOKEN_SECRET              | Used for jwt tokens                                          | ⚠️ change for production                   | ChangeMe!                              |
-| SITE_URL                         | Used for PWA icon URL                                        | ⚠️ change for production                   | https://mysite.com                     |
-| PUBLIC_VAPID_KEY                 | Used for web push notifications                              | ⚠️ change for production                   |
-| PRIVATE_VAPID_KEY                | Used for web push notifications                              | ⚠️ change for production                   |
-| APP_ICON                         | Used for PWA icon, and watermark                             | Defaults to lazztech_icon.webp ✅          | lazztech_icon.webp                     |
-| EMAIL_TRANSPORT                  | Used for emailing users                                      | ✅                                         | 'gmail' or 'mailgun' defaults to gmail |
-| EMAIL_API_KEY                    | Used for emailing users                                      | required for mailgun                       |
-| EMAIL_DOMAIN                     | Used for emailing users                                      | required for mailgun                       |
-| EMAIL_FROM_ADDRESS               | Used for emailing users                                      | ❌                                         |
-| EMAIL_PASSWORD                   | Used for emailing users                                      | ✅ when transport is mailgun               |
-| DATABASE_TYPE                    | Used for selecting sqlite or postgres                        | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'                 |
-| DATABASE_HOST                    | Used for connecting to database                              | Optional depending on database type ✅     |
-| DATABASE_PORT                    | Used for connecting to database                              | Optional depending on database type ✅     |
-| DATABASE_USER                    | Used for connecting to database                              | Optional depending on database type ✅     |
-| DATABASE_PASS                    | Used for connecting to database                              | Optional depending on database type ✅     |
-| DATABASE_SCHEMA                  | Used for connecting to database                              | Optional depending on database type ✅     |
-| DATABASE_SSL                     | To configure whether to use SSL for database                 | Optional depending on database type ✅     |
-| FILE_STORAGE_TYPE                | For selecting local or S3 compatible storage configuration   | Defaults to local ✅                       | Select 'local' or 'object'             |
-| OBJECT_STORAGE_ACCESS_KEY_ID     | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
-| OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
-| OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                   | Optional depending on file storage type ✅ |
-| OBJECT_STORAGE_REGION            | S3 region                                                    | us-east-1                                  | us-west-1                              |
-| OBJECT_STORAGE_BUCKET_NAME       | S3 bucket name                                               | Optional depending on file storage type ✅ |                                        |
+| Parameter                        | Function                                                           | Optional                                   | Example                                |
+| -------------------------------- | ------------------------------------------------------------------ | ------------------------------------------ | -------------------------------------- |
+| APP_NAME                         | Used when sending emails to call out the name of the service       | ❌                                         | Lazztech Boilerplate                   |
+| AUTH_ENABLED                     | Enables or disables auth/login functionality                       | Defaults to false ✅                       | true or false                          |
+| DISABLE_REGISTRATION             | Disallows user sign ups when false                                 | false                                      | true                                   |
+| PWA_ENABLED                      | Enables or disables service worker & PWA install prompt            | Defaults to false ✅                       | true or false                          |
+| ACCESS_TOKEN_SECRET              | Used for jwt tokens                                                | ⚠️ change for production                   | ChangeMe!                              |
+| SITE_URL                         | Used for PWA icon URL                                              | ⚠️ change for production                   | <https://mysite.com>                   |
+| PUBLIC_VAPID_KEY                 | Used for web push notifications                                    | ⚠️ change for production                   |
+| PRIVATE_VAPID_KEY                | Used for web push notifications                                    | ⚠️ change for production                   |
+| APP_ICON                         | Used for PWA icon, and watermark                                   | Defaults to lazztech_icon.webp ✅          | lazztech_icon.webp                     |
+| EMAIL_TRANSPORT                  | Used for emailing users                                            | ✅                                         | 'gmail' or 'mailgun' defaults to gmail |
+| EMAIL_API_KEY                    | Used for emailing users                                            | required for mailgun                       |
+| EMAIL_DOMAIN                     | Used for emailing users                                            | required for mailgun                       |
+| EMAIL_FROM_ADDRESS               | Used for emailing users                                            | ❌                                         |
+| EMAIL_PASSWORD                   | Used for emailing users                                            | ✅ when transport is mailgun               |
+| EMAIL_VERIFICATION               | Enable to require users to verify ownership of their email address | Defaults to false ✅                       | true or false                          |
+| DATABASE_TYPE                    | Used for selecting sqlite or postgres                              | Defaults to sqlite ✅                      | 'sqlite' or 'postgres'                 |
+| DATABASE_HOST                    | Used for connecting to database                                    | Optional depending on database type ✅     |
+| DATABASE_PORT                    | Used for connecting to database                                    | Optional depending on database type ✅     |
+| DATABASE_USER                    | Used for connecting to database                                    | Optional depending on database type ✅     |
+| DATABASE_PASS                    | Used for connecting to database                                    | Optional depending on database type ✅     |
+| DATABASE_SCHEMA                  | Used for connecting to database                                    | Optional depending on database type ✅     |
+| DATABASE_SSL                     | To configure whether to use SSL for database                       | Optional depending on database type ✅     |
+| FILE_STORAGE_TYPE                | For selecting local or S3 compatible storage configuration         | Defaults to local ✅                       | Select 'local' or 'object'             |
+| OBJECT_STORAGE_ACCESS_KEY_ID     | Used for S3 compatible object file storage                         | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_SECRET_ACCESS_KEY | Used for S3 compatible object file storage                         | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_ENDPOINT          | Used for S3 compatible object file storage                         | Optional depending on file storage type ✅ |
+| OBJECT_STORAGE_REGION            | S3 region                                                          | us-east-1                                  | us-west-1                              |
+| OBJECT_STORAGE_BUCKET_NAME       | S3 bucket name                                                     | Optional depending on file storage type ✅ |                                        |
 
 ## Lazztech LLC Cooperative Business Agreement
 
