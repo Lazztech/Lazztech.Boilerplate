@@ -209,7 +209,7 @@ export class AppModule implements OnModuleInit {
   constructor(
     private readonly orm: MikroORM,
     private readonly configService: ConfigService,
-  ) { }
+  ) {}
 
   async onModuleInit(): Promise<void> {
     this.logger.log(`NODE_ENV: ${this.configService.get('NODE_ENV')}`);

@@ -37,17 +37,11 @@ export class AuthService {
   ) {
     const viewsDir = join(__dirname, '..', '..', 'views', 'email');
     this.passwordResetTemplate = Handlebars.compile(
-      readFileSync(
-        join(viewsDir, 'password-reset.hbs'),
-        'utf-8',
-      ),
+      readFileSync(join(viewsDir, 'password-reset.hbs'), 'utf-8'),
     );
     this.emailVerificationTemplate = Handlebars.compile(
-      readFileSync(
-        join(viewsDir, 'email-vetification.hbs'),
-        'utf-8',
-      )
-    )
+      readFileSync(join(viewsDir, 'email-verification.hbs'), 'utf-8'),
+    );
   }
 
   async register(email: string, password: string): Promise<string> {
