@@ -35,11 +35,11 @@ export class File extends ShareableId {
   public async getOpenGraphTagValues(): Promise<OpenGraphTagValues> {
     const createdBy = await this?.createdBy?.load();
     return {
-      ogUrl: `${req.protocol}://${req.host}/file/${shareableId}`,
-      ogTitle: file?.fileName,
+      ogUrl: `${req.protocol}://${req.host}/file/${this.shareableId}`,
+      ogTitle: this?.fileName,
       ogDescription: `From ${createdBy?.email}`,
-      ogImage: this.fileUrlService.getWatermarkedFileUrl(shareableId, req),
-      file,
+      ogImage: this.fileUrlService.getWatermarkedFileUrl(this.shareableId, req),
+      file: this,
       createdBy,
     } as OpenGraphTagValues;
   }

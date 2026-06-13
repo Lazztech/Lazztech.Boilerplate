@@ -13,7 +13,7 @@ export class OpenGraphService {
     @InjectRepository(File)
     private readonly fileRepository: EntityRepository<File>,
     private readonly em: EntityManager,
-  ) { }
+  ) {}
 
   public async getShareableTagValues(
     shareableId: string,
@@ -27,7 +27,7 @@ export class OpenGraphService {
           populate: ['createdBy'],
         },
       );
-      return file.getOpenGraphTagValues();
+      return file.getOpenGraphTagValues(req);
     }
   }
 }
